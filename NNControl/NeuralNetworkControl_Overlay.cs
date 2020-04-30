@@ -23,11 +23,11 @@ namespace NNControl
 
         private void ShowNeuronOverlay(Point p)
         {
-            var neuronRadius = ModelAdapter.NeuralNetworkModel.NeuronRadius * (_networkView.Impl.Zoom + 1);
+            var neuronRadius = ModelAdapter.NeuralNetworkModel.NeuronRadius * 2 * (_networkView.Impl.Zoom + 1);
             _neuronOverlay.Visibility = Visibility.Visible;
 
-            Canvas.SetLeft(_neuronOverlay, p.X * (_networkView.Impl.Zoom + 1) + neuronRadius);
-            Canvas.SetTop(_neuronOverlay, p.Y * (_networkView.Impl.Zoom + 1));
+            Canvas.SetLeft(_neuronOverlay, p.X + neuronRadius);
+            Canvas.SetTop(_neuronOverlay, p.Y);
         }
 
 

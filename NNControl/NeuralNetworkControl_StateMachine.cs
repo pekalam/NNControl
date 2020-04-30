@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using NNControl.Neuron;
 using NNControl.Synapse;
@@ -11,12 +12,12 @@ namespace NNControl
         enum Triggers
         {
             LBx2, NEURON_HIT, SYNAPSE_HIT, CTRL_LB, LBx1, MV_LB, RBx1, BACKGROUND_HIT, LB_UP, ALL_NEURONS_DESELECT, SYNAPSE_DESELECT,
-            ZOOM
+            ZOOM, REPOSITION
         }
 
         enum States
         {
-            S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, ZOOM_INTERRUPT
+            S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, ZOOM_INTERRUPT, REPOSITION_INT
         }
 
         private StateMachine<Triggers, States> _stateMachine;
@@ -76,8 +77,6 @@ namespace NNControl
 
                         if (_networkView.Impl.SelectedNeuron.Count == 1)
                         {
-                            _clickedNeuronScreenPoint.X = _networkView.Impl.SelectedNeuron[0].X;
-                            _clickedNeuronScreenPoint.Y = _networkView.Impl.SelectedNeuron[0].Y;
                             ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(_networkView.Impl.SelectedNeuron[0]);
                         }
@@ -97,7 +96,7 @@ namespace NNControl
                 .CreateState(States.S3)
                 .Enter(s =>
                 {
-
+                    Console.WriteLine("asd");
                 })
                 .Loop(Triggers.LB_UP)
                 .Loop(Triggers.LBx1)
@@ -163,8 +162,6 @@ namespace NNControl
                         _clickedNeuronScreenPoint = _clickedPoint;
                         if (_networkView.Impl.SelectedNeuron.Count == 1)
                         {
-                            _clickedNeuronScreenPoint.X = _networkView.Impl.SelectedNeuron[0].X;
-                            _clickedNeuronScreenPoint.Y = _networkView.Impl.SelectedNeuron[0].Y;
                             ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(_networkView.Impl.SelectedNeuron[0]);
                         }
@@ -255,17 +252,12 @@ namespace NNControl
                     HideNeuronOverlay();
                 }, States.ZOOM_INTERRUPT, States.S0)
 
+                .ResetInterruptState(Triggers.REPOSITION, t =>
+                {
+                    HideNeuronOverlay();
+                }, States.REPOSITION_INT, States.S0)
+
                 .Build(States.S0);
-
-
-            if (!DesignerProperties.GetIsInDesignMode(this) && (bool)GetValue(ShowVisProperty))
-            {
-                vis = new StateMachineVis<Triggers, States>(_stateMachine);
-                vis.Start(@"StateMachineLibVis.exe", "-c graphViz -l 0");
-                _networkView.StartVis();
-            }
-
-
         }
 
     }

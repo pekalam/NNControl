@@ -70,9 +70,9 @@ namespace NNControl.Neuron.Impl
             var ctx = SkNetworkPaintContextHolder.Context;
             var canvas = ctx.e.Surface.Canvas;
 
-//#if DEBUG
-//            canvas.DrawRect(neuron.ReferenceRect, _selectedNeuronPaint);
-//#endif
+#if DEBUG
+            canvas.DrawRect(neuron.ReferenceRect, _defaultInputPaint);
+#endif
 
             if (network.SelectedNeuron.Count > 0 && network.SelectedNeuron.Contains(neuron))
             {

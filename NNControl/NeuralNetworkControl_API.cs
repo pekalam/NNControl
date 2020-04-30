@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using NNControl.Adapter;
 using NNControl.Neuron;
+using StateMachineLib;
 using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 namespace NNControl
@@ -20,7 +22,14 @@ namespace NNControl
         }
 
         public static readonly DependencyProperty ShowVisProperty = DependencyProperty.Register(
-            "ShowVis", typeof(bool), typeof(NeuralNetworkControl), new PropertyMetadata(default(bool)));
+            nameof(ShowVis), typeof(bool), typeof(NeuralNetworkControl), new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.AffectsRender,
+                (o, args) =>
+                {
+                    if ((bool) args.NewValue)
+                    {
+                        (o as NeuralNetworkControl).StartVis();
+                    }
+                }));
 
         public bool ShowVis
         {
@@ -64,6 +73,18 @@ namespace NNControl
             }
         }
 
+        private async void StartVis()
+        {
+            if (vis == null)
+            {
+                vis = new StateMachineVis<Triggers, States>(_stateMachine, loggingEnabled: true);
+
+                await Task.Delay(2000);
+                vis.Start(@"StateMachineLibVis.exe", "-c graphViz -l 0");
+                _networkView.StartVis();
+            }
+        }
+
         public void UpdateSynapseLabels()
         {
             _networkView.RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW_EXCLUDED);
@@ -96,6 +117,7 @@ namespace NNControl
         public void Reposition()
         {
             _networkView.Reposition();
+            _stateMachine.Next(Triggers.REPOSITION);
         }
     }
 

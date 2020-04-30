@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,13 +34,14 @@ namespace NNControl
             InitOverlay();
             InitActionMenuOverlay();
 
-            SetValue(ModelAdapterProperty, _defaultAdapter);
         }
+
+        
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - _actionMenuOverlay.Width * 2);
-            _networkView.ForceDraw();
+            _networkView.ForceDraw((float)canvas.Width, (float)canvas.Height);
         }
 
         private void canvas_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
@@ -49,7 +51,15 @@ namespace NNControl
                 e = e
             };
 
-            _networkView.Draw();
+            if (_networkView.NeuralNetworkModel != null)
+            {
+                _networkView.Draw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+            }
+            else
+            {
+                _networkView.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+                SetValue(ModelAdapterProperty, _defaultAdapter);
+            }
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)

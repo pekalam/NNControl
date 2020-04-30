@@ -1,4 +1,5 @@
 ﻿using System;
+using NNControl.Network.Impl;
 using NNControl.Neuron.Impl;
 
 namespace NNControl.Synapse.Impl
@@ -52,10 +53,10 @@ namespace NNControl.Synapse.Impl
             }
 
 
-            var a = ((n2.Y * (Neuron1.Layer.Network.Zoom + 1)) - (n1.Y * (Neuron1.Layer.Network.Zoom + 1))) / ((n2.X * (Neuron1.Layer.Network.Zoom + 1)) - (n1.X * (Neuron1.Layer.Network.Zoom + 1)));
-            var b = (n2.Y * (Neuron1.Layer.Network.Zoom + 1)) - a * (n2.X * (Neuron1.Layer.Network.Zoom + 1));
+            var a = (n2.Y - n1.Y) / (n2.X - n1.X);
+            var b = n2.Y - a * n2.X;
 
-            if (Math.Abs(a * x + b - y) < 2)
+            if (Math.Abs(a * x + b - y) < 10)
             {
                 return true;
             }

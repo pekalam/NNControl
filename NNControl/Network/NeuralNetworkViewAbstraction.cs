@@ -30,6 +30,8 @@ namespace NNControl.Network
         public NeuralNetworkPositionManagerBase PositionManager { get; set; } =
             new DefaultNeuralNetworkPositionManager();
 
+        public float CanvasWidth { get; private set; }
+        public float CanvasHeight { get; private set; }
 
         private Box _viewportPosition;
         internal Box ViewportPosition => _viewportPosition;
@@ -49,7 +51,7 @@ namespace NNControl.Network
 
                 value.NetworkLayerModels.CollectionChanged += NetworkLayerModelsOnCollectionChanged;
 
-                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
+                RequestRedraw(ViewTrig.FORCE_DRAW);
             }
         }
 
@@ -112,26 +114,19 @@ namespace NNControl.Network
 
         public void SetZoom(double value)
         {
-            if (Impl.SelectedNeuron.Count > 0 || Impl.SelectedSynapse != null)
-            {
-                SetAllNeuronAndSynapsesExcluded(false);
-
-                Impl.SelectedSynapse = null;
-                Impl.SelectedNeuron.Clear();
-            }
+            
 
             Impl.Zoom = value;
             foreach (var layer in Layers)
             {
                 layer.OnZoomChanged();
             }
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.ZOOM);
+            RequestRedraw(ViewTrig.ZOOM);
         }
 
         public void MoveSelectedNeurons(NeuronViewImpl clicked, float nx, float ny)
         {
-            nx = nx / (float) (Impl.Zoom + 1);
-            ny = ny / (float) (Impl.Zoom + 1);
+            (nx, ny) = Impl.ToCanvasPoints(nx, ny);
 
             var dx = nx - clicked.X;
             var dy = ny - clicked.Y;
@@ -142,10 +137,10 @@ namespace NNControl.Network
             }
 
 
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.MV);
+            RequestRedraw(ViewTrig.MV);
         }
 
-        public NeuronViewAbstraction SelectNeuronAt(int x, int y)
+        public NeuronViewAbstraction SelectNeuronAt(float x, float y)
         {
             var foundNeuron = FindNeuronAt(x, y);
             if (foundNeuron == null)
@@ -160,12 +155,14 @@ namespace NNControl.Network
 
             _selectedNeurons.Add(foundNeuron);
             Impl.SelectedNeuron.Add(foundNeuron.Impl);
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.SELECT);
+            RequestRedraw(ViewTrig.SELECT);
             return foundNeuron;
         }
 
-        public NeuronViewAbstraction FindNeuronAt(int x, int y)
+        public NeuronViewAbstraction FindNeuronAt(float x, float y)
         {
+            (x, y) = Impl.ToCanvasPoints(x, y);
+
             foreach (var layer in Layers)
             {
                 foreach (var neuron in layer.Neurons)
@@ -187,7 +184,7 @@ namespace NNControl.Network
             {
                 _selectedNeurons.Clear();
                 Impl.SelectedNeuron.Clear();
-                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.DESELECT);
+                RequestRedraw(ViewTrig.DESELECT);
             }
         }
 
@@ -195,18 +192,26 @@ namespace NNControl.Network
         {
             if (Impl.SelectedNeuron.Count > 0)
             {
-                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.MV_END);
+                RequestRedraw(ViewTrig.MV_END);
             }
         }
 
-        public void Draw()
+        public void Draw(float canvasWidth, float canvasHeight)
         {
-            _redrawStateMachine.Next(NeuralNetworkViewAbstraction.ViewTrig.DRAW);
+            SetCanvasSz(canvasWidth, canvasHeight);
+            _redrawStateMachine.Next(ViewTrig.DRAW);
         }
 
-        public void ForceDraw()
+        public void SetCanvasSz(float canvasWidth, float canvasHeight)
         {
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
+            CanvasWidth = canvasWidth;
+            CanvasHeight = canvasHeight;
+        }
+
+        public void ForceDraw(float canvasWidth, float canvasHeight)
+        {
+            SetCanvasSz(canvasWidth, canvasHeight);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 
         public void Move(int dx, int dy)
@@ -219,11 +224,10 @@ namespace NNControl.Network
                 layer.Impl.Y += dy;
                 foreach (var neuron in layer.Neurons)
                 {
-                    neuron.Impl.X += dx;
-                    neuron.Impl.Y += dy;
+                    neuron.Move(dx,dy);
                 }
             }
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 
         public void Reposition()
@@ -234,12 +238,14 @@ namespace NNControl.Network
             }
 
             PositionManager.InvokeActionsAfterPositionsSet(this);
-            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
+            RequestRedraw(ViewTrig.REPOSITION);
         }
 
 
         public SynapseViewAbstraction SelectSynapseAt(float x, float y)
         {
+            (x, y) = Impl.ToCanvasPoints(x, y);
+
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
             foreach (var synapse in neuron.Synapses)
@@ -249,7 +255,7 @@ namespace NNControl.Network
                     if (synapse.Impl != Impl.SelectedSynapse)
                     {
                         Impl.SelectedSynapse = synapse.Impl;
-                        RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.SELECT_SYNAPSE);
+                        RequestRedraw(ViewTrig.SELECT_SYNAPSE);
                         return synapse;
                     }
                 }

@@ -15,6 +15,8 @@ namespace NNControl.Network
         public int NeuronsCount { get; internal set; }
         public SynapseViewImpl SelectedSynapse { get; set; }
 
+        public abstract (float x, float y) ToCanvasPoints(float x, float y);
+
         public abstract LayerViewImpl CreateLayerInstance();
     
         public abstract void DrawAndSave();

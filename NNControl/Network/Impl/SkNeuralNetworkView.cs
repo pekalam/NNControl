@@ -7,6 +7,7 @@ using SkiaSharp;
 
 namespace NNControl.Network.Impl
 {
+
     internal class SkNeuralNetworkView : NeuralNetworkViewImpl
     {
         private SKImage _saved;
@@ -16,10 +17,11 @@ namespace NNControl.Network.Impl
         private SkInternalNeuronPainter _neuronPainter;
         private SkInternalSynapsePainter _synapsePainter;
 
+        private float _transX;
+        private float _transY;
 
         public SkNeuralNetworkView()
         {
-            
         }
 
         public override NeuralNetworkModel NeuralNetworkModel
@@ -42,6 +44,14 @@ namespace NNControl.Network.Impl
             var m = ctx.e.Surface.Canvas.TotalMatrix;
             m.ScaleX = (float) Zoom + 1;
             m.ScaleY = (float) Zoom + 1;
+
+            // m.TransX = (float) (ZoomCenterX * Zoom);
+            // m.TransY = (float)(ZoomCenterY * Zoom);
+
+            
+            _transX = m.TransX = -ctx.e.Surface.Canvas.DeviceClipBounds.MidX * (float)Zoom;
+            _transY = m.TransY = -ctx.e.Surface.Canvas.DeviceClipBounds.MidY * (float)Zoom;
+
             ctx.e.Surface.Canvas.SetMatrix(m);
         }
 
@@ -79,6 +89,11 @@ namespace NNControl.Network.Impl
                 _neuronPainter.Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
             }
 
+        }
+
+        public override (float x, float y) ToCanvasPoints(float x, float y)
+        {
+            return ((x - _transX) / (float)(Zoom + 1), (y - _transY) / (float)(Zoom + 1));
         }
 
         public override LayerViewImpl CreateLayerInstance()

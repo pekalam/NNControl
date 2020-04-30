@@ -52,12 +52,9 @@ namespace NNControl.Neuron
 
         private void SetArrowPos()
         {
-            if (Layer.PreviousLayer != null)
+            foreach (var synapse in ConnectedSynapses)
             {
-                foreach (var synapse in ConnectedSynapses)
-                {
-                    synapse.SetArrowPos();
-                }
+                synapse.SetArrowPos();
             }
         }
 

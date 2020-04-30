@@ -9,13 +9,13 @@ namespace NNControl.Network
         public enum ViewTrig
         {
             DRAW, PAINT, SELECT, ZOOM, DESELECT, MV, MV_END, FORCE_DRAW, SELECT_SYNAPSE, DESELECT_SYNAPSE, FORCE_DRAW_EXCLUDED,
-            FORCE_DRAW_FROM_SAVED
+            FORCE_DRAW_FROM_SAVED, REPOSITION
         }
 
         public enum States
         {
             S0, S1, S2, S3, S4, S5, S6, S7, S8, ZOOM_INTERRUPT, FORCE_DRAW_INTERRUPT, S9, S10, S11, FORCE_DRAW_EXCLUDED_INT,
-            FORCE_DRAW_FROM_SAVED_INT
+            FORCE_DRAW_FROM_SAVED_INT, REPOSITION_INT
         }
 
         public enum RedrawStates
@@ -184,9 +184,13 @@ namespace NNControl.Network
                 .Enter(s =>
                 {
                     Impl.SelectedSynapse.Excluded = true;
+                    Impl.SelectedSynapse.Neuron1.Excluded = true;
+                    Impl.SelectedSynapse.Neuron2.Excluded = true;
                     Impl.DrawAndSave();
                     Impl.DrawExcluded();
                 })
+                .Transition(ViewTrig.ZOOM, States.S11)
+                .Transition(ViewTrig.REPOSITION, States.S11)
                 .Transition(ViewTrig.PAINT, States.S10)
                 .Transition(ViewTrig.DESELECT_SYNAPSE, States.S11)
                 .End()
@@ -206,8 +210,7 @@ namespace NNControl.Network
                 .CreateState(States.S11)
                     .Enter(s =>
                     {
-                        Impl.SelectedSynapse.Excluded = false;
-                        Impl.SelectedSynapse = null;
+                        SmDeselectSynapses();
                         Impl.DrawAndSave();
                     })
                     .Transition(ViewTrig.SELECT_SYNAPSE, States.S9)
@@ -219,7 +222,9 @@ namespace NNControl.Network
 
                 .InterruptState(ViewTrig.ZOOM, s =>
                 {
+                    SmDeselectNeurons();
                     Impl.DrawAndSave();
+
                 }, States.ZOOM_INTERRUPT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW, s =>
@@ -227,6 +232,13 @@ namespace NNControl.Network
                     Impl.DrawAndSave();
                 }, States.FORCE_DRAW_INTERRUPT)
 
+
+                .InterruptState(ViewTrig.REPOSITION, s =>
+                {
+                    SmDeselectNeurons();
+                    SmDeselectSynapses();
+                    Impl.DrawAndSave();
+                }, States.REPOSITION_INT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW_EXCLUDED, s =>
                 {
@@ -244,9 +256,9 @@ namespace NNControl.Network
         }
 
 
-        public void StartVis()
+        internal void StartVis()
         {
-            vis = new StateMachineVis<ViewTrig, States>(_stateMachine, pipeName: "viewGraphViz", loggingEnabled: false);
+            vis = new StateMachineVis<ViewTrig, States>(_stateMachine, pipeName: "viewGraphViz", loggingEnabled: true);
             vis.Start(@"StateMachineLibVis.exe", "-c viewGraphViz -l 970");
         }
 
@@ -262,6 +274,29 @@ namespace NNControl.Network
                     synapse.Neuron2.Excluded = excluded;
                 }
             }
+        }
+
+        private void SmDeselectNeurons()
+        {
+            if (Impl.SelectedNeuron.Count > 0)
+            {
+                SetAllNeuronAndSynapsesExcluded(false);
+                _selectedNeurons.Clear();
+                Impl.SelectedNeuron.Clear();
+            }
+        }
+
+        private void SmDeselectSynapses()
+        {
+            if (Impl.SelectedSynapse != null)
+            {
+                Impl.SelectedSynapse.Excluded = false;
+                Impl.SelectedSynapse.Neuron1.Excluded = false;
+                Impl.SelectedSynapse.Neuron2.Excluded = false;
+                Impl.SelectedSynapse = null;
+            }
+
+
         }
 
         public void Dispose()
