@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="NeuralNetworkControl.Overlays.ActionMenuOverlay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NeuralNetworkControl"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignWidth="30" Width="30" Height="Auto" >
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="#A514202B" Margin="0,25,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Background="#A514202B" Foreground="#FFFFFF" Click="Button_Click">
+            <iconPacks:FontAwesome Kind="SyncSolid"/>
+        </Button>
+        <Button x:Name="ZoomInBtn" Grid.Row="1" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomInBtn_Click">
+            <iconPacks:FontAwesome Kind="SearchPlusSolid"/>
+        </Button>
+        <Button x:Name="ZoomOutBtn" Grid.Row="2" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomOutBtn_Click">
+            <iconPacks:FontAwesome Kind="SearchMinusSolid"/>
+        </Button>
+    </Grid>
+</UserControl>
