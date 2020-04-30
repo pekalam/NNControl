@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Model;
-using NNLib;
+using NNControl.Model;
 
-namespace NeuralNetworkControl.Adapter
+namespace NNControl.Adapter
 {
     public interface INeuralNetworkModelAdapter : INotifyPropertyChanged
     {

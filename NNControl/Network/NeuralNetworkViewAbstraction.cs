@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using NeuralNetworkControl.Impl;
-using NeuralNetworkControl.Model;
+using NNControl.Layer;
+using NNControl.Model;
+using NNControl.Neuron;
+using NNControl.Synapse;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl.Network
 {
 
 
@@ -47,7 +49,7 @@ namespace NeuralNetworkControl.Abstraction
 
                 value.NetworkLayerModels.CollectionChanged += NetworkLayerModelsOnCollectionChanged;
 
-                RequestRedraw(ViewTrig.FORCE_DRAW);
+                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
             }
         }
 
@@ -123,7 +125,7 @@ namespace NeuralNetworkControl.Abstraction
             {
                 layer.OnZoomChanged();
             }
-            RequestRedraw(ViewTrig.ZOOM);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.ZOOM);
         }
 
         public void MoveSelectedNeurons(NeuronViewImpl clicked, float nx, float ny)
@@ -140,7 +142,7 @@ namespace NeuralNetworkControl.Abstraction
             }
 
 
-            RequestRedraw(ViewTrig.MV);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.MV);
         }
 
         public NeuronViewAbstraction SelectNeuronAt(int x, int y)
@@ -158,7 +160,7 @@ namespace NeuralNetworkControl.Abstraction
 
             _selectedNeurons.Add(foundNeuron);
             Impl.SelectedNeuron.Add(foundNeuron.Impl);
-            RequestRedraw(ViewTrig.SELECT);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.SELECT);
             return foundNeuron;
         }
 
@@ -185,7 +187,7 @@ namespace NeuralNetworkControl.Abstraction
             {
                 _selectedNeurons.Clear();
                 Impl.SelectedNeuron.Clear();
-                RequestRedraw(ViewTrig.DESELECT);
+                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.DESELECT);
             }
         }
 
@@ -193,18 +195,18 @@ namespace NeuralNetworkControl.Abstraction
         {
             if (Impl.SelectedNeuron.Count > 0)
             {
-                RequestRedraw(ViewTrig.MV_END);
+                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.MV_END);
             }
         }
 
         public void Draw()
         {
-            _redrawStateMachine.Next(ViewTrig.DRAW);
+            _redrawStateMachine.Next(NeuralNetworkViewAbstraction.ViewTrig.DRAW);
         }
 
         public void ForceDraw()
         {
-            RequestRedraw(ViewTrig.FORCE_DRAW);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
         }
 
         public void Move(int dx, int dy)
@@ -221,7 +223,7 @@ namespace NeuralNetworkControl.Abstraction
                     neuron.Impl.Y += dy;
                 }
             }
-            RequestRedraw(ViewTrig.FORCE_DRAW);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
         }
 
         public void Reposition()
@@ -232,7 +234,7 @@ namespace NeuralNetworkControl.Abstraction
             }
 
             PositionManager.InvokeActionsAfterPositionsSet(this);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
+            RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW);
         }
 
 
@@ -247,7 +249,7 @@ namespace NeuralNetworkControl.Abstraction
                     if (synapse.Impl != Impl.SelectedSynapse)
                     {
                         Impl.SelectedSynapse = synapse.Impl;
-                        RequestRedraw(ViewTrig.SELECT_SYNAPSE);
+                        RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.SELECT_SYNAPSE);
                         return synapse;
                     }
                 }
@@ -261,12 +263,12 @@ namespace NeuralNetworkControl.Abstraction
         {
             if (Impl.SelectedSynapse != null)
             {
-                RequestRedraw(ViewTrig.DESELECT_SYNAPSE);
+                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.DESELECT_SYNAPSE);
             }
         }
 
 
-        public void RequestRedraw(ViewTrig next)
+        public void RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig next)
         {
             Check.NotNull(OnRequestRedraw);
             _redrawStateMachine.Next(next);

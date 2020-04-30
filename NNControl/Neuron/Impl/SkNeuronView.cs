@@ -1,7 +1,8 @@
-﻿using NeuralNetworkControl.Impl;
+﻿using NNControl.Synapse;
+using NNControl.Synapse.Impl;
 using SkiaSharp;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Neuron.Impl
 {
     internal class SkNeuronView : NeuronViewImpl
     {

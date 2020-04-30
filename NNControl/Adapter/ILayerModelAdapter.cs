@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using NeuralNetworkControl.Model;
+using NNControl.Model;
 
-namespace NeuralNetworkControl.Adapter
+namespace NNControl.Adapter
 {
     public interface ILayerModelAdapter : INotifyPropertyChanged
     {

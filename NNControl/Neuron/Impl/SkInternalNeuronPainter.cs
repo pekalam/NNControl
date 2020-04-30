@@ -1,6 +1,8 @@
-﻿using SkiaSharp;
+﻿using NNControl.Layer.Impl;
+using NNControl.Network.Impl;
+using SkiaSharp;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Neuron.Impl
 {
     internal class SkInternalNeuronPainter
     {

@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using System.Xml.XPath;
+﻿using NNControl.Layer.Impl;
+using NNControl.Network.Impl;
+using NNControl.Neuron.Impl;
 using SkiaSharp;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Synapse.Impl
 {
     internal class SkInternalSynapsePainter
     {

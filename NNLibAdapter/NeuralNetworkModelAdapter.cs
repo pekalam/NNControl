@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Adapter;
-using NeuralNetworkControl.Model;
+using NNControl;
+using NNControl.Adapter;
+using NNControl.Model;
+using NNControl.Synapse;
 using NNLib;
 
 namespace NNLibAdapter
@@ -65,7 +66,7 @@ namespace NNLibAdapter
             NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
         }
 
-        public void UpdateWeights(NeuralNetworkControl.NeuralNetworkControl networkControl, string format = "F3")
+        public void UpdateWeights(NeuralNetworkControl networkControl, string format = "F3")
         {
             for (int i = 1; i < Layers.Count; i++)
             {

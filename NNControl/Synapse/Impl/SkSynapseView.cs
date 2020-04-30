@@ -1,7 +1,7 @@
 ﻿using System;
-using NeuralNetworkControl.Impl;
+using NNControl.Neuron.Impl;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Synapse.Impl
 {
     internal class SkSynapseView : SynapseViewImpl
     {

@@ -1,6 +1,6 @@
 ﻿using SkiaSharp.Views.Desktop;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Network.Impl
 {
     public class SkNetworkPaintContext
     {

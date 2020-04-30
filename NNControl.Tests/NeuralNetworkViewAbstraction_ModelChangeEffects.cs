@@ -1,10 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
 using FluentAssertions;
-using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Model;
-using NeuralNetworkControl.SkiaImpl;
+using NNControl.Model;
+using NNControl.Network.Impl;
+using NNControl.Synapse;
 using Xunit;
+using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 namespace NeuralNetworkControl.Tests
 {

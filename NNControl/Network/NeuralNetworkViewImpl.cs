@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
-using NeuralNetworkControl.Model;
+using NNControl.Layer;
+using NNControl.Model;
+using NNControl.Neuron;
+using NNControl.Synapse;
 
-namespace NeuralNetworkControl.Impl
+namespace NNControl.Network
 {
     public abstract class NeuralNetworkViewImpl
     {

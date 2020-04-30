@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NeuralNetworkControl.Abstraction;
 
-namespace NeuralNetworkControl.Overlays
+namespace NNControl.Overlays
 {
     /// <summary>
     /// Interaction logic for ActionMenuOverlay.xaml

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NeuralNetworkControl.Overlays;
+using NNControl.Overlays;
 
-namespace NeuralNetworkControl
+namespace NNControl
 {
     public partial class NeuralNetworkControl
     {

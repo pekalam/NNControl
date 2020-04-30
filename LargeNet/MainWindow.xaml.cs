@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using NeuralNetworkControl;
-using NeuralNetworkControl.Adapter;
+using NNControl;
+using NNControl.Adapter;
 
 namespace LargeNet
 {

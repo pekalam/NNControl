@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Impl;
+using NNControl.Neuron;
+using NNControl.Synapse;
 using StateMachineLib;
 
-namespace NeuralNetworkControl
+namespace NNControl
 {
     public partial class NeuralNetworkControl
     {

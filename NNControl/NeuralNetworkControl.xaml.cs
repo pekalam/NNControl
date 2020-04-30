@@ -1,71 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Adapter;
-using NeuralNetworkControl.Model;
-using NeuralNetworkControl.SkiaImpl;
-using NNLib;
-using NNLib.ActivationFunction;
+using NNControl.Adapter;
+using NNControl.Network.Impl;
+using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 
-[assembly: InternalsVisibleTo("NeuralNetworkControl.Tests")]
-namespace NeuralNetworkControl
+[assembly: InternalsVisibleTo("NNControl.Tests")]
+namespace NNControl
 {
-    public class DefaultLayerModelAdapter: ILayerModelAdapter
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public LayerModel LayerModel { get; set; }
-    }
-
-    public class DefaultNeuralNetworkModelAdapter : INeuralNetworkModelAdapter
-    {
-        public DefaultNeuralNetworkModelAdapter(params int[] netsz)
-        {
-            NeuralNetworkModel = new NeuralNetworkModel();
-            NeuralNetworkModel.NetworkLayerModels = new ObservableCollection<LayerModel>();
-            foreach (var sz in netsz)
-            {
-                var l = new LayerModel();
-                l.NeuronModels = new ObservableRangeCollection<NeuronModel>();
-                for (int i = 0; i < sz; i++)
-                {
-                    l.NeuronModels.Add(new NeuronModel());
-                }
-                NeuralNetworkModel.NetworkLayerModels.Add(l);
-            }
-
-            var layerAdapters = new List<DefaultLayerModelAdapter>();
-
-            foreach (var layerModel in NeuralNetworkModel.NetworkLayerModels)
-            {
-                layerAdapters.Add(new DefaultLayerModelAdapter()
-                {
-                    LayerModel = layerModel,
-                });
-            }
-
-            LayerModelAdapters = layerAdapters;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public NeuralNetworkModel NeuralNetworkModel { get; }
-        public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters { get; }
-    }
-
-
     /// <summary>
     /// Interaction logic for NeuralNetworkControl.xaml
     /// </summary>

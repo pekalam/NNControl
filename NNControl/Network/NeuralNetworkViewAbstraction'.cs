@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using StateMachineLib;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl.Network
 {
     public partial class NeuralNetworkViewAbstraction : IDisposable
     {

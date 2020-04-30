@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using NeuralNetworkControl.Abstraction;
 
-namespace NeuralNetworkControl.Model
+namespace NNControl.Model
 {
     public class NeuralNetworkModel
     {

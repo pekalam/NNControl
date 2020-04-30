@@ -1,7 +1,6 @@
-﻿using NeuralNetworkControl.Impl;
-using NNLib;
+﻿using NNControl.Neuron;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl.Synapse
 {
     public class SynapseViewAbstraction
     {

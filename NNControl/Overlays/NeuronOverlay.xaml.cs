@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace NeuralNetworkControl.Overlays
+namespace NNControl.Overlays
 {
     /// <summary>
     /// Interaction logic for NeuronOverlay.xaml

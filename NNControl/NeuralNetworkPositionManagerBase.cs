@@ -1,7 +1,8 @@
-﻿using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Impl;
+﻿using NNControl.Layer;
+using NNControl.Neuron;
+using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
-namespace NeuralNetworkControl
+namespace NNControl
 {
     public abstract class NeuralNetworkPositionManagerBase
     {

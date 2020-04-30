@@ -1,4 +1,4 @@
-﻿namespace NeuralNetworkControl.SkiaImpl
+﻿namespace NNControl.Network.Impl
 {
     public static class SkNetworkPaintContextHolder
     {

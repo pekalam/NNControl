@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NeuralNetworkControl.Adapter;
-using NeuralNetworkControl.Model;
+using NNControl.Adapter;
+using NNControl.Model;
 using NNLib;
 
 namespace NNLibAdapter

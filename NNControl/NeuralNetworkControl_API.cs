@@ -1,13 +1,9 @@
-﻿using NeuralNetworkControl.Abstraction;
-using NeuralNetworkControl.Impl;
-using NeuralNetworkControl.Model;
-using System.Collections.ObjectModel;
-using System.Windows;
-using MahApps.Metro.IconPacks.Converter;
-using NeuralNetworkControl.Adapter;
-using NNLib;
+﻿using System.Windows;
+using NNControl.Adapter;
+using NNControl.Neuron;
+using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
-namespace NeuralNetworkControl
+namespace NNControl
 {
     public partial class NeuralNetworkControl
     {

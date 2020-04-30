@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using NeuralNetworkControl.Impl;
+using NNControl.Layer;
+using NNControl.Synapse;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl.Neuron
 {
     public class NeuronViewAbstraction
     {

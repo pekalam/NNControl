@@ -1,4 +1,4 @@
-﻿namespace NeuralNetworkControl.Abstraction
+﻿namespace NNControl
 {
     public struct Box
     {

@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Windows.Markup.Localizer;
-using NeuralNetworkControl.Impl;
-using NeuralNetworkControl.Model;
+using NNControl.Model;
+using NNControl.Neuron;
+using NNControl.Synapse;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl.Layer
 {
     public class LayerViewAbstraction
     {
         internal LayerViewImpl Impl { get; private set; }
         private readonly List<NeuronViewAbstraction> _neurons = new List<NeuronViewAbstraction>();
-        internal NeuralNetworkViewAbstraction Network { get; private set; }
+        internal NNControl.Network.NeuralNetworkViewAbstraction Network { get; private set; }
         internal LayerViewAbstraction PreviousLayer { get; private set; }
         internal LayerViewAbstraction NextLayer { get; set; }
 
-        public LayerViewAbstraction(LayerViewAbstraction previousLayer, int layerNum, LayerViewImpl impl, NeuralNetworkViewAbstraction network)
+        public LayerViewAbstraction(LayerViewAbstraction previousLayer, int layerNum, LayerViewImpl impl, NNControl.Network.NeuralNetworkViewAbstraction network)
         {
             PreviousLayer = previousLayer;
             Impl = impl;

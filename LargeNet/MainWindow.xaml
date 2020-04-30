@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LargeNet"
-        xmlns:neuralNetworkControl="clr-namespace:NeuralNetworkControl;assembly=NNControl"
+        xmlns:nnControl="clr-namespace:NNControl;assembly=NNControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <neuralNetworkControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}"/>
+        <nnControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}"/>
     </Grid>
 </Window>

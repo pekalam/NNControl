@@ -1,4 +1,6 @@
-﻿namespace NeuralNetworkControl.Impl
+﻿using NNControl.Neuron;
+
+namespace NNControl.Synapse
 {
     public abstract class SynapseViewImpl
     {

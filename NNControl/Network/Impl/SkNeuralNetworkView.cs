@@ -1,8 +1,11 @@
-﻿using NeuralNetworkControl.Impl;
-using NeuralNetworkControl.Model;
+﻿using NNControl.Layer;
+using NNControl.Layer.Impl;
+using NNControl.Model;
+using NNControl.Neuron.Impl;
+using NNControl.Synapse.Impl;
 using SkiaSharp;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Network.Impl
 {
     internal class SkNeuralNetworkView : NeuralNetworkViewImpl
     {

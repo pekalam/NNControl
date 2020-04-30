@@ -1,6 +1,7 @@
-﻿using NeuralNetworkControl.Impl;
+﻿using NNControl.Neuron;
+using NNControl.Neuron.Impl;
 
-namespace NeuralNetworkControl.SkiaImpl
+namespace NNControl.Layer.Impl
 {
     internal class SkLayerView : LayerViewImpl
     {

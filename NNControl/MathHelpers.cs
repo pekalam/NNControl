@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeuralNetworkControl
+namespace NNControl
 {
     internal static class MathHelpers
     {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using NeuralNetworkControl.Impl;
+using NNControl.Layer;
+using NNControl.Neuron;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl
 {
     public class DefaultNeuralNetworkPositionManager : NeuralNetworkPositionManagerBase
     {
-        public override float GetLayerX(NeuralNetworkViewAbstraction network, int layerNum)
+        public override float GetLayerX(NNControl.Network.NeuralNetworkViewAbstraction network, int layerNum)
         {
             Debug.Assert(network != null);
 
@@ -15,14 +16,14 @@ namespace NeuralNetworkControl.Abstraction
                    layerNum + network.ViewportPosition.Left;
         }
 
-        public override float GetLayerY(NeuralNetworkViewAbstraction network, int layerNum)
+        public override float GetLayerY(NNControl.Network.NeuralNetworkViewAbstraction network, int layerNum)
         {
             Debug.Assert(network != null);
 
             return network.NeuralNetworkModel.Padding.Top + network.ViewportPosition.Top;
         }
 
-        public override float GetNeuronX(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
+        public override float GetNeuronX(NNControl.Network.NeuralNetworkViewAbstraction network, LayerViewImpl layer,
             NeuronViewImpl neuron)
         {
             Debug.Assert(network != null);
@@ -32,7 +33,7 @@ namespace NeuralNetworkControl.Abstraction
             return layer.X;
         }
 
-        public override float GetNeuronY(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
+        public override float GetNeuronY(NNControl.Network.NeuralNetworkViewAbstraction network, LayerViewImpl layer,
             NeuronViewImpl neuron)
         {
             Debug.Assert(network != null);
@@ -45,7 +46,7 @@ namespace NeuralNetworkControl.Abstraction
                    network.NeuralNetworkModel.LayerYSpaceBetween;
         }
 
-        private void CenterPositions(NeuralNetworkViewAbstraction network)
+        private void CenterPositions(NNControl.Network.NeuralNetworkViewAbstraction network)
         {
             int CalcLayerHeight(int i) =>
                 network.Layers[i].Neurons.Count * (network.NeuralNetworkModel.NeuronRadius * 2) +
@@ -80,7 +81,7 @@ namespace NeuralNetworkControl.Abstraction
 
         }
 
-        private void AdjustToNotOverlap(NeuralNetworkViewAbstraction network)
+        private void AdjustToNotOverlap(NNControl.Network.NeuralNetworkViewAbstraction network)
         {
             for (int i = 1; i < network.Layers.Count; i++)
             {
@@ -135,7 +136,7 @@ namespace NeuralNetworkControl.Abstraction
             }
         }
 
-        public override void InvokeActionsAfterPositionsSet(NeuralNetworkViewAbstraction network)
+        public override void InvokeActionsAfterPositionsSet(NNControl.Network.NeuralNetworkViewAbstraction network)
         {
             AdjustToNotOverlap(network);
             CenterPositions(network);

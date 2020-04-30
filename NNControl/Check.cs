@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeuralNetworkControl.Abstraction
+namespace NNControl
 {
     internal static class Check
     {
