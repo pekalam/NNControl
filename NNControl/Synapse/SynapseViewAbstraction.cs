@@ -21,7 +21,7 @@ namespace NNControl.Synapse
         {
             var dst = MathHelpers.Distance(Neuron1.Impl.X, Neuron1.Impl.Y, Neuron2.Impl.X, Neuron2.Impl.Y);
 
-            var arrowLen = 3f;
+            var arrowLen = Neuron1.Layer.Network.NeuralNetworkModel.SynapseSettings.ArrowLength;
 
             var l = Neuron1.Layer.Network.NeuralNetworkModel.NeuronRadius / dst;
             var vp = (x: (Neuron2.Impl.X - Neuron1.Impl.X) * l, y: (Neuron2.Impl.Y - Neuron1.Impl.Y) * l);
@@ -38,6 +38,7 @@ namespace NNControl.Synapse
             Impl.ArrowLeftEnd = (x: arrowBeg.x + dif.y, y: arrowBeg.y - dif.x);
             Impl.ArrowRightEnd = (x: arrowBeg.x - dif.y, y: arrowBeg.y + dif.x);
             Impl.ArrowEnd = arrowEnd;
+            Impl.ArrowBeg = arrowBeg;
         }
     }
 }

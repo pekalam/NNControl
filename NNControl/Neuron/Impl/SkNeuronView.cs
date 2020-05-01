@@ -20,12 +20,6 @@ namespace NNControl.Neuron.Impl
                 _x = value;
                 ReferenceRect.Left = (X - Radius);
                 ReferenceRect.Right = (X + Radius);
-
-                //
-                // ReferenceRect.Left = (X - Radius) * (float)(Layer.Network.Zoom + 1);
-                // ReferenceRect.Right = (X + Radius) * (float)(Layer.Network.Zoom + 1);
-                // ReferenceRect.Left = (X - Radius) * (float)(Layer.Network.Zoom + 1);
-                // ReferenceRect.Right = (X + Radius) * (float)(Layer.Network.Zoom + 1);
             }
         }
         public override float Y
@@ -35,8 +29,6 @@ namespace NNControl.Neuron.Impl
             {
                 _y = value;
 
-                // ReferenceRect.Top = (Y - Radius) * (float)(Layer.Network.Zoom + 1);
-                // ReferenceRect.Bottom = (Y + Radius) * (float)(Layer.Network.Zoom + 1);
                 ReferenceRect.Top = (Y - Radius);
                 ReferenceRect.Bottom = (Y + Radius);
             }
@@ -55,10 +47,6 @@ namespace NNControl.Neuron.Impl
 
         public override void OnZoomChanged()
         {
-            // ReferenceRect.Left = (X - Radius) * (float)(Layer.Network.Zoom + 1);
-            // ReferenceRect.Right = (X + Radius) * (float)(Layer.Network.Zoom + 1);
-            // ReferenceRect.Top = (Y - Radius) * (float)(Layer.Network.Zoom + 1);
-            // ReferenceRect.Bottom = (Y + Radius) * (float)(Layer.Network.Zoom + 1);
         }
 
         public override bool Contains(float x, float y)

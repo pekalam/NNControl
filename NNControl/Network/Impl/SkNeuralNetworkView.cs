@@ -30,8 +30,8 @@ namespace NNControl.Network.Impl
             set
             {
                 _neuralNetworkModel = value;
-                _neuronPainter = new SkInternalNeuronPainter(NeuralNetworkModel.NeuronColor);
-                _synapsePainter = new SkInternalSynapsePainter(NeuralNetworkModel.SynapseColor, NeuralNetworkModel.SynapseLabelColor);
+                _neuronPainter = new SkInternalNeuronPainter(NeuralNetworkModel.NeuronSettings);
+                _synapsePainter = new SkInternalSynapsePainter(NeuralNetworkModel.SynapseSettings);
                 _networkLayerPainter = new SkInternalNetworkLayerPainter();
             }
         }

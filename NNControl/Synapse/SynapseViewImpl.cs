@@ -12,6 +12,8 @@ namespace NNControl.Synapse
         public (float x, float y) ArrowLeftEnd { get; set; }
         public (float x, float y) ArrowRightEnd { get; set; }
         public (float x, float y) ArrowEnd { get; set; }
+        public (float x, float y) ArrowBeg { get; set; }
+
 
         public abstract bool Contains(float x, float y);
     }

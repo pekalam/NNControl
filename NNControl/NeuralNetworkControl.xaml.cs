@@ -16,7 +16,7 @@ namespace NNControl
     /// </summary>
     public partial class NeuralNetworkControl : UserControl
     {
-        private static double ZoomStepWheel = 0.1;
+        private static double ZoomStepWheel = 0.05;
 
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
@@ -36,12 +36,13 @@ namespace NNControl
 
         }
 
-        
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - _actionMenuOverlay.Width * 2);
-            _networkView.ForceDraw((float)canvas.Width, (float)canvas.Height);
+            _networkView.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+            // _networkView.ForceDraw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+            _networkView.Reposition();
         }
 
         private void canvas_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)

@@ -53,24 +53,48 @@ namespace NNControl
                 network.Layers[i].Neurons.Count * (network.NeuralNetworkModel.NeuronRadius * 2) +
                 (network.NeuralNetworkModel.LayerYSpaceBetween * network.Layers[i].Neurons.Count - 1);
 
+
             float netWidth = (network.Layers[^1].Impl.X + network.NeuralNetworkModel.NeuronRadius) - network.Layers[0].Impl.X;
-            float netStart = (network.CanvasWidth - netWidth) / 2f;
+            float newScale = 0f;
+            float netStart = 0f;
+            int maxHeight = 0;
+            for (int i = 0; i < network.Layers.Count; i++)
+            {
+                var currentHeight = CalcLayerHeight(i);
+                maxHeight = Math.Max(currentHeight, maxHeight);
+            }
+
+            
+            if (maxHeight > network.CanvasHeight)
+            {
+                var scale = -(1 - network.CanvasHeight / maxHeight);
+                newScale = Math.Min(scale, newScale);
+            }
+            if (netWidth > network.CanvasWidth)
+            {
+                var scale = -(1 - network.CanvasWidth / netWidth);
+                newScale = Math.Min(scale, newScale);
+            }
+            else
+            {
+                netStart = (network.CanvasWidth - netWidth) / 2f;
+            }
 
 
             for (int i = 0; i < network.Layers.Count; i++)
             {
-
-                float dy = 0;
-                var layHeight = CalcLayerHeight(i);
-
-                dy += (network.CanvasHeight - layHeight) / 2f - network.NeuralNetworkModel.NeuronRadius * 2
-                                                              - network.NeuralNetworkModel.LayerYSpaceBetween;
-
+                float dy = (network.CanvasHeight - CalcLayerHeight(i)) / 2f - network.NeuralNetworkModel.NeuronRadius * 2
+                                                                            - network.NeuralNetworkModel.LayerYSpaceBetween;
 
                 foreach (var neuron in network.Layers[i].Neurons)
                 {
                     neuron.Move(netStart - neuron.Impl.X + (neuron.Impl.X - network.Layers[0].Impl.X), dy);
                 }
+            }
+
+            if (network.CanvasWidth > 0 && network.CanvasHeight > 0)
+            {
+                network.SetZoom(newScale);
             }
         }
 

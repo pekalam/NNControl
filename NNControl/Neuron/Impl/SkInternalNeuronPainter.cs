@@ -1,4 +1,5 @@
 ﻿using NNControl.Layer.Impl;
+using NNControl.Model;
 using NNControl.Network.Impl;
 using SkiaSharp;
 
@@ -11,13 +12,12 @@ namespace NNControl.Neuron.Impl
         private readonly SKPaint _defaultInputPaint = new SKPaint();
 
 
-        public SkInternalNeuronPainter(string neuronColor = "#2C3E50", string selectedNeuronColor = "#4C4CFC",
-            string inputNeuronColor = "#000000")
+        public SkInternalNeuronPainter(NeuronSettings settings)
         {
             _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = true;
-            _defaultPaint.Color = SKColor.Parse(neuronColor);
-            _defaultInputPaint.Color = SKColor.Parse(inputNeuronColor);
-            _selectedPaint.Color = SKColor.Parse(selectedNeuronColor);
+            _defaultPaint.Color = SKColor.Parse(settings.Color);
+            _defaultInputPaint.Color = SKColor.Parse(settings.InputColor);
+            _selectedPaint.Color = SKColor.Parse(settings.SelectedColor);
             _defaultPaint.StrokeCap = _selectedPaint.StrokeCap = SKStrokeCap.Round;
 
             _defaultInputPaint.Style = SKPaintStyle.Fill;
@@ -70,7 +70,7 @@ namespace NNControl.Neuron.Impl
             var ctx = SkNetworkPaintContextHolder.Context;
             var canvas = ctx.e.Surface.Canvas;
 
-#if DEBUG
+#if DEBUG2
             canvas.DrawRect(neuron.ReferenceRect, _defaultInputPaint);
 #endif
 
