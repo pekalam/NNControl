@@ -1,17 +1,17 @@
 ﻿using NNControl.Layer;
+using NNControl.Network;
 using NNControl.Neuron;
-using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 namespace NNControl
 {
     public abstract class NeuralNetworkPositionManagerBase
     {
-        public abstract float GetLayerX(NeuralNetworkViewAbstraction network, int layerNum);
-        public abstract float GetLayerY(NeuralNetworkViewAbstraction network, int layerNum);
-        public abstract float GetNeuronX(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
-            NeuronViewImpl neuron);
-        public abstract float GetNeuronY(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
-            NeuronViewImpl neuron);
-        public abstract void InvokeActionsAfterPositionsSet(NeuralNetworkViewAbstraction network);
+        public abstract float GetLayerX(NeuralNetworkController network, int layerNum);
+        public abstract float GetLayerY(NeuralNetworkController network, int layerNum);
+        public abstract float GetNeuronX(NeuralNetworkController network, LayerView layer,
+            NeuronView neuron);
+        public abstract float GetNeuronY(NeuralNetworkController network, LayerView layer,
+            NeuronView neuron);
+        public abstract void InvokeActionsAfterPositionsSet(NeuralNetworkController network);
     }
 }

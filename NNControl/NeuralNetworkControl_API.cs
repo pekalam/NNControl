@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using NNControl.Adapter;
+using NNControl.Network;
 using NNControl.Neuron;
 using StateMachineLib;
-using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 namespace NNControl
 {
@@ -87,7 +87,7 @@ namespace NNControl
 
         public void UpdateSynapseLabels()
         {
-            _networkView.RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.FORCE_DRAW_EXCLUDED);
+            _networkView.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_EXCLUDED);
         }
 
         public static readonly RoutedEvent NeuronClickEvent =
@@ -100,7 +100,7 @@ namespace NNControl
             remove => RemoveHandler(NeuronClickEvent, value);
         }
 
-        protected virtual void RaiseNeuronClickEvent(NeuronViewImpl neuron)
+        protected virtual void RaiseNeuronClickEvent(NeuronView neuron)
         {
             var layerAdapter = ModelAdapter.LayerModelAdapters[neuron.Layer.Number];
 
@@ -110,7 +110,7 @@ namespace NNControl
 
         public void Zoom(double zoom)
         {
-            _networkView.SetZoom(_networkView.Impl.Zoom + zoom);
+            _networkView.SetZoom(_networkView.View.Zoom + zoom);
             _stateMachine.Next(Triggers.ZOOM);
         }
 

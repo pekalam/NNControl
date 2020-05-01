@@ -26,8 +26,8 @@ namespace NNControl
 
         private Point _clickedPoint;
         private Point _baseMovePoint;
-        private SynapseViewAbstraction _clickedSynapse;
-        private NeuronViewAbstraction _clickedNeuron;
+        private SynapseController _clickedSynapse;
+        private NeuronController _clickedNeuron;
         private Point _clickedNeuronScreenPoint;
 
 
@@ -75,10 +75,10 @@ namespace NNControl
                             _networkView.DeselectSynapse();
                         }
 
-                        if (_networkView.Impl.SelectedNeuron.Count == 1)
+                        if (_networkView.View.SelectedNeuron.Count == 1)
                         {
                             ShowNeuronOverlay(_clickedNeuronScreenPoint);
-                            RaiseNeuronClickEvent(_networkView.Impl.SelectedNeuron[0]);
+                            RaiseNeuronClickEvent(_networkView.View.SelectedNeuron[0]);
                         }
                         else
                         {
@@ -139,7 +139,7 @@ namespace NNControl
                         {
                             _stateMachine.Next(Triggers.BACKGROUND_HIT);
                         }
-                        else if (_networkView.Impl.SelectedNeuron.Contains(_clickedNeuron.Impl))
+                        else if (_networkView.View.SelectedNeuron.Contains(_clickedNeuron.View))
                         {
                             _stateMachine.Next(Triggers.NEURON_HIT);
                         }
@@ -158,12 +158,12 @@ namespace NNControl
                 .CreateState(States.S7)
                     .Enter(s =>
                     {
-                        _networkView.MoveSelectedNeurons(_clickedNeuron.Impl, (float)_clickedPoint.X, (float)_clickedPoint.Y);
+                        _networkView.MoveSelectedNeurons(_clickedNeuron.View, (float)_clickedPoint.X, (float)_clickedPoint.Y);
                         _clickedNeuronScreenPoint = _clickedPoint;
-                        if (_networkView.Impl.SelectedNeuron.Count == 1)
+                        if (_networkView.View.SelectedNeuron.Count == 1)
                         {
                             ShowNeuronOverlay(_clickedNeuronScreenPoint);
-                            RaiseNeuronClickEvent(_networkView.Impl.SelectedNeuron[0]);
+                            RaiseNeuronClickEvent(_networkView.View.SelectedNeuron[0]);
                         }
                         else
                         {

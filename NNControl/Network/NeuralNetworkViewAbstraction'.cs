@@ -4,7 +4,7 @@ using StateMachineLib;
 
 namespace NNControl.Network
 {
-    public partial class NeuralNetworkViewAbstraction : IDisposable
+    public partial class NeuralNetworkController : IDisposable
     {
         public enum ViewTrig
         {
@@ -29,7 +29,7 @@ namespace NNControl.Network
 
         private readonly Queue<ViewTrig> _redrawMachineQueue = new Queue<ViewTrig>();
 
-        protected NeuralNetworkViewAbstraction()
+        protected NeuralNetworkController()
         {
             _redrawStateMachine = new StateMachineBuilder<ViewTrig, RedrawStates>()
                 .CreateState(RedrawStates.S0)
@@ -87,7 +87,7 @@ namespace NNControl.Network
 
 
                 .CreateState(States.S1)
-                    .Enter(s => { Impl.DrawAndSave(); })
+                    .Enter(s => { View.DrawAndSave(); })
                     .Transition(ViewTrig.PAINT, States.S2)
                     .Transition(ViewTrig.SELECT, States.S3)
                     .Transition(ViewTrig.SELECT_SYNAPSE, States.S9)
@@ -95,7 +95,7 @@ namespace NNControl.Network
 
 
                 .CreateState(States.S2)
-                    .Enter(s => { Impl.DrawFromSaved(); })
+                    .Enter(s => { View.DrawFromSaved(); })
                     .Transition(ViewTrig.PAINT, States.S2)
                     .Transition(ViewTrig.SELECT, States.S3)
                     .Transition(ViewTrig.SELECT_SYNAPSE, States.S9)
@@ -105,7 +105,7 @@ namespace NNControl.Network
                 .CreateState(States.S3)
                     .Enter(s =>
                     {
-                        Impl.DrawAndSave();
+                        View.DrawAndSave();
                     })
                     .Transition(ViewTrig.SELECT, States.S3)
                     .Transition(ViewTrig.DESELECT, States.S5)
@@ -115,7 +115,7 @@ namespace NNControl.Network
 
 
                 .CreateState(States.S4)
-                    .Enter(s => { Impl.DrawFromSaved(); })
+                    .Enter(s => { View.DrawFromSaved(); })
                     .Transition(ViewTrig.PAINT, States.S4)
                     .Transition(ViewTrig.SELECT, States.S3)
                     .Transition(ViewTrig.DESELECT, States.S5)
@@ -128,7 +128,7 @@ namespace NNControl.Network
                     {
                         SetAllNeuronAndSynapsesExcluded(false);
 
-                        Impl.DrawAndSave();
+                        View.DrawAndSave();
                     })
                     .Transition(ViewTrig.SELECT, States.S3)
                     .Transition(ViewTrig.SELECT_SYNAPSE, States.S9)
@@ -143,8 +143,8 @@ namespace NNControl.Network
                     {
                         SetAllNeuronAndSynapsesExcluded(true);
 
-                        Impl.DrawAndSave();
-                        Impl.DrawExcluded();
+                        View.DrawAndSave();
+                        View.DrawExcluded();
                     })
                     .Transition(ViewTrig.DESELECT, States.S5)
                     .Transition(ViewTrig.MV, States.S8)
@@ -157,7 +157,7 @@ namespace NNControl.Network
                     .Enter(s =>
                     {
                         SetAllNeuronAndSynapsesExcluded(false);
-                        Impl.DrawAndSave();
+                        View.DrawAndSave();
                     })
                     .Transition(ViewTrig.PAINT, States.S4)
                     .Transition(ViewTrig.SELECT, States.S3)
@@ -168,8 +168,8 @@ namespace NNControl.Network
 
                 .CreateState(States.S8)
                     .Enter(s => {
-                        Impl.DrawFromSaved();
-                        Impl.DrawExcluded();
+                        View.DrawFromSaved();
+                        View.DrawExcluded();
                     })
                     .Transition(ViewTrig.PAINT, States.S8)
                     .Transition(ViewTrig.MV, States.S8)
@@ -183,11 +183,11 @@ namespace NNControl.Network
                 .CreateState(States.S9)
                 .Enter(s =>
                 {
-                    Impl.SelectedSynapse.Excluded = true;
-                    Impl.SelectedSynapse.Neuron1.Excluded = true;
-                    Impl.SelectedSynapse.Neuron2.Excluded = true;
-                    Impl.DrawAndSave();
-                    Impl.DrawExcluded();
+                    View.SelectedSynapse.Excluded = true;
+                    View.SelectedSynapse.Neuron1.Excluded = true;
+                    View.SelectedSynapse.Neuron2.Excluded = true;
+                    View.DrawAndSave();
+                    View.DrawExcluded();
                 })
                 .Transition(ViewTrig.ZOOM, States.S11)
                 .Transition(ViewTrig.REPOSITION, States.S11)
@@ -199,8 +199,8 @@ namespace NNControl.Network
                 .CreateState(States.S10)
                 .Enter(s =>
                 {
-                    Impl.DrawFromSaved();
-                    Impl.DrawExcluded();
+                    View.DrawFromSaved();
+                    View.DrawExcluded();
                 })
                 .Loop(ViewTrig.PAINT)
                 .Transition(ViewTrig.DESELECT_SYNAPSE, States.S11)
@@ -211,7 +211,7 @@ namespace NNControl.Network
                     .Enter(s =>
                     {
                         SmDeselectSynapses();
-                        Impl.DrawAndSave();
+                        View.DrawAndSave();
                     })
                     .Transition(ViewTrig.SELECT_SYNAPSE, States.S9)
                     .Transition(ViewTrig.SELECT, States.S3)
@@ -223,13 +223,13 @@ namespace NNControl.Network
                 .InterruptState(ViewTrig.ZOOM, s =>
                 {
                     SmDeselectNeurons();
-                    Impl.DrawAndSave();
+                    View.DrawAndSave();
 
                 }, States.ZOOM_INTERRUPT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW, s =>
                 {
-                    Impl.DrawAndSave();
+                    View.DrawAndSave();
                 }, States.FORCE_DRAW_INTERRUPT)
 
 
@@ -237,18 +237,18 @@ namespace NNControl.Network
                 {
                     SmDeselectNeurons();
                     SmDeselectSynapses();
-                    Impl.DrawAndSave();
+                    View.DrawAndSave();
                 }, States.REPOSITION_INT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW_EXCLUDED, s =>
                 {
-                    Impl.DrawFromSaved();
-                    Impl.DrawExcluded();
+                    View.DrawFromSaved();
+                    View.DrawExcluded();
                 }, States.FORCE_DRAW_EXCLUDED_INT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW_FROM_SAVED, s =>
                 {
-                    Impl.DrawAndSave();
+                    View.DrawAndSave();
                 }, States.FORCE_DRAW_FROM_SAVED_INT)
 
                 .Build(States.S0);
@@ -264,7 +264,7 @@ namespace NNControl.Network
 
         private void SetAllNeuronAndSynapsesExcluded(bool excluded)
         {
-            foreach (var neuron in Impl.SelectedNeuron)
+            foreach (var neuron in View.SelectedNeuron)
             {
                 neuron.Excluded = excluded;
                 foreach (var synapse in neuron.ConnectedSynapses)
@@ -278,22 +278,22 @@ namespace NNControl.Network
 
         private void SmDeselectNeurons()
         {
-            if (Impl.SelectedNeuron.Count > 0)
+            if (View.SelectedNeuron.Count > 0)
             {
                 SetAllNeuronAndSynapsesExcluded(false);
                 _selectedNeurons.Clear();
-                Impl.SelectedNeuron.Clear();
+                View.SelectedNeuron.Clear();
             }
         }
 
         private void SmDeselectSynapses()
         {
-            if (Impl.SelectedSynapse != null)
+            if (View.SelectedSynapse != null)
             {
-                Impl.SelectedSynapse.Excluded = false;
-                Impl.SelectedSynapse.Neuron1.Excluded = false;
-                Impl.SelectedSynapse.Neuron2.Excluded = false;
-                Impl.SelectedSynapse = null;
+                View.SelectedSynapse.Excluded = false;
+                View.SelectedSynapse.Neuron1.Excluded = false;
+                View.SelectedSynapse.Neuron2.Excluded = false;
+                View.SelectedSynapse = null;
             }
 
 

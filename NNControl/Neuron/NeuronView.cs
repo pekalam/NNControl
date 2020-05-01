@@ -5,7 +5,7 @@ using NNControl.Synapse;
 
 namespace NNControl.Neuron
 {
-    public abstract class NeuronViewImpl
+    public abstract class NeuronView
     {
         public virtual float X { get; set; }
         public virtual float Y { get; set; }
@@ -14,12 +14,12 @@ namespace NNControl.Neuron
         public int NumberInLayer { get; set; }
         public int Number { get; set; }
         public bool Excluded { get; set; }
-        public readonly List<SynapseViewImpl> Synapses = new List<SynapseViewImpl>();
-        public readonly List<SynapseViewImpl> ConnectedSynapses = new List<SynapseViewImpl>();
-        public LayerViewImpl Layer { get; set; }
+        public readonly List<SynapseView> Synapses = new List<SynapseView>();
+        public readonly List<SynapseView> ConnectedSynapses = new List<SynapseView>();
+        public LayerView Layer { get; set; }
         public NeuronModel NeuronModel { get; set; }
 
-        public abstract SynapseViewImpl CreateSynapseImpl();
+        public abstract SynapseView CreateSynapseImpl();
         public abstract bool Contains(float x, float y);
         public abstract void OnRepositioned();
         public abstract void OnZoomChanged();

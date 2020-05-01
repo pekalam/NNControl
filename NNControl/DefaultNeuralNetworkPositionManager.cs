@@ -8,7 +8,7 @@ namespace NNControl
 {
     public class DefaultNeuralNetworkPositionManager : NeuralNetworkPositionManagerBase
     {
-        public override float GetLayerX(NeuralNetworkViewAbstraction network, int layerNum)
+        public override float GetLayerX(NeuralNetworkController network, int layerNum)
         {
             Debug.Assert(network != null);
 
@@ -17,15 +17,15 @@ namespace NNControl
                    layerNum + network.ViewportPosition.Left;
         }
 
-        public override float GetLayerY(NeuralNetworkViewAbstraction network, int layerNum)
+        public override float GetLayerY(NeuralNetworkController network, int layerNum)
         {
             Debug.Assert(network != null);
 
             return network.NeuralNetworkModel.Padding.Top + network.ViewportPosition.Top;
         }
 
-        public override float GetNeuronX(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
-            NeuronViewImpl neuron)
+        public override float GetNeuronX(NeuralNetworkController network, LayerView layer,
+            NeuronView neuron)
         {
             Debug.Assert(network != null);
             Debug.Assert(layer != null);
@@ -34,8 +34,8 @@ namespace NNControl
             return layer.X;
         }
 
-        public override float GetNeuronY(NeuralNetworkViewAbstraction network, LayerViewImpl layer,
-            NeuronViewImpl neuron)
+        public override float GetNeuronY(NeuralNetworkController network, LayerView layer,
+            NeuronView neuron)
         {
             Debug.Assert(network != null);
             Debug.Assert(layer != null);
@@ -47,14 +47,14 @@ namespace NNControl
                    network.NeuralNetworkModel.LayerYSpaceBetween;
         }
 
-        private void CenterPositions(NeuralNetworkViewAbstraction network)
+        private void CenterPositions(NeuralNetworkController network)
         {
             int CalcLayerHeight(int i) =>
                 network.Layers[i].Neurons.Count * (network.NeuralNetworkModel.NeuronRadius * 2) +
                 (network.NeuralNetworkModel.LayerYSpaceBetween * network.Layers[i].Neurons.Count - 1);
 
 
-            float netWidth = (network.Layers[^1].Impl.X + network.NeuralNetworkModel.NeuronRadius) - network.Layers[0].Impl.X;
+            float netWidth = (network.Layers[^1].View.X + network.NeuralNetworkModel.NeuronRadius) - network.Layers[0].View.X;
             float newScale = 0f;
             float netStart = 0f;
             int maxHeight = 0;
@@ -88,7 +88,7 @@ namespace NNControl
 
                 foreach (var neuron in network.Layers[i].Neurons)
                 {
-                    neuron.Move(netStart - neuron.Impl.X + (neuron.Impl.X - network.Layers[0].Impl.X), dy);
+                    neuron.Move(netStart - neuron.View.X + (neuron.View.X - network.Layers[0].View.X), dy);
                 }
             }
 
@@ -98,11 +98,11 @@ namespace NNControl
             }
         }
 
-        private void AdjustToNotOverlap(NeuralNetworkViewAbstraction network)
+        private void AdjustToNotOverlap(NeuralNetworkController network)
         {
             for (int i = 1; i < network.Layers.Count; i++)
             {
-                var prevLayer = network.Layers[i - 1].Impl;
+                var prevLayer = network.Layers[i - 1].View;
 
                 if (prevLayer.Neurons.Count <= 2)
                 {
@@ -111,7 +111,7 @@ namespace NNControl
 
                 var p1 = (x: prevLayer.Neurons[^1].X,
                     y: prevLayer.Neurons[^1].Y);
-                var p2 = (x: network.Layers[i].Impl.Neurons[0].X, y: network.Layers[i].Impl.Neurons[0].Y);
+                var p2 = (x: network.Layers[i].View.Neurons[0].X, y: network.Layers[i].View.Neurons[0].Y);
 
                 var s = (x: prevLayer.Neurons[^2].X,
                     y: prevLayer.Neurons[^2].Y);
@@ -142,7 +142,7 @@ namespace NNControl
 
                     for (int j = i; j < network.Layers.Count; j++)
                     {
-                        network.Layers[j].Impl.X += xx;
+                        network.Layers[j].View.X += xx;
                         foreach (var neuron in network.Layers[j].Neurons)
                         {
                             neuron.Move((int)xx, 0);
@@ -152,7 +152,7 @@ namespace NNControl
             }
         }
 
-        public override void InvokeActionsAfterPositionsSet(NeuralNetworkViewAbstraction network)
+        public override void InvokeActionsAfterPositionsSet(NeuralNetworkController network)
         {
             if (network.Layers.Count == 0)
             {

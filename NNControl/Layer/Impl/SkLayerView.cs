@@ -3,15 +3,15 @@ using NNControl.Neuron.Impl;
 
 namespace NNControl.Layer.Impl
 {
-    internal class SkLayerView : LayerViewImpl
+    internal class SkLayerView : LayerView
     {
         public SkLayerView() : base()
         {
         }
 
-        public override NeuronViewImpl CreateNeuronInstance()
+        public override NeuronView CreateNeuronInstance()
         {
-            var neuron = new SkNeuronView(new SkInternalNeuronPainter(Network.NeuralNetworkModel.NeuronSettings));
+            var neuron = new SkNeuronView(new SkNeuronPainter(Network.NeuralNetworkModel.NeuronSettings));
             return neuron;
         }
 

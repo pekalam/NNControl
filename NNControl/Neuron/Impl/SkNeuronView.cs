@@ -6,9 +6,9 @@ using SkiaSharp;
 
 namespace NNControl.Neuron.Impl
 {
-    internal class SkNeuronView : NeuronViewImpl
+    internal class SkNeuronView : NeuronView
     {
-        private readonly SkInternalNeuronPainter _neuronPainter;
+        private readonly SkNeuronPainter _neuronPainter;
 
         private float _x;
         private float _y;
@@ -17,14 +17,14 @@ namespace NNControl.Neuron.Impl
 
         internal SKRect ReferenceRect;
 
-        public SkNeuronView(SkInternalNeuronPainter neuronPainter)
+        public SkNeuronView(SkNeuronPainter neuronPainter)
         {
             _neuronPainter = neuronPainter;
         }
 
-        public override SynapseViewImpl CreateSynapseImpl()
+        public override SynapseView CreateSynapseImpl()
         {
-            return new SkSynapseView(new SkInternalSynapsePainter(Layer.Network.NeuralNetworkModel.SynapseSettings));
+            return new SkSynapseView(new SkSynapsePainter(Layer.Network.NeuralNetworkModel.SynapseSettings));
         }
 
         public override float X

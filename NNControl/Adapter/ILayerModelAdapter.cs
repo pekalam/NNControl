@@ -7,9 +7,4 @@ namespace NNControl.Adapter
     {
         LayerModel LayerModel { get; }
     }
-
-    public class NetworkAdapter
-    {
-        public INeuralNetworkModelAdapter Impl { get; set; }
-    }
 }

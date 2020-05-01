@@ -8,12 +8,12 @@ using SkiaSharp;
 namespace NNControl.Network.Impl
 {
 
-    internal class SkNeuralNetworkView : NeuralNetworkViewImpl
+    internal class SkNeuralNetworkView : NeuralNetworkView
     {
         private SKImage _saved;
 
         private NeuralNetworkModel _neuralNetworkModel;
-        private SkInternalNetworkLayerPainter _networkLayerPainter;
+        private SkNetworkLayerPainter _networkLayerPainter;
 
         private float _transX;
         private float _transY;
@@ -22,7 +22,7 @@ namespace NNControl.Network.Impl
         {
         }
 
-        public override LayerViewImpl CreateLayerInstance()
+        public override LayerView CreateLayerInstance()
         {
             return new SkLayerView();
         }
@@ -33,7 +33,7 @@ namespace NNControl.Network.Impl
             set
             {
                 _neuralNetworkModel = value;
-                _networkLayerPainter = new SkInternalNetworkLayerPainter();
+                _networkLayerPainter = new SkNetworkLayerPainter();
             }
         }
 

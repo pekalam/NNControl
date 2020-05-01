@@ -5,14 +5,14 @@ using SkiaSharp;
 
 namespace NNControl.Neuron.Impl
 {
-    internal class SkInternalNeuronPainter
+    internal class SkNeuronPainter
     {
         private readonly SKPaint _defaultPaint = new SKPaint();
         private readonly SKPaint _selectedPaint = new SKPaint();
         private readonly SKPaint _defaultInputPaint = new SKPaint();
 
 
-        public SkInternalNeuronPainter(NeuronSettings settings)
+        public SkNeuronPainter(NeuronSettings settings)
         {
             _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = true;
             _defaultPaint.Color = SKColor.Parse(settings.Color);

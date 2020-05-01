@@ -6,18 +6,18 @@ using NNControl.Synapse;
 
 namespace NNControl.Network
 {
-    public abstract class NeuralNetworkViewImpl
+    public abstract class NeuralNetworkView
     {
         public virtual NeuralNetworkModel NeuralNetworkModel { get; set; }
-        public List<LayerViewImpl> Layers { get; } = new List<LayerViewImpl>();
-        public List<NeuronViewImpl> SelectedNeuron { get; } = new List<NeuronViewImpl>();
+        public List<LayerView> Layers { get; } = new List<LayerView>();
+        public List<NeuronView> SelectedNeuron { get; } = new List<NeuronView>();
         public virtual double Zoom { get; internal set; } = 0;
         public int NeuronsCount { get; internal set; }
-        public SynapseViewImpl SelectedSynapse { get; set; }
+        public SynapseView SelectedSynapse { get; set; }
 
         public abstract (float x, float y) ToCanvasPoints(float x, float y);
 
-        public abstract LayerViewImpl CreateLayerInstance();
+        public abstract LayerView CreateLayerInstance();
     
         public abstract void DrawAndSave();
         public abstract void DrawFromSaved();

@@ -6,7 +6,7 @@ using SkiaSharp;
 
 namespace NNControl.Synapse.Impl
 {
-    internal class SkInternalSynapsePainter
+    internal class SkSynapsePainter
     {
         private readonly SKPaint _synapsePaint = new SKPaint();
         private readonly SKPaint _synapseLabelPaint = new SKPaint();
@@ -15,7 +15,7 @@ namespace NNControl.Synapse.Impl
         private readonly SKPaint _largeNetSynPaint = new SKPaint();
         private readonly SKPaint _largeNetArrowPaint = new SKPaint();
 
-        public SkInternalSynapsePainter(SynapseSettings settings)
+        public SkSynapsePainter(SynapseSettings settings)
         {
             _synapsePaint.Color = SKColor.Parse(settings.Color);
             _synapsePaint.IsAntialias = true;

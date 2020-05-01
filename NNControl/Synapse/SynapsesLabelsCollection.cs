@@ -7,11 +7,11 @@ namespace NNControl.Synapse
 {
     public class SynapsesLabelsCollection : List<string>
     {
-        private readonly LayerViewImpl _layerViewImpl;
+        private readonly LayerView _layerView;
 
-        public SynapsesLabelsCollection(LayerViewImpl layerViewImpl)
+        public SynapsesLabelsCollection(LayerView layerView)
         {
-            _layerViewImpl = layerViewImpl;
+            _layerView = layerView;
         }
 
         public new void Clear()
@@ -21,7 +21,7 @@ namespace NNControl.Synapse
 
         public new void Insert(int index, string item)
         {
-            if (_layerViewImpl.Neurons.Sum(impl => impl.Synapses.Count) == Count)
+            if (_layerView.Neurons.Sum(impl => impl.Synapses.Count) == Count)
             {
                 throw new InvalidOperationException();
             }
@@ -30,7 +30,7 @@ namespace NNControl.Synapse
 
         public new void RemoveAt(int index)
         {
-            if (_layerViewImpl.Neurons.Sum(impl => impl.Synapses.Count) <= Count)
+            if (_layerView.Neurons.Sum(impl => impl.Synapses.Count) <= Count)
             {
                 throw new InvalidOperationException();
             }

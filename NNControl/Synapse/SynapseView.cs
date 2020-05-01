@@ -2,12 +2,12 @@
 
 namespace NNControl.Synapse
 {
-    public abstract class SynapseViewImpl
+    public abstract class SynapseView
     {
         public int NumberInNeuron { get; set; }
         public bool Excluded { get; set; }
-        public NeuronViewImpl Neuron1 { get; set; }
-        public NeuronViewImpl Neuron2 { get; set; }
+        public NeuronView Neuron1 { get; set; }
+        public NeuronView Neuron2 { get; set; }
 
         public (float x, float y) ArrowLeftEnd { get; set; }
         public (float x, float y) ArrowRightEnd { get; set; }

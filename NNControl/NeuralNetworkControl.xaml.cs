@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NNControl.Adapter;
+using NNControl.Network;
 using NNControl.Network.Impl;
-using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 
 [assembly: InternalsVisibleTo("NNControl.Tests")]
@@ -20,12 +20,12 @@ namespace NNControl
 
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
-        private readonly NeuralNetworkViewAbstraction _networkView;
+        private readonly NeuralNetworkController _networkView;
 
         public NeuralNetworkControl()
         {
             this.SizeChanged += NeuralNetworkControl_SizeChanged;
-            _networkView = new NeuralNetworkViewAbstraction(new SkNeuralNetworkView());
+            _networkView = new NeuralNetworkController(new SkNeuralNetworkView());
             _networkView.OnRequestRedraw += () => canvas.InvalidateVisual();
             InitDependencyProperties();
 
@@ -36,7 +36,7 @@ namespace NNControl
 
         }
 
-        public NeuralNetworkViewAbstraction Controller => _networkView;
+        public NeuralNetworkController Controller => _networkView;
 
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)

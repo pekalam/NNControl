@@ -9,21 +9,21 @@ using NNControl.Synapse;
 
 namespace NNControl.Network
 {
-    public partial class NeuralNetworkViewAbstraction
+    public partial class NeuralNetworkController
     {
-        private readonly List<LayerViewAbstraction> _abstrLayers = new List<LayerViewAbstraction>();
-        private readonly List<NeuronViewAbstraction> _selectedNeurons = new List<NeuronViewAbstraction>();
+        private readonly List<LayerController> _abstrLayers = new List<LayerController>();
+        private readonly List<NeuronController> _selectedNeurons = new List<NeuronController>();
 
-        public NeuralNetworkViewAbstraction(NeuralNetworkViewImpl impl) : this()
+        public NeuralNetworkController(NeuralNetworkView view) : this()
         {
-            Impl = impl;
+            View = view;
         }
 
         public event Action OnRequestRedraw;
 
-        internal NeuralNetworkViewImpl Impl { get; private set; }
+        internal NeuralNetworkView View { get; private set; }
 
-        public IReadOnlyList<LayerViewAbstraction> Layers => _abstrLayers;
+        public IReadOnlyList<LayerController> Layers => _abstrLayers;
 
         public NeuralNetworkPositionManagerBase PositionManager { get; set; } =
             new DefaultNeuralNetworkPositionManager();
@@ -36,12 +36,12 @@ namespace NNControl.Network
 
         public NeuralNetworkModel NeuralNetworkModel
         {
-            get => Impl.NeuralNetworkModel;
+            get => View.NeuralNetworkModel;
             set
             {
                 _abstrLayers.Clear();
-                Impl.Layers.Clear();
-                Impl.NeuralNetworkModel = value;
+                View.Layers.Clear();
+                View.NeuralNetworkModel = value;
 
                 AddNewLayers();
 
@@ -55,24 +55,24 @@ namespace NNControl.Network
 
         private void AddNewLayers(int collectionStartingIndex = 0)
         {
-            for (int i = collectionStartingIndex; i < Impl.NeuralNetworkModel.NetworkLayerModels.Count; i++)
+            for (int i = collectionStartingIndex; i < View.NeuralNetworkModel.NetworkLayerModels.Count; i++)
             {
                 CreateAndAddNewLayer(i);
-                Impl.NeuralNetworkModel.NetworkLayerModels[i].NeuronModels.CollectionChanged +=
+                View.NeuralNetworkModel.NetworkLayerModels[i].NeuronModels.CollectionChanged +=
                     NeuronModelsOnCollectionChanged;
             }
 
             SetNeuronsNumbers();
-            Impl.NeuronsCount = NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count).Sum();
+            View.NeuronsCount = NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count).Sum();
         }
 
         private void CreateAndAddNewLayer(int layerNum)
         {
-            var newLayer = Impl.CreateLayerInstance();
-            Impl.Layers.Add(newLayer);
+            var newLayer = View.CreateLayerInstance();
+            View.Layers.Add(newLayer);
 
             var previousLayer = layerNum == 0 ? null : _abstrLayers[layerNum - 1];
-            var newAbstractLayer = new LayerViewAbstraction(previousLayer, layerNum,
+            var newAbstractLayer = new LayerController(previousLayer, layerNum,
                 newLayer, this);
             if (previousLayer != null)
             {
@@ -91,7 +91,7 @@ namespace NNControl.Network
 
         private void NeuronModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Impl.NeuronsCount = Impl.NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count)
+            View.NeuronsCount = View.NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count)
                 .Sum();
             SetNeuronsNumbers();
 
@@ -101,7 +101,7 @@ namespace NNControl.Network
         private void SetNeuronsNumbers()
         {
             int n = 0;
-            foreach (var layer in Impl.Layers)
+            foreach (var layer in View.Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -118,7 +118,7 @@ namespace NNControl.Network
                 return;
             }
 
-            Impl.Zoom = value;
+            View.Zoom = value;
             foreach (var layer in Layers)
             {
                 layer.OnZoomChanged();
@@ -127,9 +127,9 @@ namespace NNControl.Network
             RequestRedraw(ViewTrig.ZOOM);
         }
 
-        public void MoveSelectedNeurons(NeuronViewImpl clicked, float nx, float ny)
+        public void MoveSelectedNeurons(NeuronView clicked, float nx, float ny)
         {
-            (nx, ny) = Impl.ToCanvasPoints(nx, ny);
+            (nx, ny) = View.ToCanvasPoints(nx, ny);
 
             var dx = nx - clicked.X;
             var dy = ny - clicked.Y;
@@ -143,7 +143,7 @@ namespace NNControl.Network
             RequestRedraw(ViewTrig.MV);
         }
 
-        public NeuronViewAbstraction SelectNeuronAt(float x, float y)
+        public NeuronController SelectNeuronAt(float x, float y)
         {
             var foundNeuron = FindNeuronAt(x, y);
             if (foundNeuron == null)
@@ -151,26 +151,26 @@ namespace NNControl.Network
                 return null;
             }
 
-            if (Impl.SelectedNeuron.Contains(foundNeuron.Impl))
+            if (View.SelectedNeuron.Contains(foundNeuron.View))
             {
                 return foundNeuron;
             }
 
             _selectedNeurons.Add(foundNeuron);
-            Impl.SelectedNeuron.Add(foundNeuron.Impl);
+            View.SelectedNeuron.Add(foundNeuron.View);
             RequestRedraw(ViewTrig.SELECT);
             return foundNeuron;
         }
 
-        public NeuronViewAbstraction FindNeuronAt(float x, float y)
+        public NeuronController FindNeuronAt(float x, float y)
         {
-            (x, y) = Impl.ToCanvasPoints(x, y);
+            (x, y) = View.ToCanvasPoints(x, y);
 
             foreach (var layer in Layers)
             {
                 foreach (var neuron in layer.Neurons)
                 {
-                    if (neuron.Impl.Contains(x, y))
+                    if (neuron.View.Contains(x, y))
                     {
                         return neuron;
                     }
@@ -183,17 +183,17 @@ namespace NNControl.Network
 
         public void DeselectNeuron()
         {
-            if (Impl.SelectedNeuron.Count > 0)
+            if (View.SelectedNeuron.Count > 0)
             {
                 _selectedNeurons.Clear();
-                Impl.SelectedNeuron.Clear();
+                View.SelectedNeuron.Clear();
                 RequestRedraw(ViewTrig.DESELECT);
             }
         }
 
         public void SelectedNeuronMoveEnd()
         {
-            if (Impl.SelectedNeuron.Count > 0)
+            if (View.SelectedNeuron.Count > 0)
             {
                 RequestRedraw(ViewTrig.MV_END);
             }
@@ -223,8 +223,8 @@ namespace NNControl.Network
             _viewportPosition.Top += dy;
             foreach (var layer in Layers)
             {
-                layer.Impl.X += dx;
-                layer.Impl.Y += dy;
+                layer.View.X += dx;
+                layer.View.Y += dy;
                 foreach (var neuron in layer.Neurons)
                 {
                     neuron.Move(dx, dy);
@@ -246,19 +246,19 @@ namespace NNControl.Network
         }
 
 
-        public SynapseViewAbstraction SelectSynapseAt(float x, float y)
+        public SynapseController SelectSynapseAt(float x, float y)
         {
-            (x, y) = Impl.ToCanvasPoints(x, y);
+            (x, y) = View.ToCanvasPoints(x, y);
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
             foreach (var synapse in neuron.Synapses)
             {
-                if (synapse.Impl.Contains(x, y))
+                if (synapse.View.Contains(x, y))
                 {
-                    if (synapse.Impl != Impl.SelectedSynapse)
+                    if (synapse.View != View.SelectedSynapse)
                     {
-                        Impl.SelectedSynapse = synapse.Impl;
+                        View.SelectedSynapse = synapse.View;
                         RequestRedraw(ViewTrig.SELECT_SYNAPSE);
                         return synapse;
                     }
@@ -271,14 +271,14 @@ namespace NNControl.Network
 
         public void DeselectSynapse()
         {
-            if (Impl.SelectedSynapse != null)
+            if (View.SelectedSynapse != null)
             {
-                RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig.DESELECT_SYNAPSE);
+                RequestRedraw(NeuralNetworkController.ViewTrig.DESELECT_SYNAPSE);
             }
         }
 
 
-        public void RequestRedraw(NeuralNetworkViewAbstraction.ViewTrig next)
+        public void RequestRedraw(NeuralNetworkController.ViewTrig next)
         {
             Check.NotNull(OnRequestRedraw);
             _redrawStateMachine.Next(next);
@@ -295,12 +295,12 @@ namespace NNControl.Network
 
         public void SetNeuronColor(int number, string hexColor)
         {
-            NeuronViewAbstraction neuron = null;
+            NeuronController neuron = null;
             foreach (var layer in Layers)
             {
                 foreach (var n in layer.Neurons)
                 {
-                    if (n.Impl.Number == number)
+                    if (n.View.Number == number)
                     {
                         neuron = n;
                         break;

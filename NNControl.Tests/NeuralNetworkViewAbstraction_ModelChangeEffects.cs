@@ -2,20 +2,20 @@ using System;
 using System.Collections.ObjectModel;
 using FluentAssertions;
 using NNControl.Model;
+using NNControl.Network;
 using NNControl.Network.Impl;
 using NNControl.Synapse;
 using Xunit;
-using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstraction;
 
 namespace NeuralNetworkControl.Tests
 {
     public class NeuralNetworkViewAbstraction_ElementsNumbering
     {
-        private NeuralNetworkViewAbstraction nnc;
+        private NeuralNetworkController nnc;
 
         public NeuralNetworkViewAbstraction_ElementsNumbering()
         {
-            nnc = new NeuralNetworkViewAbstraction(new SkNeuralNetworkView());
+            nnc = new NeuralNetworkController(new SkNeuralNetworkView());
             nnc.OnRequestRedraw += () => { };
         }
 
@@ -55,16 +55,16 @@ namespace NeuralNetworkControl.Tests
 
 
             int nc = 0;
-            for (int i = 0; i < nnc.Impl.Layers.Count; i++)
+            for (int i = 0; i < nnc.View.Layers.Count; i++)
             {
-                nnc.Impl.Layers[i].Number.Should().Be(i);
-                for (int j = 0; j < nnc.Impl.Layers[i].Neurons.Count; j++)
+                nnc.View.Layers[i].Number.Should().Be(i);
+                for (int j = 0; j < nnc.View.Layers[i].Neurons.Count; j++)
                 {
-                    nnc.Impl.Layers[i].Neurons[j].NumberInLayer.Should().Be(j);
-                    nnc.Impl.Layers[i].Neurons[j].Number.Should().Be(nc);
-                    for (int k = 0; k < nnc.Impl.Layers[i].Neurons[j].Synapses.Count; k++)
+                    nnc.View.Layers[i].Neurons[j].NumberInLayer.Should().Be(j);
+                    nnc.View.Layers[i].Neurons[j].Number.Should().Be(nc);
+                    for (int k = 0; k < nnc.View.Layers[i].Neurons[j].Synapses.Count; k++)
                     {
-                        nnc.Impl.Layers[i].Neurons[j].Synapses[k].NumberInNeuron.Should().Be(k);
+                        nnc.View.Layers[i].Neurons[j].Synapses[k].NumberInNeuron.Should().Be(k);
                     }
                     nc++;
                 }
@@ -75,12 +75,12 @@ namespace NeuralNetworkControl.Tests
 
     public class NeuralNetworkViewAbstraction_ModelChangeEffects
     {
-        private NeuralNetworkViewAbstraction nnc;
+        private NeuralNetworkController nnc;
         private int requestRedrawCount;
 
         public NeuralNetworkViewAbstraction_ModelChangeEffects()
         {
-            nnc = new NeuralNetworkViewAbstraction(new SkNeuralNetworkView());
+            nnc = new NeuralNetworkController(new SkNeuralNetworkView());
             nnc.OnRequestRedraw += () => requestRedrawCount++;
         }
 
@@ -92,7 +92,7 @@ namespace NeuralNetworkControl.Tests
             };
 
             nnc.Layers.Count.Should().Be(0);
-            nnc.Impl.Layers.Count.Should().Be(0);
+            nnc.View.Layers.Count.Should().Be(0);
             requestRedrawCount.Should().Be(1);
         }
 
@@ -105,7 +105,7 @@ namespace NeuralNetworkControl.Tests
             };
 
             nnc.Layers.Count.Should().Be(0);
-            nnc.Impl.Layers.Count.Should().Be(0);
+            nnc.View.Layers.Count.Should().Be(0);
             requestRedrawCount.Should().Be(1);
         }
 
@@ -121,7 +121,7 @@ namespace NeuralNetworkControl.Tests
             };
 
             nnc.Layers.Count.Should().Be(1);
-            nnc.Impl.Layers.Count.Should().Be(1);
+            nnc.View.Layers.Count.Should().Be(1);
             requestRedrawCount.Should().Be(1);
         }
 
@@ -144,9 +144,9 @@ namespace NeuralNetworkControl.Tests
             };
 
             nnc.Layers.Count.Should().Be(1);
-            nnc.Impl.Layers.Count.Should().Be(1);
+            nnc.View.Layers.Count.Should().Be(1);
 
-            nnc.Impl.Layers[0].Neurons.Count.Should().Be(1);
+            nnc.View.Layers[0].Neurons.Count.Should().Be(1);
             nnc.Layers[0].Neurons.Count.Should().Be(1);
             requestRedrawCount.Should().Be(1);
         }
@@ -179,13 +179,13 @@ namespace NeuralNetworkControl.Tests
             });
 
             nnc.Layers.Count.Should().Be(2);
-            nnc.Impl.Layers.Count.Should().Be(2);
+            nnc.View.Layers.Count.Should().Be(2);
 
-            nnc.Impl.Layers[1].Neurons.Count.Should().Be(2);
+            nnc.View.Layers[1].Neurons.Count.Should().Be(2);
             nnc.Layers[1].Neurons.Count.Should().Be(2);
 
             nnc.Layers[1].PreviousLayer.Should().Be(nnc.Layers[0]);
-            nnc.Impl.Layers[1].PreviousLayer.Should().Be(nnc.Impl.Layers[0]);
+            nnc.View.Layers[1].PreviousLayer.Should().Be(nnc.View.Layers[0]);
 
             requestRedrawCount.Should().Be(2);
         }

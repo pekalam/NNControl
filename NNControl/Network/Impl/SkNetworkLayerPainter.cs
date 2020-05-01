@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace NNControl.Network.Impl
 {
-    internal class SkInternalNetworkLayerPainter
+    internal class SkNetworkLayerPainter
     {
         private readonly SKPaint _layerPaint = new SKPaint();
 

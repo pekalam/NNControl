@@ -5,11 +5,11 @@ using NNControl.Neuron.Impl;
 
 namespace NNControl.Synapse.Impl
 {
-    internal class SkSynapseView : SynapseViewImpl
+    internal class SkSynapseView : SynapseView
     {
-        private SkInternalSynapsePainter _synapsePainter;
+        private SkSynapsePainter _synapsePainter;
 
-        public SkSynapseView(SkInternalSynapsePainter synapsePainter)
+        public SkSynapseView(SkSynapsePainter synapsePainter)
         {
             _synapsePainter = synapsePainter;
         }
