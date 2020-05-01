@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Automation.Provider;
 using NNControl.Layer;
 using NNControl.Synapse;
 
@@ -6,8 +7,13 @@ namespace NNControl.Neuron
 {
     public class NeuronViewAbstraction
     {
-
+        /// <summary>
+        /// Begining in neuron
+        /// </summary>
         internal readonly List<SynapseViewAbstraction> ConnectedSynapses = new List<SynapseViewAbstraction>();
+        /// <summary>
+        /// Ending in neuron
+        /// </summary>
         internal readonly List<SynapseViewAbstraction> Synapses = new List<SynapseViewAbstraction>();
 
         public NeuronViewAbstraction(int numberInLayer, NeuronViewImpl impl, LayerViewAbstraction layer)
@@ -30,6 +36,13 @@ namespace NNControl.Neuron
             Impl.X = x;
             Impl.Y = y;
         }
+
+        public SynapseViewAbstraction GetSynapse(int number)
+        {
+            return Synapses[number];
+        }
+
+        public int TotalSynapses => Synapses.Count;
 
         internal void AddSynapse(NeuronViewAbstraction neuron2)
         {
@@ -90,6 +103,11 @@ namespace NNControl.Neuron
         public void OnZoomChanged()
         {
             Impl.OnZoomChanged();
+        }
+
+        internal void SetNeuronColor(string hexColor)
+        {
+            Impl.SetColor(hexColor);
         }
     }
 }

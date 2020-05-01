@@ -9,8 +9,6 @@ using NNControl.Synapse;
 
 namespace NNControl.Network
 {
-
-
     public partial class NeuralNetworkViewAbstraction
     {
         private readonly List<LayerViewAbstraction> _abstrLayers = new List<LayerViewAbstraction>();
@@ -60,7 +58,8 @@ namespace NNControl.Network
             for (int i = collectionStartingIndex; i < Impl.NeuralNetworkModel.NetworkLayerModels.Count; i++)
             {
                 CreateAndAddNewLayer(i);
-                Impl.NeuralNetworkModel.NetworkLayerModels[i].NeuronModels.CollectionChanged += NeuronModelsOnCollectionChanged;
+                Impl.NeuralNetworkModel.NetworkLayerModels[i].NeuronModels.CollectionChanged +=
+                    NeuronModelsOnCollectionChanged;
             }
 
             SetNeuronsNumbers();
@@ -79,6 +78,7 @@ namespace NNControl.Network
             {
                 previousLayer.NextLayer = newAbstractLayer;
             }
+
             _abstrLayers.Add(newAbstractLayer);
         }
 
@@ -111,7 +111,6 @@ namespace NNControl.Network
         }
 
 
-
         public void SetZoom(double value)
         {
             if (value < -1.0d)
@@ -124,6 +123,7 @@ namespace NNControl.Network
             {
                 layer.OnZoomChanged();
             }
+
             RequestRedraw(ViewTrig.ZOOM);
         }
 
@@ -227,9 +227,10 @@ namespace NNControl.Network
                 layer.Impl.Y += dy;
                 foreach (var neuron in layer.Neurons)
                 {
-                    neuron.Move(dx,dy);
+                    neuron.Move(dx, dy);
                 }
             }
+
             RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 
@@ -283,6 +284,43 @@ namespace NNControl.Network
             _redrawStateMachine.Next(next);
             // ReSharper disable once PossibleNullReferenceException
             OnRequestRedraw.Invoke();
+        }
+
+
+        public void SetNeuronColor(int layerNumber, int numberInLayer, string hexColor)
+        {
+            Layers[layerNumber].Neurons[numberInLayer].SetNeuronColor(hexColor);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
+        public void SetNeuronColor(int number, string hexColor)
+        {
+            NeuronViewAbstraction neuron = null;
+            foreach (var layer in Layers)
+            {
+                foreach (var n in layer.Neurons)
+                {
+                    if (n.Impl.Number == number)
+                    {
+                        neuron = n;
+                        break;
+                    }
+                }
+            }
+
+            neuron?.SetNeuronColor(hexColor);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
+        public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
+        {
+            if (Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+            {
+                return;
+            }
+
+            Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].SetSynapseColor(hexColor);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
         }
     }
 }

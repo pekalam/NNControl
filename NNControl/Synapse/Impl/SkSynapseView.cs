@@ -1,4 +1,5 @@
 ﻿using System;
+using NNControl.Layer.Impl;
 using NNControl.Network.Impl;
 using NNControl.Neuron.Impl;
 
@@ -6,6 +7,13 @@ namespace NNControl.Synapse.Impl
 {
     internal class SkSynapseView : SynapseViewImpl
     {
+        private SkInternalSynapsePainter _synapsePainter;
+
+        public SkSynapseView(SkInternalSynapsePainter synapsePainter)
+        {
+            _synapsePainter = synapsePainter;
+        }
+
         public override bool Contains(float x, float y)
         {
             var n2 = Neuron2 as SkNeuronView;
@@ -62,6 +70,23 @@ namespace NNControl.Synapse.Impl
             }
 
             return false;
+        }
+
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse)
+        {
+            _synapsePainter.Draw(network, layer, neuron, synapse);
+        }
+
+
+        public void DrawSynapseLabel(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,
+            SkSynapseView synapse)
+        {
+            _synapsePainter.DrawSynapseLabel(network, layer, neuron, synapse);
+        }
+
+        public override void SetColor(string hexColor)
+        {
+            _synapsePainter.SetColor(hexColor);
         }
     }
 }

@@ -16,5 +16,6 @@ namespace NNControl.Synapse
 
 
         public abstract bool Contains(float x, float y);
+        public abstract void SetColor(string hexColor);
     }
 }

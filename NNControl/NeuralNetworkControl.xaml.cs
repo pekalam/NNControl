@@ -36,6 +36,8 @@ namespace NNControl
 
         }
 
+        public NeuralNetworkViewAbstraction Controller => _networkView;
+
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {

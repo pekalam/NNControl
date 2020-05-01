@@ -40,5 +40,11 @@ namespace NNControl.Synapse
             Impl.ArrowEnd = arrowEnd;
             Impl.ArrowBeg = arrowBeg;
         }
+
+
+        internal void SetSynapseColor(string hexColor)
+        {
+            Impl.SetColor(hexColor);
+        }
     }
 }

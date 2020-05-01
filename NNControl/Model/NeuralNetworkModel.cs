@@ -14,7 +14,7 @@ namespace NNControl.Model
         public string Color { get; set; } = "#000000";
         public string LabelColor { get; set; } = "#000000";
         public string SelectedColor { get; set; } = "#FFFFFF";
-        public string LargetNetColor { get; set; } = "#f2f2f2";
+        public string LargetNetColor { get; set; } = "#ffb0e3";
         public string ArrowColor { get; set; } = "#000000";
         public float StrokeWidth { get; set; } = 1.45f;
         public float ArrowLength { get; set; } = 3.2f;

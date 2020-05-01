@@ -9,6 +9,70 @@ using NeuralNetworkViewAbstraction = NNControl.Network.NeuralNetworkViewAbstract
 
 namespace NeuralNetworkControl.Tests
 {
+    public class NeuralNetworkViewAbstraction_ElementsNumbering
+    {
+        private NeuralNetworkViewAbstraction nnc;
+
+        public NeuralNetworkViewAbstraction_ElementsNumbering()
+        {
+            nnc = new NeuralNetworkViewAbstraction(new SkNeuralNetworkView());
+            nnc.OnRequestRedraw += () => { };
+        }
+
+        [Fact]
+        public void f()
+        {
+            nnc.NeuralNetworkModel = new NeuralNetworkModel()
+            {
+                NetworkLayerModels = new ObservableCollection<LayerModel>()
+                {
+                    new LayerModel()
+                    {
+                        NeuronModels = new ObservableRangeCollection<NeuronModel>()
+                        {
+                            new NeuronModel(),
+                            new NeuronModel(),
+                            new NeuronModel(),
+                        }
+                    },
+                    new LayerModel()
+                    {
+                        NeuronModels = new ObservableRangeCollection<NeuronModel>()
+                        {
+                            new NeuronModel(),
+                            new NeuronModel(),
+                        }
+                    },
+                    new LayerModel()
+                    {
+                        NeuronModels = new ObservableRangeCollection<NeuronModel>()
+                        {
+                            new NeuronModel(),
+                        }
+                    },
+                }
+            };
+
+
+            int nc = 0;
+            for (int i = 0; i < nnc.Impl.Layers.Count; i++)
+            {
+                nnc.Impl.Layers[i].Number.Should().Be(i);
+                for (int j = 0; j < nnc.Impl.Layers[i].Neurons.Count; j++)
+                {
+                    nnc.Impl.Layers[i].Neurons[j].NumberInLayer.Should().Be(j);
+                    nnc.Impl.Layers[i].Neurons[j].Number.Should().Be(nc);
+                    for (int k = 0; k < nnc.Impl.Layers[i].Neurons[j].Synapses.Count; k++)
+                    {
+                        nnc.Impl.Layers[i].Neurons[j].Synapses[k].NumberInNeuron.Should().Be(k);
+                    }
+                    nc++;
+                }
+            }
+        }
+    }
+
+
     public class NeuralNetworkViewAbstraction_ModelChangeEffects
     {
         private NeuralNetworkViewAbstraction nnc;

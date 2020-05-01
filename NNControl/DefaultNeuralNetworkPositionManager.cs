@@ -154,6 +154,11 @@ namespace NNControl
 
         public override void InvokeActionsAfterPositionsSet(NeuralNetworkViewAbstraction network)
         {
+            if (network.Layers.Count == 0)
+            {
+                return;
+            }
+
             AdjustToNotOverlap(network);
             CenterPositions(network);
         }

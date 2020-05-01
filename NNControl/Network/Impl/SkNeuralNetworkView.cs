@@ -14,8 +14,6 @@ namespace NNControl.Network.Impl
 
         private NeuralNetworkModel _neuralNetworkModel;
         private SkInternalNetworkLayerPainter _networkLayerPainter;
-        private SkInternalNeuronPainter _neuronPainter;
-        private SkInternalSynapsePainter _synapsePainter;
 
         private float _transX;
         private float _transY;
@@ -24,14 +22,17 @@ namespace NNControl.Network.Impl
         {
         }
 
+        public override LayerViewImpl CreateLayerInstance()
+        {
+            return new SkLayerView();
+        }
+
         public override NeuralNetworkModel NeuralNetworkModel
         {
             get => _neuralNetworkModel;
             set
             {
                 _neuralNetworkModel = value;
-                _neuronPainter = new SkInternalNeuronPainter(NeuralNetworkModel.NeuronSettings);
-                _synapsePainter = new SkInternalSynapsePainter(NeuralNetworkModel.SynapseSettings);
                 _networkLayerPainter = new SkInternalNetworkLayerPainter();
             }
         }
@@ -73,7 +74,8 @@ namespace NNControl.Network.Impl
                     continue;
                 }
 
-                _synapsePainter.Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
+
+                (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
                     synapse as SkSynapseView);
             }
 
@@ -86,7 +88,7 @@ namespace NNControl.Network.Impl
                     continue;
                 }
 
-                _neuronPainter.Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
             }
 
         }
@@ -96,10 +98,7 @@ namespace NNControl.Network.Impl
             return ((x - _transX) / (float)(Zoom + 1), (y - _transY) / (float)(Zoom + 1));
         }
 
-        public override LayerViewImpl CreateLayerInstance()
-        {
-            return new SkLayerView();
-        }
+       
 
         public override void DrawAndSave()
         {
@@ -124,7 +123,7 @@ namespace NNControl.Network.Impl
             {
                 if (synapse.Excluded)
                 {
-                    _synapsePainter.Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
+                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
                         synapse as SkSynapseView);
                 }
             }
@@ -136,7 +135,7 @@ namespace NNControl.Network.Impl
                 {
                     if (neuron.Excluded)
                     {
-                        _neuronPainter.Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                        (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
                     }
                 }
             }
@@ -148,7 +147,7 @@ namespace NNControl.Network.Impl
             {
                 if (synapse.Excluded)
                 {
-                    _synapsePainter.DrawSynapseLabel(this, layerView as SkLayerView, neuron as SkNeuronView,
+                    (synapse as SkSynapseView).DrawSynapseLabel(this, layerView as SkLayerView, neuron as SkNeuronView,
                         synapse as SkSynapseView);
                 }
             }

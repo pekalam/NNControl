@@ -44,13 +44,18 @@ namespace NNControl.Synapse.Impl
             _synapsePaint.StrokeWidth = _selectedSynapsePaint.StrokeWidth = settings.StrokeWidth;
         }
 
+        public void SetColor(string hexColor)
+        {
+            _synapsePaint.Color = _largeNetSynPaint.Color = SKColor.Parse(hexColor);
+        }
+
         public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse)
         {
             var ctx = SkNetworkPaintContextHolder.Context;
             var canvas = ctx.e.Surface.Canvas;
 
             
-            SKPaint synapsPaint = neuron.ConnectedSynapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
+            SKPaint synapsPaint = neuron.Synapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
 
 
             var arrowEnd = synapse.ArrowEnd;
@@ -69,7 +74,7 @@ namespace NNControl.Synapse.Impl
             arrowPath.LineTo(arrowEnd.x, arrowEnd.y);
             arrowPath.Close();
 
-            canvas.DrawPath(arrowPath, neuron.ConnectedSynapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
+            canvas.DrawPath(arrowPath, neuron.Synapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
         }
 
         public void DrawSynapseLabel(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,

@@ -11,7 +11,7 @@ namespace NNControl.Layer.Impl
 
         public override NeuronViewImpl CreateNeuronInstance()
         {
-            var neuron = new SkNeuronView();
+            var neuron = new SkNeuronView(new SkInternalNeuronPainter(Network.NeuralNetworkModel.NeuronSettings));
             return neuron;
         }
 

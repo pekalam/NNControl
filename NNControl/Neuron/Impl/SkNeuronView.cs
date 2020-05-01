@@ -1,4 +1,5 @@
-﻿using NNControl.Network.Impl;
+﻿using NNControl.Layer.Impl;
+using NNControl.Network.Impl;
 using NNControl.Synapse;
 using NNControl.Synapse.Impl;
 using SkiaSharp;
@@ -7,10 +8,24 @@ namespace NNControl.Neuron.Impl
 {
     internal class SkNeuronView : NeuronViewImpl
     {
+        private readonly SkInternalNeuronPainter _neuronPainter;
+
         private float _x;
         private float _y;
 
         private int Radius => Layer.Network.NeuralNetworkModel.NeuronRadius;
+
+        internal SKRect ReferenceRect;
+
+        public SkNeuronView(SkInternalNeuronPainter neuronPainter)
+        {
+            _neuronPainter = neuronPainter;
+        }
+
+        public override SynapseViewImpl CreateSynapseImpl()
+        {
+            return new SkSynapseView(new SkInternalSynapsePainter(Layer.Network.NeuralNetworkModel.SynapseSettings));
+        }
 
         public override float X
         {
@@ -49,16 +64,19 @@ namespace NNControl.Neuron.Impl
         {
         }
 
+        public override void SetColor(string hexColor)
+        {
+            _neuronPainter.SetColor(hexColor);
+        }
+
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)
+        {
+            _neuronPainter.Draw(network, layer, neuron);
+        }
+
         public override bool Contains(float x, float y)
         {
             return ReferenceRect.Contains(x, y);
         }
-
-        public override SynapseViewImpl CreateSynapseImpl()
-        {
-            return new SkSynapseView();
-        }
-
-        internal SKRect ReferenceRect;
     }
 }
