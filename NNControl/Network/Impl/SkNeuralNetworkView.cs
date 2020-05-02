@@ -8,7 +8,14 @@ using SkiaSharp;
 namespace NNControl.Network.Impl
 {
 
-    internal class SkNeuralNetworkView : NeuralNetworkView
+
+    internal partial class SkNeuralNetworkView
+    {
+
+    }
+
+
+    internal partial class SkNeuralNetworkView : NeuralNetworkView
     {
         private SKImage _saved;
 

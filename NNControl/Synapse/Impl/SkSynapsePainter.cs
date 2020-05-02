@@ -44,9 +44,9 @@ namespace NNControl.Synapse.Impl
             _synapsePaint.StrokeWidth = _selectedSynapsePaint.StrokeWidth = settings.StrokeWidth;
         }
 
-        public void SetColor(string hexColor)
+        public void SetColor(SKColor color)
         {
-            _synapsePaint.Color = _largeNetSynPaint.Color = SKColor.Parse(hexColor);
+            _synapsePaint.Color = _largeNetSynPaint.Color = color;
         }
 
         public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse)

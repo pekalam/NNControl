@@ -15,7 +15,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NNControl;
 using NNControl.Adapter;
-using MathNet.Numerics.Random;
 
 namespace LargeNet
 {
@@ -47,11 +46,14 @@ namespace LargeNet
 
                     Dispatcher.Invoke(() =>
                     {
-                        var b = rnd.NextBytes(3);
+                        var b = new byte[3];
+                        rnd.NextBytes(b);
                         var str = BitConverter.ToString(b).Replace("-", "");
-                        control.Controller.SetNeuronColor(l, n, "#" + str);
-                        control.Controller.SetSynapseColor(l, n, s, "#" + str);
+                        control.Controller.Color.SetNeuronColor(l, n, "#" + str);
+                        control.Controller.Color.SetSynapseColor(l, n, s, "#" + str);
+                        control.Controller.Color.ApplyColors();
                     });
+
                     await Task.Delay(200);
                 }
             });

@@ -24,5 +24,6 @@ namespace NNControl.Neuron
         public abstract void OnRepositioned();
         public abstract void OnZoomChanged();
         public abstract void SetColor(string hexColor);
+        public abstract void SetColor(int scale);
     }
 }

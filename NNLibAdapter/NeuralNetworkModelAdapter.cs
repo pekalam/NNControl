@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using NNControl;
 using NNControl.Adapter;
 using NNControl.Model;
+using NNControl.Network;
 using NNControl.Synapse;
 using NNLib;
 
@@ -12,14 +17,27 @@ namespace NNLibAdapter
     public class NeuralNetworkModelAdapter : INeuralNetworkModelAdapter
     {
         private readonly List<LayerModelAdapter> _layerModelAdapters = new List<LayerModelAdapter>();
+        private NeuralNetworkController _controller;
 
         public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters => _layerModelAdapters;
+
+        public NeuralNetworkController Controller
+        {
+            get => _controller;
+            set
+            {
+                _controller = value;
+                ColorAnimation = new ColorAnimation(_controller);
+            }
+        }
+
         public IReadOnlyList<Layer> Layers { get; private set; }
         public NeuralNetworkModel NeuralNetworkModel { get; private set; }
+        public ColorAnimation ColorAnimation { get; private set; }
 
         public void SetNeuralNetwork<T>(Network<T> network) where T : Layer
         {
-            Layers = network.ReadBaseLayers;
+            Layers = network.BaseLayers;
             NeuralNetworkModel = new NeuralNetworkModel();
             var inputLayer = Layers[0];
             //Forward layer
@@ -30,7 +48,7 @@ namespace NNLibAdapter
             }
             AddLayerModel(forwardLayerModel, null);
 
-            foreach (var layer in network.ReadBaseLayers)
+            foreach (var layer in network.BaseLayers)
             {
                 var layerModel = new LayerModel();
 
@@ -75,7 +93,7 @@ namespace NNLibAdapter
                     for (int k = 0; k < Layers[i].InputsCount; k++)
                     {
                         NeuralNetworkModel.NetworkLayerModels[i].NeuronModels[j].SynapsesLabels[k] =
-                            Layers[i].ReadWeights[j, k].ToString(format);
+                            Layers[i].Weights[j, k].ToString(format);
                     }
                 }
             }

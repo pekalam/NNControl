@@ -17,6 +17,7 @@ namespace NNControl.Network
         public NeuralNetworkController(NeuralNetworkView view) : this()
         {
             View = view;
+            Color = new ColorManager(this);
         }
 
         public event Action OnRequestRedraw;
@@ -33,6 +34,8 @@ namespace NNControl.Network
 
         private Box _viewportPosition;
         internal Box ViewportPosition => _viewportPosition;
+
+        public ColorManager Color { get; }
 
         public NeuralNetworkModel NeuralNetworkModel
         {
@@ -287,40 +290,78 @@ namespace NNControl.Network
         }
 
 
-        public void SetNeuronColor(int layerNumber, int numberInLayer, string hexColor)
-        {
-            Layers[layerNumber].Neurons[numberInLayer].SetNeuronColor(hexColor);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
-        }
 
-        public void SetNeuronColor(int number, string hexColor)
+    }
+
+    public partial class NeuralNetworkController
+    {
+        public class ColorManager
         {
-            NeuronController neuron = null;
-            foreach (var layer in Layers)
+            private NeuralNetworkController _controller;
+
+            public ColorManager(NeuralNetworkController controller)
             {
-                foreach (var n in layer.Neurons)
+                _controller = controller;
+            }
+
+            public void SetNeuronColor(int layerNumber, int numberInLayer, string hexColor)
+            {
+                _controller.Layers[layerNumber].Neurons[numberInLayer].View.SetColor(hexColor);
+            }
+
+            public void SetNeuronColor(int number, string hexColor)
+            {
+                NeuronController neuron = null;
+                foreach (var layer in _controller.Layers)
                 {
-                    if (n.View.Number == number)
+                    foreach (var n in layer.Neurons)
                     {
-                        neuron = n;
-                        break;
+                        if (n.View.Number == number)
+                        {
+                            neuron = n;
+                            break;
+                        }
                     }
                 }
+
+                neuron?.View.SetColor(hexColor);
             }
 
-            neuron?.SetNeuronColor(hexColor);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
-        }
-
-        public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
-        {
-            if (Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+            public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
             {
-                return;
+                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+                {
+                    return;
+                }
+
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View.SetColor(hexColor);
             }
 
-            Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].SetSynapseColor(hexColor);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
+
+            public void SetNeuronColor(int layerNumber, int numberInLayer, int scale)
+            {
+                _controller.Layers[layerNumber].Neurons[numberInLayer].View.SetColor(scale);
+            }
+
+            public void SetNeuronColor(int number, int scale)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, int scale)
+            {
+                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+                {
+                    return;
+                }
+
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View.SetColor(scale);
+            }
+
+            public void ApplyColors()
+            {
+                _controller.RequestRedraw(ViewTrig.FORCE_DRAW);
+            }
         }
     }
 }

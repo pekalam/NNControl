@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MathNet.Numerics.Random;
 
 namespace DefaultTest
 {
@@ -33,24 +32,61 @@ namespace DefaultTest
         {
             base.OnContentRendered(e);
 
+            // Task.Run(async () =>
+            // {
+            //     while (true)
+            //     {
+            //         var l = rnd.Next(0, control.Controller.Layers.Count);
+            //         var n = rnd.Next(0, control.Controller.Layers[l].Neurons.Count);
+            //         var s = rnd.Next(0, control.Controller.Layers[l].Neurons[n].TotalSynapses);
+            //
+            //         Dispatcher.Invoke(() =>
+            //         {
+            //             var b = new byte[3];
+            //             rnd.NextBytes(b);
+            //             var str = BitConverter.ToString(b).Replace("-", "");
+            //             control.Controller.SetNeuronColor(l, n, "#" + str);
+            //             control.Controller.SetSynapseColor(l,n,s, "#" + str);
+            //         });
+            //         await Task.Delay(200);
+            //     }
+            // });
+
+
+
             Task.Run(async () =>
             {
                 while (true)
                 {
                     var l = rnd.Next(0, control.Controller.Layers.Count);
-                    var n = rnd.Next(0, control.Controller.Layers[l].Neurons.Count);
-                    var s = rnd.Next(0, control.Controller.Layers[l].Neurons[n].TotalSynapses);
 
-                    Dispatcher.Invoke(() =>
+
+                    int sc = 0;
+                    while (sc < 255)
                     {
-                        var b = rnd.NextBytes(3);
-                        var str = BitConverter.ToString(b).Replace("-", "");
-                        control.Controller.SetNeuronColor(l, n, "#" + str);
-                        control.Controller.SetSynapseColor(l,n,s, "#" + str);
-                    });
-                    await Task.Delay(200);
+                        Dispatcher.Invoke(() =>
+                        {
+                            for (int i = 0; i < control.Controller.Layers[l].Neurons.Count; i++)
+                            {
+                                for (int j = 0; j < control.Controller.Layers[l].Neurons[i].TotalSynapses; j++)
+                                {
+                                    control.Controller.Color.SetNeuronColor(l, i, sc);
+                                    control.Controller.Color.SetSynapseColor(l, i, j, sc);
+                                }
+                            }
+                            control.Controller.Color.ApplyColors();
+                            sc++;
+                        });
+
+                
+                        await Task.Delay(10);
+                    }
+
+
                 }
+
             });
+
         }
     }
 }

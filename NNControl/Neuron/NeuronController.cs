@@ -104,10 +104,5 @@ namespace NNControl.Neuron
         {
             View.OnZoomChanged();
         }
-
-        internal void SetNeuronColor(string hexColor)
-        {
-            View.SetColor(hexColor);
-        }
     }
 }

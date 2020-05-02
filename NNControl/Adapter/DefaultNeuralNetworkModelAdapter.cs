@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using NNControl.Model;
+using NNControl.Network;
 using NNControl.Synapse;
 
 namespace NNControl.Adapter
@@ -39,5 +40,6 @@ namespace NNControl.Adapter
         public event PropertyChangedEventHandler PropertyChanged;
         public NeuralNetworkModel NeuralNetworkModel { get; }
         public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters { get; }
+        public NeuralNetworkController Controller { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace NNControl.Network
         public abstract (float x, float y) ToCanvasPoints(float x, float y);
 
         public abstract LayerView CreateLayerInstance();
-    
+            
         public abstract void DrawAndSave();
         public abstract void DrawFromSaved();
         public abstract void DrawExcluded();

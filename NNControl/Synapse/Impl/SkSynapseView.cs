@@ -1,10 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using NNControl.Layer.Impl;
 using NNControl.Network.Impl;
 using NNControl.Neuron.Impl;
+using SkiaSharp;
 
 namespace NNControl.Synapse.Impl
 {
+    internal static class ScaleColorManager
+    {
+        private const int ScaleMax = 256;
+
+        private static SKColor[] _colors = new SKColor[ScaleMax];
+
+        static ScaleColorManager()
+        {
+            float h = 0;
+            float s = 100;
+            float v = 100;
+
+            var step = 100f / (ScaleMax / 2f);
+            for (int i = 0; i < ScaleMax / 2; i++)
+            {
+                _colors[i] = SKColor.FromHsv(h,s,v);
+
+                s -= step;
+            }
+
+            s = 0;
+            h = 232;
+
+            for (int i = ScaleMax / 2; i < ScaleMax; i++)
+            {
+                _colors[i] = SKColor.FromHsv(h, s, v);
+
+                s += step;
+            }
+        }
+
+        public static SKColor FromScale(int scale) => _colors[scale];
+    }
+
     internal class SkSynapseView : SynapseView
     {
         private SkSynapsePainter _synapsePainter;
@@ -86,7 +122,12 @@ namespace NNControl.Synapse.Impl
 
         public override void SetColor(string hexColor)
         {
-            _synapsePainter.SetColor(hexColor);
+            _synapsePainter.SetColor(SKColor.Parse(hexColor));
+        }
+
+        public override void SetColor(int scale)
+        {
+            _synapsePainter.SetColor(ScaleColorManager.FromScale(scale));
         }
     }
 }

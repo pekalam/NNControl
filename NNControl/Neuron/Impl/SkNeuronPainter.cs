@@ -31,9 +31,9 @@ namespace NNControl.Neuron.Impl
             _defaultInputPaint.ImageFilter = neuronShadowFilter;
         }
 
-        internal void SetColor(string hexColor)
+        internal void SetColor(SKColor color)
         {
-            _defaultPaint.Color = _defaultInputPaint.Color = SKColor.Parse(hexColor);
+            _defaultPaint.Color = _defaultInputPaint.Color = color;
         }
 
         private SKImageFilter CreateSelectedShadow()

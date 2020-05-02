@@ -66,7 +66,12 @@ namespace NNControl.Neuron.Impl
 
         public override void SetColor(string hexColor)
         {
-            _neuronPainter.SetColor(hexColor);
+            _neuronPainter.SetColor(SKColor.Parse(hexColor));
+        }
+
+        public override void SetColor(int scale)
+        {
+            _neuronPainter.SetColor(ScaleColorManager.FromScale(scale));
         }
 
         public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)

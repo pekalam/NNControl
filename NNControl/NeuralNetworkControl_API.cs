@@ -18,11 +18,11 @@ namespace NNControl
                     new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
                         OnModelAdapterChanged));
             }
-
         }
 
         public static readonly DependencyProperty ShowVisProperty = DependencyProperty.Register(
-            nameof(ShowVis), typeof(bool), typeof(NeuralNetworkControl), new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.AffectsRender,
+            nameof(ShowVis), typeof(bool), typeof(NeuralNetworkControl), new FrameworkPropertyMetadata(default(bool),
+                FrameworkPropertyMetadataOptions.AffectsRender,
                 (o, args) =>
                 {
                     if ((bool) args.NewValue)
@@ -33,8 +33,8 @@ namespace NNControl
 
         public bool ShowVis
         {
-            get { return (bool) GetValue(ShowVisProperty); }
-            set { SetValue(ShowVisProperty, value); }
+            get => (bool) GetValue(ShowVisProperty);
+            set => SetValue(ShowVisProperty, value);
         }
 
 
@@ -48,21 +48,19 @@ namespace NNControl
 
         private void OnModelAdapterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var adapter = d.GetValue(ModelAdapterProperty) as INeuralNetworkModelAdapter;
-            if (adapter == null)
+            if (!(d.GetValue(ModelAdapterProperty) is INeuralNetworkModelAdapter adapter))
             {
                 return;
             }
-            adapter.PropertyChanged += Adapter_PropertyChanged;
+
+            adapter.Controller = (d as NeuralNetworkControl).Controller;
+
+            adapter.PropertyChanged += (sender, e2) =>
+                OnAdapterPropertyChanged(sender as INeuralNetworkModelAdapter, e2.PropertyName);
             if (adapter.NeuralNetworkModel != null)
             {
                 (d as NeuralNetworkControl)._networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
             }
-        }
-
-        private void Adapter_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            OnAdapterPropertyChanged(sender as INeuralNetworkModelAdapter, e.PropertyName);
         }
 
         private void OnAdapterPropertyChanged(INeuralNetworkModelAdapter adapter, string propertyName)
@@ -124,7 +122,8 @@ namespace NNControl
 
     public class NeuronClickedEventArgs : RoutedEventArgs
     {
-        public NeuronClickedEventArgs(ILayerModelAdapter layerAdapter, int neuronIndex) : base(NeuralNetworkControl.NeuronClickEvent)
+        public NeuronClickedEventArgs(ILayerModelAdapter layerAdapter, int neuronIndex) : base(NeuralNetworkControl
+            .NeuronClickEvent)
         {
             LayerAdapter = layerAdapter;
             NeuronIndex = neuronIndex;

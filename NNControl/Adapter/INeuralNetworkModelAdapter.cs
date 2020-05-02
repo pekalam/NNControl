@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using NNControl.Model;
+using NNControl.Network;
 
 namespace NNControl.Adapter
 {
@@ -8,5 +9,6 @@ namespace NNControl.Adapter
     {
         NeuralNetworkModel NeuralNetworkModel { get; }
         IReadOnlyList<ILayerModelAdapter> LayerModelAdapters { get; }
+        NeuralNetworkController Controller { get; set; }
     }
 }
