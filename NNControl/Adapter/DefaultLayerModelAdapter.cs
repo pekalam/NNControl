@@ -7,5 +7,9 @@ namespace NNControl.Adapter
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public LayerModel LayerModel { get; set; }
+        public void SetNeuronsCount(int neuronsCount)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
