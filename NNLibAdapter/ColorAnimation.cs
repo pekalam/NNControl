@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Windows;
 using MathNet.Numerics.LinearAlgebra;
 using NNControl.Network;
 using NNLib;
@@ -8,6 +12,8 @@ namespace NNLibAdapter
 {
     public class ColorAnimation
     {
+        private readonly ReplaySubject<int> sub = new ReplaySubject<int>(10);
+
         private NeuralNetworkController _controller;
         private MLPTrainer _trainer;
 
@@ -20,6 +26,19 @@ namespace NNLibAdapter
         {
             _trainer = trainer;
             _trainer.EpochEnd += TrainerEpochEnd;
+        }
+
+        public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
+        {
+            _trainer = trainer;
+            _trainer.EpochEnd += () => sub.OnNext(0);
+
+            sub
+                .Buffer(timeSpan: delay, count: 10)
+                .DelaySubscription(delay).Subscribe(ints =>
+                {
+                    TrainerEpochEnd();
+                });
         }
 
 
@@ -102,7 +121,7 @@ namespace NNLibAdapter
             return (mingz, maxgz, minlz, maxlz);
         }
 
-        public int Scale(double x, double minx, double maxx, int miny, int maxy, int start = 0)
+        private int Scale(double x, double minx, double maxx, int miny, int maxy, int start = 0)
         {
             if (!double.IsFinite(x))
             {
@@ -168,7 +187,7 @@ namespace NNLibAdapter
             }
 
 
-            color.ApplyColors();
+            Application.Current.Dispatcher.Invoke(() => color.ApplyColors());
         }
     }
 }

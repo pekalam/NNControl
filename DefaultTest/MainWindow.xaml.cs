@@ -58,7 +58,7 @@ namespace DefaultTest
             {
                 while (true)
                 {
-                    var l = rnd.Next(0, control.Controller.Layers.Count);
+                    var l = rnd.Next(1, control.Controller.Layers.Count);
 
 
                     int sc = 0;
@@ -79,7 +79,7 @@ namespace DefaultTest
                         });
 
                 
-                        await Task.Delay(10);
+                        await Task.Delay(1000);
                     }
 
 

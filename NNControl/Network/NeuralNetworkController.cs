@@ -11,6 +11,9 @@ namespace NNControl.Network
 {
     public partial class NeuralNetworkController
     {
+        internal NeuralNetworkPositionManager PositionManager =
+            new NeuralNetworkPositionManager();
+
         private readonly List<LayerController> _abstrLayers = new List<LayerController>();
         private readonly List<NeuronController> _selectedNeurons = new List<NeuronController>();
 
@@ -26,8 +29,7 @@ namespace NNControl.Network
 
         public IReadOnlyList<LayerController> Layers => _abstrLayers;
 
-        public NeuralNetworkPositionManagerBase PositionManager { get; set; } =
-            new DefaultNeuralNetworkPositionManager();
+
 
         public float CanvasWidth { get; private set; }
         public float CanvasHeight { get; private set; }
@@ -245,6 +247,16 @@ namespace NNControl.Network
             }
 
             PositionManager.InvokeActionsAfterPositionsSet(this);
+            RequestRedraw(ViewTrig.REPOSITION);
+        }
+
+        public void UpdatePositionParameters()
+        {
+            foreach (var layer in Layers)
+            {
+                layer.Reposition();
+            }
+            PositionManager.InvokeActionsAfterPositionsSet(this, false);
             RequestRedraw(ViewTrig.REPOSITION);
         }
 

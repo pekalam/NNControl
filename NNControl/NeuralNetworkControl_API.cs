@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using NNControl.Adapter;
 using NNControl.Network;
@@ -7,16 +9,13 @@ using StateMachineLib;
 
 namespace NNControl
 {
-    public partial class NeuralNetworkControl
+    public partial class NeuralNetworkControl : INotifyPropertyChanged
     {
         private void InitDependencyProperties()
         {
             if (ModelAdapterProperty == null)
             {
-                ModelAdapterProperty = DependencyProperty.Register(
-                    nameof(ModelAdapter), typeof(INeuralNetworkModelAdapter), typeof(NeuralNetworkControl),
-                    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
-                        OnModelAdapterChanged));
+                
             }
         }
 
@@ -38,7 +37,10 @@ namespace NNControl
         }
 
 
-        public static DependencyProperty ModelAdapterProperty;
+        public static DependencyProperty ModelAdapterProperty = DependencyProperty.Register(
+            nameof(ModelAdapter), typeof(INeuralNetworkModelAdapter), typeof(NeuralNetworkControl),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
+                OnModelAdapterChanged));
 
         public INeuralNetworkModelAdapter ModelAdapter
         {
@@ -46,29 +48,33 @@ namespace NNControl
             set => SetValue(ModelAdapterProperty, value);
         }
 
-        private void OnModelAdapterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnModelAdapterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!(d.GetValue(ModelAdapterProperty) is INeuralNetworkModelAdapter adapter))
             {
                 return;
             }
 
-            adapter.Controller = (d as NeuralNetworkControl).Controller;
+            var control = (d as NeuralNetworkControl);
 
-            adapter.PropertyChanged += (sender, e2) =>
-                OnAdapterPropertyChanged(sender as INeuralNetworkModelAdapter, e2.PropertyName);
+            adapter.Controller = control.Controller;
+            control.SetAdapter(adapter);
+            
             if (adapter.NeuralNetworkModel != null)
             {
-                (d as NeuralNetworkControl)._networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                control._networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
             }
         }
 
-        private void OnAdapterPropertyChanged(INeuralNetworkModelAdapter adapter, string propertyName)
+        private void SetAdapter(INeuralNetworkModelAdapter adapter)
         {
-            if (propertyName == nameof(adapter.NeuralNetworkModel))
+            adapter.PropertyChanged += (sender, args) =>
             {
-                _networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
-            }
+                if (args.PropertyName == nameof(adapter.NeuralNetworkModel))
+                {
+                    _networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                }
+            };
         }
 
         private async void StartVis()
@@ -116,6 +122,18 @@ namespace NNControl
         {
             _networkView.Reposition();
             _stateMachine.Next(Triggers.REPOSITION);
+        }
+
+        public void UpdatePositionParameters()
+        {
+            _networkView.UpdatePositionParameters();
+            _stateMachine.Next(Triggers.REPOSITION);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

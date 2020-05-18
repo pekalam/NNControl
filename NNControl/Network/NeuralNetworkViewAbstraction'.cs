@@ -230,6 +230,7 @@ namespace NNControl.Network
                 .InterruptState(ViewTrig.FORCE_DRAW, s =>
                 {
                     View.DrawAndSave();
+                    View.DrawExcluded();
                 }, States.FORCE_DRAW_INTERRUPT)
 
 

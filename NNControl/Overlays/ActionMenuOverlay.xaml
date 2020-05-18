@@ -5,14 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignWidth="30" Width="30" Height="Auto" >
+             Width="Auto" Height="Auto" >
     <UserControl.Resources>
         <Style TargetType="Button">
             <Setter Property="Width" Value="30"/>
             <Setter Property="Height" Value="30"/>
         </Style>
     </UserControl.Resources>
+
     <Grid Background="#A514202B" Margin="0,25,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -20,14 +25,50 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Background="#A514202B" Foreground="#FFFFFF" Click="Button_Click">
+        <Button Grid.Column="1" Background="#A514202B" Foreground="#FFFFFF" Click="Button_Click">
             <iconPacks:FontAwesome Kind="SyncSolid"/>
         </Button>
-        <Button x:Name="ZoomInBtn" Grid.Row="1" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomInBtn_Click">
+        <Button x:Name="ZoomInBtn" Grid.Column="1" Grid.Row="1" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomInBtn_Click">
             <iconPacks:FontAwesome Kind="SearchPlusSolid"/>
         </Button>
-        <Button x:Name="ZoomOutBtn" Grid.Row="2" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomOutBtn_Click">
+        <Button x:Name="ZoomOutBtn" Grid.Column="1" Grid.Row="2" Background="#A514202B" Foreground="#FFFFFF" Click="ZoomOutBtn_Click">
             <iconPacks:FontAwesome Kind="SearchMinusSolid"/>
         </Button>
+        <Button x:Name="SettingsBtn" Click="SettingsBtn_Click" Grid.Column="1" Grid.Row="3" Background="#A514202B" Foreground="#FFFFFF">
+            <iconPacks:FontAwesome Kind="SlidersHSolid"/>
+        </Button>
+        <Border Grid.RowSpan="4" x:Name="settings" MinWidth="170" Visibility="Collapsed" BorderBrush="#FF707070" BorderThickness="1,1,0,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White">
+                        <iconPacks:FontAwesome Kind="ArrowsAltVSolid"/>
+                    </Label>
+
+                    <Slider x:Name="vSlider" Grid.Column="1" VerticalAlignment="Center" ValueChanged="VSlider_ValueChanged"/>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White">
+                        <iconPacks:FontAwesome Kind="ArrowsAltHSolid"/>
+                    </Label>
+
+                    <Slider x:Name="hSlider" Grid.Column="1" VerticalAlignment="Center" ValueChanged="HSlider_ValueChanged"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+
     </Grid>
 </UserControl>

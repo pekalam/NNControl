@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="3.4.0" />
-    <PackageReference Include="SkiaSharp" Version="1.68.2" />
-    <PackageReference Include="SkiaSharp.Views.WPF" Version="1.68.2" />
-    <PackageReference Include="StateMachineLib" Version="1.0.70" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.1.0" />
+    <PackageReference Include="SkiaSharp" Version="1.68.2.1" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="1.68.2.1" />
+    <PackageReference Include="StateMachineLib" Version="1.0.80" />
     <PackageReference Include="StateMachineLibVis" Version="1.0.2" />
   </ItemGroup>
 

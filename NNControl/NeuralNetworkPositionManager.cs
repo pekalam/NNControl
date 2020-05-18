@@ -6,9 +6,9 @@ using NNControl.Neuron;
 
 namespace NNControl
 {
-    public class DefaultNeuralNetworkPositionManager : NeuralNetworkPositionManagerBase
+    public class NeuralNetworkPositionManager
     {
-        public override float GetLayerX(NeuralNetworkController network, int layerNum)
+        public float GetLayerX(NeuralNetworkController network, int layerNum)
         {
             Debug.Assert(network != null);
 
@@ -17,14 +17,14 @@ namespace NNControl
                    layerNum + network.ViewportPosition.Left;
         }
 
-        public override float GetLayerY(NeuralNetworkController network, int layerNum)
+        public float GetLayerY(NeuralNetworkController network, int layerNum)
         {
             Debug.Assert(network != null);
 
             return network.NeuralNetworkModel.Padding.Top + network.ViewportPosition.Top;
         }
 
-        public override float GetNeuronX(NeuralNetworkController network, LayerView layer,
+        public float GetNeuronX(NeuralNetworkController network, LayerView layer,
             NeuronView neuron)
         {
             Debug.Assert(network != null);
@@ -34,7 +34,7 @@ namespace NNControl
             return layer.X;
         }
 
-        public override float GetNeuronY(NeuralNetworkController network, LayerView layer,
+        public float GetNeuronY(NeuralNetworkController network, LayerView layer,
             NeuronView neuron)
         {
             Debug.Assert(network != null);
@@ -43,18 +43,18 @@ namespace NNControl
 
             var offsetFromPrev = (neuron.NumberInLayer * (2 * network.NeuralNetworkModel.NeuronRadius +
                                                           network.NeuralNetworkModel.LayerYSpaceBetween));
-            return layer.Y + offsetFromPrev +
-                   network.NeuralNetworkModel.LayerYSpaceBetween;
+            return layer.Y + offsetFromPrev;
         }
 
-        private void CenterPositions(NeuralNetworkController network)
+        private float CenterPositions(NeuralNetworkController network)
         {
             int CalcLayerHeight(int i) =>
                 network.Layers[i].Neurons.Count * (network.NeuralNetworkModel.NeuronRadius * 2) +
-                (network.NeuralNetworkModel.LayerYSpaceBetween * network.Layers[i].Neurons.Count - 1);
+                (network.NeuralNetworkModel.LayerYSpaceBetween * (network.Layers[i].Neurons.Count - 1));
 
 
-            float netWidth = (network.Layers[^1].View.X + network.NeuralNetworkModel.NeuronRadius) - network.Layers[0].View.X;
+            float netWidth =
+                (network.Layers[^1].View.X + 2 * network.NeuralNetworkModel.NeuronRadius) - network.Layers[0].View.X;
             float newScale = 0f;
             float netStart = 0f;
             int maxHeight = 0;
@@ -64,27 +64,27 @@ namespace NNControl
                 maxHeight = Math.Max(currentHeight, maxHeight);
             }
 
-            
+
             if (maxHeight > network.CanvasHeight)
             {
-                var scale = -(1 - network.CanvasHeight / maxHeight);
+                var scale = -(1 - network.CanvasHeight / (maxHeight + network.NeuralNetworkModel.Padding.Top*2));
                 newScale = Math.Min(scale, newScale);
             }
+
             if (netWidth > network.CanvasWidth)
             {
-                var scale = -(1 - network.CanvasWidth / netWidth);
+                var scale = -(1 - network.CanvasWidth / (netWidth + network.NeuralNetworkModel.Padding.Left));
                 newScale = Math.Min(scale, newScale);
             }
-            else
-            {
-                netStart = (network.CanvasWidth - netWidth) / 2f;
-            }
+
+            netStart = (network.CanvasWidth - netWidth) / 2f;
+
 
 
             for (int i = 0; i < network.Layers.Count; i++)
             {
-                float dy = (network.CanvasHeight - CalcLayerHeight(i)) / 2f - network.NeuralNetworkModel.NeuronRadius * 2
-                                                                            - network.NeuralNetworkModel.LayerYSpaceBetween;
+                float dy =
+                    (network.CanvasHeight - CalcLayerHeight(i)) / 2f - network.NeuralNetworkModel.Padding.Top/2f;
 
                 foreach (var neuron in network.Layers[i].Neurons)
                 {
@@ -92,10 +92,7 @@ namespace NNControl
                 }
             }
 
-            if (network.CanvasWidth > 0 && network.CanvasHeight > 0)
-            {
-                network.SetZoom(newScale);
-            }
+            return newScale;
         }
 
         private void AdjustToNotOverlap(NeuralNetworkController network)
@@ -145,22 +142,31 @@ namespace NNControl
                         network.Layers[j].View.X += xx;
                         foreach (var neuron in network.Layers[j].Neurons)
                         {
-                            neuron.Move((int)xx, 0);
+                            neuron.Move((int) xx, 0);
                         }
                     }
                 }
             }
         }
 
-        public override void InvokeActionsAfterPositionsSet(NeuralNetworkController network)
+        public void InvokeActionsAfterPositionsSet(NeuralNetworkController network, bool setZoom = true,
+            bool adjustToNotOverlap = true)
         {
             if (network.Layers.Count == 0)
             {
                 return;
             }
 
-            AdjustToNotOverlap(network);
-            CenterPositions(network);
+            if (adjustToNotOverlap)
+            {
+                AdjustToNotOverlap(network);
+            }
+
+            var newScale = CenterPositions(network);
+            if (setZoom && network.CanvasWidth > 0 && network.CanvasHeight > 0)
+            {
+                network.SetZoom(newScale);
+            }
         }
     }
 }

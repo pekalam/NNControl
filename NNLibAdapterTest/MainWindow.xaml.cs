@@ -48,7 +48,7 @@ namespace NNLibAdapterTest
                 new PerceptronLayer(2, 15, new SigmoidActivationFunction()),
                 new PerceptronLayer(15, 1, new SigmoidActivationFunction()));
 
-            _trainer = new MLPTrainer(_network, trainingSets, new GradientDescent(new GradientDescentLearningParameters()), new QuadraticLossFunction());
+            _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentParams(), new QuadraticLossFunction());
 
             Adapter = new NeuralNetworkModelAdapter();
             Adapter.SetNeuralNetwork(_network);

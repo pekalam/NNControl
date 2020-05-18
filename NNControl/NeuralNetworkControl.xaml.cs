@@ -41,7 +41,7 @@ namespace NNControl
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - _actionMenuOverlay.Width * 2);
+            Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - 60);
             _networkView.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             // _networkView.ForceDraw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             _networkView.Reposition();
