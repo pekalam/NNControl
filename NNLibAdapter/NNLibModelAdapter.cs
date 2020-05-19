@@ -14,9 +14,9 @@ using NNLib;
 
 namespace NNLibAdapter
 {
-    public class NeuralNetworkModelAdapter : INeuralNetworkModelAdapter
+    public class NNLibModelAdapter : INeuralNetworkModelAdapter
     {
-        private readonly List<LayerModelAdapter> _layerModelAdapters = new List<LayerModelAdapter>();
+        private readonly List<NNLibLayerAdapter> _layerModelAdapters = new List<NNLibLayerAdapter>();
         private NeuralNetworkController _controller;
 
         public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters => _layerModelAdapters;
@@ -66,7 +66,7 @@ namespace NNLibAdapter
 
         private void AddLayerModel(LayerModel layerModel, Layer layer)
         {
-            _layerModelAdapters.Add(new LayerModelAdapter(layerModel, layer));
+            _layerModelAdapters.Add(new NNLibLayerAdapter(layerModel, layer));
             NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
         }
 
@@ -80,7 +80,7 @@ namespace NNLibAdapter
                     new NeuronModel()
                 }
             };
-            _layerModelAdapters.Add(new LayerModelAdapter(layerModel, layer));
+            _layerModelAdapters.Add(new NNLibLayerAdapter(layerModel, layer));
             NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
         }
 

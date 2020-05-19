@@ -7,9 +7,9 @@ using NNLib;
 
 namespace NNLibAdapter
 {
-    public class LayerModelAdapter : ILayerModelAdapter
+    public class NNLibLayerAdapter : ILayerModelAdapter
     {
-        public LayerModelAdapter(LayerModel layerModel, Layer layer)
+        public NNLibLayerAdapter(LayerModel layerModel, Layer layer)
         {
             LayerModel = layerModel;
             Layer = layer;

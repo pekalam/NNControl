@@ -62,7 +62,7 @@ namespace DefaultTest
 
 
                     int sc = 0;
-                    while (sc < 255)
+                    while (sc <= 255)
                     {
                         Dispatcher.Invoke(() =>
                         {
@@ -79,7 +79,7 @@ namespace DefaultTest
                         });
 
                 
-                        await Task.Delay(1000);
+                        await Task.Delay(10);
                     }
 
 

@@ -50,13 +50,13 @@ namespace NNLibAdapterTest
 
             _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentParams(), new QuadraticLossFunction());
 
-            Adapter = new NeuralNetworkModelAdapter();
+            Adapter = new NNLibAdapter.NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
             DataContext = this;
             InitializeComponent();
         }
 
-        public NeuralNetworkModelAdapter Adapter { get; set; }
+        public NNLibAdapter.NNLibModelAdapter Adapter { get; set; }
 
         protected override void OnContentRendered(EventArgs e)
         {

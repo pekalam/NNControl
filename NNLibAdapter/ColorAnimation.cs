@@ -12,7 +12,8 @@ namespace NNLibAdapter
 {
     public class ColorAnimation
     {
-        private readonly ReplaySubject<int> sub = new ReplaySubject<int>(10);
+        private readonly ReplaySubject<int> _sub = new ReplaySubject<int>(10);
+        private IDisposable? _epochSubscr;
 
         private NeuralNetworkController _controller;
         private MLPTrainer _trainer;
@@ -31,14 +32,23 @@ namespace NNLibAdapter
         public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
         {
             _trainer = trainer;
-            _trainer.EpochEnd += () => sub.OnNext(0);
+            _trainer.EpochEnd += () => _sub.OnNext(0);
 
-            sub
+            _epochSubscr = _sub
                 .Buffer(timeSpan: delay, count: 10)
                 .DelaySubscription(delay).Subscribe(ints =>
                 {
                     TrainerEpochEnd();
                 });
+        }
+
+        public void StopAnimation(bool resetColors)
+        {
+            _epochSubscr?.Dispose();
+            if (resetColors)
+            {
+                _controller.Color.ResetColorsToDefault();
+            }
         }
 
 
@@ -129,6 +139,14 @@ namespace NNLibAdapter
             }
 
             var s = (int) ((x - minx) * (maxy - miny) / (maxx - minx)) + start;
+            if (s > start + maxy)
+            {
+                s = start + maxy;
+            }
+            else if (s < miny + start)
+            {
+                s = start + miny;
+            }
             //Debug.WriteLine($"{s} for {x} max:{maxx} min: {minx}");
             // if (s >= 126 || s <= 128)
             // {
@@ -137,14 +155,9 @@ namespace NNLibAdapter
             return s;
         }
 
-
-        private void TrainerEpochEnd()
+        protected virtual void SetColors(IReadOnlyList<PerceptronLayer> layers)
         {
             var color = _controller.Color;
-
-            var layers = _trainer.Network.Layers;
-
-
 
             for (int i = 0; i < layers.Count; i++)
             {
@@ -188,6 +201,12 @@ namespace NNLibAdapter
 
 
             Application.Current.Dispatcher.Invoke(() => color.ApplyColors());
+        }
+
+        private void TrainerEpochEnd()
+        {
+            var layers = _trainer.Network.Layers;
+            SetColors(layers);
         }
     }
 }

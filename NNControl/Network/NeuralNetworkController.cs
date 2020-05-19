@@ -370,6 +370,22 @@ namespace NNControl.Network
                 _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View.SetColor(scale);
             }
 
+            public void ResetColorsToDefault()
+            {
+                foreach (var layer in _controller.Layers)
+                {
+                    foreach (var neuron in layer.Neurons)
+                    {
+                        neuron.View.SetColor(_controller.NeuralNetworkModel.NeuronSettings.Color);
+                        foreach (var synapse in neuron.Synapses)
+                        {
+                            synapse.View.SetColor(_controller.NeuralNetworkModel.SynapseSettings.Color);
+                        }
+                    }
+                }
+                ApplyColors();
+            }
+
             public void ApplyColors()
             {
                 _controller.RequestRedraw(ViewTrig.FORCE_DRAW);
