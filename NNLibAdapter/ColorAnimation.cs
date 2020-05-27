@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
-using MathNet.Numerics.LinearAlgebra;
+using System.Windows.Threading;
 using NNControl.Network;
 using NNLib;
 
@@ -32,19 +32,31 @@ namespace NNLibAdapter
         public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
         {
             _trainer = trainer;
-            _trainer.EpochEnd += () => _sub.OnNext(0);
+            _trainer.EpochEnd += TrainerOnEpochEnd;
 
             _epochSubscr = _sub
                 .Buffer(timeSpan: delay, count: 10)
-                .DelaySubscription(delay).Subscribe(ints =>
+                .DelaySubscription(delay)
+                .SubscribeOn(Scheduler.Default)
+                .Subscribe(ints =>
                 {
+                    if (ints.Count == 0)
+                    {
+                        return;
+                    }
                     TrainerEpochEnd();
                 });
+        }
+
+        private void TrainerOnEpochEnd()
+        {
+            _sub.OnNext(0);
         }
 
         public void StopAnimation(bool resetColors)
         {
             _epochSubscr?.Dispose();
+            _trainer.EpochEnd -= TrainerOnEpochEnd;
             if (resetColors)
             {
                 _controller.Color.ResetColorsToDefault();
@@ -199,8 +211,8 @@ namespace NNLibAdapter
                 }
             }
 
+            Application.Current.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
 
-            Application.Current.Dispatcher.Invoke(() => color.ApplyColors());
         }
 
         private void TrainerEpochEnd()
