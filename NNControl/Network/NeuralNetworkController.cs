@@ -241,6 +241,8 @@ namespace NNControl.Network
 
         public void Reposition()
         {
+            _viewportPosition.Left = 0;
+            _viewportPosition.Top = 0;
             foreach (var layer in Layers)
             {
                 layer.Reposition();
@@ -256,6 +258,7 @@ namespace NNControl.Network
             {
                 layer.Reposition();
             }
+
             PositionManager.InvokeActionsAfterPositionsSet(this, false);
             RequestRedraw(ViewTrig.REPOSITION);
         }

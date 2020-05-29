@@ -10,7 +10,7 @@ namespace NNControl.Overlays
     {
         private static double ZoomStepActionMenu = 0.1;
 
-        private NeuralNetworkControl _control;
+        private readonly NeuralNetworkControl _control;
 
         public ActionMenuOverlay(NeuralNetworkControl control)
         {
@@ -18,6 +18,7 @@ namespace NNControl.Overlays
             _control.PropertyChanged += _control_PropertyChanged;
             InitializeComponent();
         }
+
 
         private void _control_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -64,14 +65,20 @@ namespace NNControl.Overlays
 
         public void HideSettings()
         {
-            settings.Visibility = Visibility.Collapsed;
-            Canvas.SetLeft(this, Canvas.GetLeft(this) + settings.MinWidth);
+            if (settings.Visibility == Visibility.Visible)
+            {
+                settings.Visibility = Visibility.Collapsed;
+                Canvas.SetLeft(this, Canvas.GetLeft(this) + settings.MinWidth);
+            }
         }
 
         public void ShowSettings()
         {
-            settings.Visibility = Visibility.Visible;
-            Canvas.SetLeft(this, Canvas.GetLeft(this) - settings.MinWidth);
+            if (settings.Visibility == Visibility.Collapsed)
+            {
+                settings.Visibility = Visibility.Visible;
+                Canvas.SetLeft(this, Canvas.GetLeft(this) - settings.MinWidth);
+            }
         }
 
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)

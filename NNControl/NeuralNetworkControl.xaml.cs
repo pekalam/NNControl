@@ -6,6 +6,7 @@ using System.Windows.Input;
 using NNControl.Adapter;
 using NNControl.Network;
 using NNControl.Network.Impl;
+using NNControl.Overlays;
 
 
 [assembly: InternalsVisibleTo("NNControl.Tests")]
@@ -20,31 +21,29 @@ namespace NNControl
 
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
-        private readonly NeuralNetworkController _networkView;
+        private readonly NeuralNetworkController _networkController;
 
         public NeuralNetworkControl()
         {
-            this.SizeChanged += NeuralNetworkControl_SizeChanged;
-            _networkView = new NeuralNetworkController(new SkNeuralNetworkView());
-            _networkView.OnRequestRedraw += () => canvas.InvalidateVisual();
-            InitDependencyProperties();
+            SizeChanged += NeuralNetworkControl_SizeChanged;
+            _networkController = new NeuralNetworkController(new SkNeuralNetworkView());
+            _networkController.OnRequestRedraw += () => canvas.InvalidateVisual();
 
             InitStateMachine();
             InitializeComponent();
-            InitOverlay();
             InitActionMenuOverlay();
-
+            InitOverlay();
         }
 
-        public NeuralNetworkController Controller => _networkView;
+        public NeuralNetworkController Controller => _networkController;
 
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - 60);
-            _networkView.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+            _networkController.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             // _networkView.ForceDraw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
-            _networkView.Reposition();
+            _networkController.Reposition();
         }
 
         private void canvas_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
@@ -54,13 +53,13 @@ namespace NNControl
                 e = e
             };
 
-            if (_networkView.NeuralNetworkModel != null)
+            if (_networkController.NeuralNetworkModel != null)
             {
-                _networkView.Draw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+                _networkController.Draw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             }
             else
             {
-                _networkView.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+                _networkController.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
                 SetValue(ModelAdapterProperty, _defaultAdapter);
             }
         }
@@ -75,14 +74,6 @@ namespace NNControl
             else if (e.LeftButton == MouseButtonState.Released)
             {
                 var p = e.GetPosition(canvas);
-                if (p.X > rootGrid.ActualWidth - _actionMenuOverlay.Width && p.X <= rootGrid.ActualWidth)
-                {
-                    ShowActionMenuOverlay();
-                }
-                else
-                {
-                    HideActionMenuOverlay();
-                }
             }
         }
 
@@ -99,6 +90,11 @@ namespace NNControl
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                if (e.ClickCount == 1)
+                {
+                    _actionMenuOverlay.HideSettings();
+                }
+
                 if (e.ClickCount == 1 && !Keyboard.IsKeyDown(Key.LeftShift))
                 {
                     _clickedPoint = e.GetPosition(canvas);
@@ -139,7 +135,7 @@ namespace NNControl
 
         private void rootGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            HideActionMenuOverlay();
+            _stateMachine.Next(Triggers.MOUSE_OUT);
         }
     }
 }

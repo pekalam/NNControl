@@ -77,8 +77,7 @@ namespace NNControl
                 newScale = Math.Min(scale, newScale);
             }
 
-            netStart = (network.CanvasWidth - netWidth) / 2f;
-
+            netStart = (network.CanvasWidth - netWidth) / 2f + network.ViewportPosition.Left;
 
 
             for (int i = 0; i < network.Layers.Count; i++)

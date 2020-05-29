@@ -18,16 +18,5 @@ namespace NNControl
             Canvas.SetTop(_actionMenuOverlay, 0);
             overlayCanvas.Children.Add(_actionMenuOverlay);
         }
-
-        public void ShowActionMenuOverlay()
-        {
-            //Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - _actionMenuOverlay.Width * 2);
-            //_actionMenuOverlay.Visibility = Visibility.Visible;
-        }
-
-        public void HideActionMenuOverlay()
-        {
-            //_actionMenuOverlay.Visibility = Visibility.Collapsed;
-        }
     }
 }

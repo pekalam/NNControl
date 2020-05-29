@@ -11,14 +11,6 @@ namespace NNControl
 {
     public partial class NeuralNetworkControl : INotifyPropertyChanged
     {
-        private void InitDependencyProperties()
-        {
-            if (ModelAdapterProperty == null)
-            {
-                
-            }
-        }
-
         public static readonly DependencyProperty ShowVisProperty = DependencyProperty.Register(
             nameof(ShowVis), typeof(bool), typeof(NeuralNetworkControl), new FrameworkPropertyMetadata(default(bool),
                 FrameworkPropertyMetadataOptions.AffectsRender,
@@ -62,8 +54,10 @@ namespace NNControl
             
             if (adapter.NeuralNetworkModel != null)
             {
-                control._networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                control._networkController.NeuralNetworkModel = adapter.NeuralNetworkModel;
             }
+
+            control.OnPropertyChanged(nameof(ModelAdapter));
         }
 
         private void SetAdapter(INeuralNetworkModelAdapter adapter)
@@ -72,7 +66,7 @@ namespace NNControl
             {
                 if (args.PropertyName == nameof(adapter.NeuralNetworkModel))
                 {
-                    _networkView.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                    _networkController.NeuralNetworkModel = adapter.NeuralNetworkModel;
                 }
             };
         }
@@ -85,13 +79,13 @@ namespace NNControl
 
                 await Task.Delay(2000);
                 vis.Start(@"StateMachineLibVis.exe", "-c graphViz -l 0");
-                _networkView.StartVis();
+                _networkController.StartVis();
             }
         }
 
         public void UpdateSynapseLabels()
         {
-            _networkView.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_EXCLUDED);
+            _networkController.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_EXCLUDED);
         }
 
         public static readonly RoutedEvent NeuronClickEvent =
@@ -114,19 +108,19 @@ namespace NNControl
 
         public void Zoom(double zoom)
         {
-            _networkView.SetZoom(_networkView.View.Zoom + zoom);
+            _networkController.SetZoom(_networkController.View.Zoom + zoom);
             _stateMachine.Next(Triggers.ZOOM);
         }
 
         public void Reposition()
         {
-            _networkView.Reposition();
+            _networkController.Reposition();
             _stateMachine.Next(Triggers.REPOSITION);
         }
 
         public void UpdatePositionParameters()
         {
-            _networkView.UpdatePositionParameters();
+            _networkController.UpdatePositionParameters();
             _stateMachine.Next(Triggers.REPOSITION);
         }
 

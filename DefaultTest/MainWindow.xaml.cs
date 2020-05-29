@@ -54,38 +54,38 @@ namespace DefaultTest
 
 
 
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    var l = rnd.Next(1, control.Controller.Layers.Count);
-
-
-                    int sc = 0;
-                    while (sc <= 255)
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            for (int i = 0; i < control.Controller.Layers[l].Neurons.Count; i++)
-                            {
-                                for (int j = 0; j < control.Controller.Layers[l].Neurons[i].TotalSynapses; j++)
-                                {
-                                    control.Controller.Color.SetNeuronColor(l, i, sc);
-                                    control.Controller.Color.SetSynapseColor(l, i, j, sc);
-                                }
-                            }
-                            control.Controller.Color.ApplyColors();
-                            sc++;
-                        });
-
-                
-                        await Task.Delay(10);
-                    }
-
-
-                }
-
-            });
+            // Task.Run(async () =>
+            // {
+            //     while (true)
+            //     {
+            //         var l = rnd.Next(1, control.Controller.Layers.Count);
+            //
+            //
+            //         int sc = 0;
+            //         while (sc <= 255)
+            //         {
+            //             Dispatcher.Invoke(() =>
+            //             {
+            //                 for (int i = 0; i < control.Controller.Layers[l].Neurons.Count; i++)
+            //                 {
+            //                     for (int j = 0; j < control.Controller.Layers[l].Neurons[i].TotalSynapses; j++)
+            //                     {
+            //                         control.Controller.Color.SetNeuronColor(l, i, sc);
+            //                         control.Controller.Color.SetSynapseColor(l, i, j, sc);
+            //                     }
+            //                 }
+            //                 control.Controller.Color.ApplyColors();
+            //                 sc++;
+            //             });
+            //
+            //     
+            //             await Task.Delay(10);
+            //         }
+            //
+            //
+            //     }
+            //
+            // });
 
         }
     }
