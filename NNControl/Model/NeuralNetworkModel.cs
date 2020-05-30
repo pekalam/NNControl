@@ -23,7 +23,7 @@ namespace NNControl.Model
     public class NeuralNetworkModel
     {
         public int NeuronRadius { get; set; } = 10;
-        public int LayerXSpaceBetween { get; set; } = 15;
+        public int LayerXSpaceBetween { get; set; } = 25;
         public int LayerYSpaceBetween { get; set; } = 15;
         public Box Padding { get; } = new Box() {Left = 40, Right = 40, Top = 40, Bottom = 40};
 

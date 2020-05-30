@@ -11,6 +11,7 @@ namespace NNControl.Overlays
         private static double ZoomStepActionMenu = 0.1;
 
         private readonly NeuralNetworkControl _control;
+        private bool _pristine;
 
         public ActionMenuOverlay(NeuralNetworkControl control)
         {
@@ -24,6 +25,7 @@ namespace NNControl.Overlays
         {
             if(e.PropertyName == nameof(NeuralNetworkControl.ModelAdapter) && _control.ModelAdapter.NeuralNetworkModel != null)
             {
+                _pristine = false;
 
                 vSlider.Minimum = _control.ModelAdapter.NeuralNetworkModel.NeuronRadius;
                 vSlider.Maximum = 500;
@@ -33,6 +35,8 @@ namespace NNControl.Overlays
                 hSlider.Minimum = _control.ModelAdapter.NeuralNetworkModel.NeuronRadius;
                 hSlider.Maximum = 500;
                 hSlider.Value = _control.ModelAdapter.NeuralNetworkModel.LayerXSpaceBetween;
+
+                _pristine = true;
             }
         }
 
@@ -53,12 +57,22 @@ namespace NNControl.Overlays
 
         private void HSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (!_pristine)
+            {
+                return;
+            }
+
             _control.ModelAdapter.NeuralNetworkModel.LayerXSpaceBetween = (int)e.NewValue;
             _control.UpdatePositionParameters();
         }
 
         private void VSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (!_pristine)
+            {
+                return;
+            }
+
             _control.ModelAdapter.NeuralNetworkModel.LayerYSpaceBetween = (int) e.NewValue;
             _control.UpdatePositionParameters();
         }

@@ -35,7 +35,7 @@ namespace NNLibAdapter
             _trainer.EpochEnd += TrainerOnEpochEnd;
 
             _epochSubscr = _sub
-                .Buffer(timeSpan: delay, count: 10)
+                .Buffer(timeSpan: delay, count: 20)
                 .DelaySubscription(delay)
                 .SubscribeOn(Scheduler.Default)
                 .Subscribe(ints =>
@@ -55,6 +55,8 @@ namespace NNLibAdapter
 
         public void StopAnimation(bool resetColors)
         {
+            //flush
+            TrainerEpochEnd();
             _epochSubscr?.Dispose();
             _trainer.EpochEnd -= TrainerOnEpochEnd;
             if (resetColors)
