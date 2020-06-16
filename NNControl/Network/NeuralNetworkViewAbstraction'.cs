@@ -126,7 +126,7 @@ namespace NNControl.Network
                 .CreateState(States.S5)
                     .Enter(s =>
                     {
-                        SetAllNeuronAndSynapsesExcluded(false);
+                        SetSelectedNeuronsAndSynapsesExcluded(false);
 
                         View.DrawAndSave();
                     })
@@ -141,7 +141,7 @@ namespace NNControl.Network
                 .CreateState(States.S6)
                     .Enter(s =>
                     {
-                        SetAllNeuronAndSynapsesExcluded(true);
+                        SetSelectedNeuronsAndSynapsesExcluded(true);
 
                         View.DrawAndSave();
                         View.DrawExcluded();
@@ -156,7 +156,7 @@ namespace NNControl.Network
                 .CreateState(States.S7)
                     .Enter(s =>
                     {
-                        SetAllNeuronAndSynapsesExcluded(false);
+                        SetSelectedNeuronsAndSynapsesExcluded(false);
                         View.DrawAndSave();
                     })
                     .Transition(ViewTrig.PAINT, States.S4)
@@ -263,7 +263,7 @@ namespace NNControl.Network
             vis.Start(@"StateMachineLibVis.exe", "-c viewGraphViz -l 970");
         }
 
-        private void SetAllNeuronAndSynapsesExcluded(bool excluded)
+        private void SetSelectedNeuronsAndSynapsesExcluded(bool excluded)
         {
             foreach (var neuron in View.SelectedNeuron)
             {
@@ -281,7 +281,7 @@ namespace NNControl.Network
         {
             if (View.SelectedNeuron.Count > 0)
             {
-                SetAllNeuronAndSynapsesExcluded(false);
+                SetSelectedNeuronsAndSynapsesExcluded(false);
                 _selectedNeurons.Clear();
                 View.SelectedNeuron.Clear();
             }

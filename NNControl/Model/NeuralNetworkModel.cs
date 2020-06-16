@@ -7,6 +7,7 @@ namespace NNControl.Model
         public string Color { get; set; } = "#2C3E50";
         public string InputColor { get; set; } = "#000000";
         public string SelectedColor { get; set; } = "#4C4CFC";
+        public string HighlightedColor { get; set; } = "#FFFF00";
     }
 
     public class SynapseSettings

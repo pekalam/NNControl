@@ -10,23 +10,25 @@ namespace NNControl.Neuron.Impl
         private readonly SKPaint _defaultPaint = new SKPaint();
         private readonly SKPaint _selectedPaint = new SKPaint();
         private readonly SKPaint _defaultInputPaint = new SKPaint();
+        private readonly SKPaint _highlightedPaint = new SKPaint();
 
 
         public SkNeuronPainter(NeuronSettings settings)
         {
-            _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = true;
+            _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = _highlightedPaint.IsAntialias = true;
             _defaultPaint.Color = SKColor.Parse(settings.Color);
             _defaultInputPaint.Color = SKColor.Parse(settings.InputColor);
             _selectedPaint.Color = SKColor.Parse(settings.SelectedColor);
-            _defaultPaint.StrokeCap = _selectedPaint.StrokeCap = SKStrokeCap.Round;
+            _highlightedPaint.Color = SKColor.Parse(settings.HighlightedColor);
+            _defaultPaint.StrokeCap = _selectedPaint.StrokeCap = _highlightedPaint.StrokeCap = SKStrokeCap.Round;
 
             _defaultInputPaint.Style = SKPaintStyle.Fill;
 
+            //            var selectedShadowFilter = CreateSelectedShadow();
+
+            //            _selectedNeuronPaint.ImageFilter = selectedShadowFilter;
+
             var neuronShadowFilter = CreateDefaultShadow();
-//            var selectedShadowFilter = CreateSelectedShadow();
-
-//            _selectedNeuronPaint.ImageFilter = selectedShadowFilter;
-
             _defaultPaint.ImageFilter = neuronShadowFilter;
             _defaultInputPaint.ImageFilter = neuronShadowFilter;
         }
@@ -55,18 +57,27 @@ namespace NNControl.Neuron.Impl
         }
 
         private void DrawNeuron(SKCanvas canvas, SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,
-            bool selected)
+            bool selected, bool highlighted)
         {
+            SKPaint paint;
+            if (highlighted)
+            {
+                paint = _highlightedPaint;
+            }
+            else
+            {
+                paint = selected ? _selectedPaint : (layer.PreviousLayer == null ? _defaultInputPaint : _defaultPaint);
+            }
+
             if (layer.PreviousLayer == null)
             {
                 canvas.DrawRect(neuron.X - network.NeuralNetworkModel.NeuronRadius / 2f,
                     neuron.Y - network.NeuralNetworkModel.NeuronRadius / 2f, network.NeuralNetworkModel.NeuronRadius,
-                    network.NeuralNetworkModel.NeuronRadius, selected ? _selectedPaint : _defaultInputPaint);
+                    network.NeuralNetworkModel.NeuronRadius, paint);
             }
             else
             {
-                canvas.DrawCircle(neuron.X, neuron.Y, network.NeuralNetworkModel.NeuronRadius,
-                    selected ? _selectedPaint : _defaultPaint);
+                canvas.DrawCircle(neuron.X, neuron.Y, network.NeuralNetworkModel.NeuronRadius, paint);
             }
         }
 
@@ -79,14 +90,7 @@ namespace NNControl.Neuron.Impl
             canvas.DrawRect(neuron.ReferenceRect, _defaultInputPaint);
 #endif
 
-            if (network.SelectedNeuron.Count > 0 && network.SelectedNeuron.Contains(neuron))
-            {
-                DrawNeuron(canvas, network, layer, neuron, true);
-            }
-            else
-            {
-                DrawNeuron(canvas, network, layer, neuron, false);
-            }
+            DrawNeuron(canvas, network, layer, neuron, network.SelectedNeuron.Contains(neuron), network.HighlightedNeurons.Contains(neuron));
         }
     }
 }

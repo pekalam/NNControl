@@ -29,6 +29,18 @@
     <Content Update="C:\Users\Marek Pękala\.nuget\packages\statemachinelibvis\1.0.2\contentFiles\any\netcoreapp3.1\StateMachineLibVis.runtimeconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="D:\nuget-cache\statemachinelibvis\1.0.2\contentFiles\any\netcoreapp3.1\CommandLine.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="D:\nuget-cache\statemachinelibvis\1.0.2\contentFiles\any\netcoreapp3.1\StateMachineLibVis.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="D:\nuget-cache\statemachinelibvis\1.0.2\contentFiles\any\netcoreapp3.1\StateMachineLibVis.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="D:\nuget-cache\statemachinelibvis\1.0.2\contentFiles\any\netcoreapp3.1\StateMachineLibVis.runtimeconfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
