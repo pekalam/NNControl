@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Accessibility;
 using NNControl.Layer;
 using NNControl.Model;
 using NNControl.Neuron;
@@ -89,7 +90,32 @@ namespace NNControl.Network
 
         private void NetworkLayerModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            AddNewLayers(e.NewStartingIndex);
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                AddNewLayers(e.NewStartingIndex);
+            }else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                LayerController next = e.OldStartingIndex < Layers.Count - 1 ? Layers[e.OldStartingIndex + 1] : null;
+                next?.RemoveSynapsesFromPrevious();
+
+                LayerController toRemove = _abstrLayers[e.OldStartingIndex];
+                //toRemove.RemoveSynapsesFromPrevious();
+                toRemove.RemoveNeurons();
+
+                View.Layers.RemoveAt(e.OldStartingIndex);
+                _abstrLayers.RemoveAt(e.OldStartingIndex);
+
+                for (int i = 0; i < _abstrLayers.Count; i++)
+                {
+                    _abstrLayers[i].View.Number = i;
+                    View.Layers[i].PreviousLayer = i > 0 ? View.Layers[i - 1] : null;
+                    _abstrLayers[i].PreviousLayer = i > 0 ? _abstrLayers[i - 1] : null;
+                    _abstrLayers[i].NextLayer = i < _abstrLayers.Count - 1 ? _abstrLayers[i + 1] : null;
+                }
+
+                next?.AddSynapsesToPrevious();
+
+            }
 
             Reposition();
         }

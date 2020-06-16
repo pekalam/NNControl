@@ -12,10 +12,11 @@ namespace NNControl.Layer
         internal LayerView View { get; private set; }
         private readonly List<NeuronController> _neurons = new List<NeuronController>();
         internal NeuralNetworkController Network { get; private set; }
-        internal LayerController PreviousLayer { get; private set; }
+        internal LayerController PreviousLayer { get; set; }
         internal LayerController NextLayer { get; set; }
 
-        public LayerController(LayerController previousLayer, int layerNum, LayerView view, NeuralNetworkController network)
+        public LayerController(LayerController previousLayer, int layerNum, LayerView view,
+            NeuralNetworkController network)
         {
             PreviousLayer = previousLayer;
             View = view;
@@ -57,7 +58,7 @@ namespace NNControl.Layer
         private NeuronController CreateAndAddNewNeuron(int neuronNum)
         {
             var newNeuron = View.CreateNeuronInstance();
-            var newNeuronAbstr = new NeuronController(_neurons.Count,newNeuron, this);
+            var newNeuronAbstr = new NeuronController(_neurons.Count, newNeuron, this);
             LayerModel.NeuronModels[neuronNum].SynapsesLabels = new SynapsesLabelsCollection(View);
 
             if (View.PreviousLayer != null)
@@ -91,9 +92,54 @@ namespace NNControl.Layer
                     nextNeuron.RemoveSynapseFrom(_neurons[neuronNum]);
                 }
             }
-            
+
             View.Neurons.RemoveAt(neuronNum);
             _neurons.RemoveAt(neuronNum);
+        }
+
+        public void RemoveNeurons()
+        {
+            for (int i = 0; i < Neurons.Count; i++)
+            {
+                RemoveNeuron(i);
+            }
+        }
+
+        public void RemoveSynapsesFromPrevious()
+        {
+            foreach (var neuron in Neurons)
+            {
+                foreach (var prevNeuron in PreviousLayer.Neurons)
+                {
+                    neuron.RemoveSynapseFrom(prevNeuron);
+                }
+            }
+        }
+
+        public void AddSynapsesToPrevious()
+        {
+            if (PreviousLayer == null)
+            {
+                return;
+            }
+            foreach (var neuron in Neurons)
+            {
+                foreach (var prevNeuron in PreviousLayer.Neurons)
+                {
+                    prevNeuron.AddSynapse(neuron);
+                }
+            }
+        }
+
+        public void AddSynapsesToNext(LayerController next)
+        {
+            foreach (var neuron in Neurons)
+            {
+                foreach (var nextNeuron in next.Neurons)
+                {
+                    neuron.AddSynapse(nextNeuron);
+                }
+            }
         }
 
         private void NeuronModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -112,11 +158,10 @@ namespace NNControl.Layer
                     }
                 }
             }
-            else if(e.Action == NotifyCollectionChangedAction.Remove)
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 RemoveNeuron(e.OldStartingIndex);
             }
-
         }
 
         public void Reposition()
@@ -127,6 +172,7 @@ namespace NNControl.Layer
             {
                 neuron.Reposition();
             }
+
             View.OnRepositioned();
         }
 
@@ -136,6 +182,7 @@ namespace NNControl.Layer
             {
                 neuron.OnZoomChanged();
             }
+
             View.OnZoomChanged();
         }
     }

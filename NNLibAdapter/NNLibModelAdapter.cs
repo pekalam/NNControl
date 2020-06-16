@@ -84,6 +84,16 @@ namespace NNLibAdapter
             NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
         }
 
+        public void RemoveLayer(int layerIndex)
+        {
+            _layerModelAdapters.RemoveAt(layerIndex + 1);
+            NeuralNetworkModel.NetworkLayerModels.RemoveAt(layerIndex + 1);
+            if (layerIndex == 0)
+            {
+                _layerModelAdapters[0].SetNeuronsCount(_layerModelAdapters[1].Layer.InputsCount);
+            }
+        }
+
         public void UpdateWeights(NeuralNetworkControl networkControl, string format = "F3")
         {
             for (int i = 1; i < Layers.Count; i++)
