@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using NNControl.Overlays;
+using System.Windows;
 using System.Windows.Controls;
-using NNControl.Overlays;
 
 namespace NNControl
 {

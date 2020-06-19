@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using NNControl.Model;
+﻿using NNControl.Model;
+using System.ComponentModel;
 
 namespace NNControl.Adapter
 {

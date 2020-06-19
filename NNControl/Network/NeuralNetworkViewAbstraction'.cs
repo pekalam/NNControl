@@ -1,6 +1,6 @@
-﻿using System;
+﻿using StateMachineLib;
+using System;
 using System.Collections.Generic;
-using StateMachineLib;
 
 namespace NNControl.Network
 {

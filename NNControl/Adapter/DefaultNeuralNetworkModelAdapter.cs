@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using NNControl.Model;
+﻿using NNControl.Model;
 using NNControl.Network;
 using NNControl.Synapse;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace NNControl.Adapter
 {

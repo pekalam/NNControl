@@ -1,8 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using NNControl.Layer;
+﻿using NNControl.Layer;
 using NNControl.Network;
 using NNControl.Neuron;
+using System;
+using System.Diagnostics;
 
 namespace NNControl
 {

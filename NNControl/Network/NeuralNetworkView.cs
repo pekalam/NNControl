@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using NNControl.Layer;
+﻿using NNControl.Layer;
 using NNControl.Model;
 using NNControl.Neuron;
 using NNControl.Synapse;
+using System.Collections.Generic;
 
 namespace NNControl.Network
 {

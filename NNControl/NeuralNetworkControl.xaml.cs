@@ -1,12 +1,10 @@
-﻿using System;
+﻿using NNControl.Adapter;
+using NNControl.Network;
+using NNControl.Network.Impl;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NNControl.Adapter;
-using NNControl.Network;
-using NNControl.Network.Impl;
-using NNControl.Overlays;
 
 
 [assembly: InternalsVisibleTo("NNControl.Tests")]

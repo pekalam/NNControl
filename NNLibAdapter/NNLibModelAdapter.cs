@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using NNControl;
+﻿using NNControl;
 using NNControl.Adapter;
 using NNControl.Model;
 using NNControl.Network;
 using NNControl.Synapse;
 using NNLib;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace NNLibAdapter
 {

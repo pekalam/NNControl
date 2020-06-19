@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
-using NNControl.Neuron;
+﻿using NNControl.Neuron;
 using NNControl.Synapse;
 using StateMachineLib;
+using System;
+using System.Windows;
 
 namespace NNControl
 {

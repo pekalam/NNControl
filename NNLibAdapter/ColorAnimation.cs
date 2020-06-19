@@ -1,12 +1,12 @@
-﻿using System;
+﻿using NNControl.Network;
+using NNLib;
+using System;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
-using NNControl.Network;
-using NNLib;
 
 namespace NNLibAdapter
 {

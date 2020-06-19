@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Windows.Automation.Provider;
-using NNControl.Layer;
+﻿using NNControl.Layer;
 using NNControl.Synapse;
+using System.Collections.Generic;
 
 namespace NNControl.Neuron
 {

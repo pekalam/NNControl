@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using NNControl.Model;
+﻿using NNControl.Model;
 using NNControl.Network;
 using NNControl.Neuron;
+using System.Collections.Generic;
 
 namespace NNControl.Layer
 {

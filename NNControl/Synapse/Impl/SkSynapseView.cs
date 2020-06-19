@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using NNControl.Layer.Impl;
+﻿using NNControl.Layer.Impl;
 using NNControl.Network.Impl;
 using NNControl.Neuron.Impl;
 using SkiaSharp;
+using System;
 
 namespace NNControl.Synapse.Impl
 {

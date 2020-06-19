@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using NNControl.Adapter;
+﻿using NNControl.Adapter;
 using NNControl.Model;
 using NNLib;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace NNLibAdapter
 {

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NNControl.Layer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NNControl.Layer;
 
 namespace NNControl.Synapse
 {

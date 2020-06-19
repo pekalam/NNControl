@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using Accessibility;
-using NNControl.Layer;
+﻿using NNControl.Layer;
 using NNControl.Model;
 using NNControl.Neuron;
 using NNControl.Synapse;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace NNControl.Network
 {
@@ -29,7 +28,6 @@ namespace NNControl.Network
         internal NeuralNetworkView View { get; private set; }
 
         public IReadOnlyList<LayerController> Layers => _abstrLayers;
-
 
 
         public float CanvasWidth { get; private set; }
@@ -93,7 +91,8 @@ namespace NNControl.Network
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 AddNewLayers(e.NewStartingIndex);
-            }else if (e.Action == NotifyCollectionChangedAction.Remove)
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 LayerController next = e.OldStartingIndex < Layers.Count - 1 ? Layers[e.OldStartingIndex + 1] : null;
                 next?.RemoveSynapsesFromPrevious();
@@ -114,7 +113,6 @@ namespace NNControl.Network
                 }
 
                 next?.AddSynapsesToPrevious();
-
             }
 
             Reposition();
@@ -193,6 +191,48 @@ namespace NNControl.Network
             return foundNeuron;
         }
 
+        public NeuronController HighlightNeuron(int layerNum, int neuronNum)
+        {
+            var neuron = Layers[layerNum].Neurons[neuronNum];
+            View.HighlightedNeurons.Add(neuron.View);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+            return neuron;
+        }
+
+        public void ClearNeuronHighlight(int layerNum, int neuronNum)
+        {
+            var neuron = Layers[layerNum].Neurons[neuronNum];
+            View.HighlightedNeurons.Remove(neuron.View);
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
+        public void HighlightLayer(int layerNum)
+        {
+            var layer = Layers[layerNum];
+            foreach (var neuron in layer.Neurons)
+            {
+                View.HighlightedNeurons.Add(neuron.View);
+            }
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
+        public void ClearLayerHighlight(int layerNum)
+        {
+            var layer = Layers[layerNum];
+            foreach (var neuron in layer.Neurons)
+            {
+                View.HighlightedNeurons.Remove(neuron.View);
+            }
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
+        public void ClearHighlight()
+        {
+            View.HighlightedNeurons.Clear();
+            View.HighlightedSynapses.Clear();
+            RequestRedraw(ViewTrig.FORCE_DRAW);
+        }
+
         public NeuronController FindNeuronAt(float x, float y)
         {
             (x, y) = View.ToCanvasPoints(x, y);
@@ -210,7 +250,6 @@ namespace NNControl.Network
 
             return null;
         }
-
 
         public void DeselectNeuron()
         {
@@ -329,9 +368,6 @@ namespace NNControl.Network
             // ReSharper disable once PossibleNullReferenceException
             OnRequestRedraw.Invoke();
         }
-
-
-
     }
 
     public partial class NeuralNetworkController
@@ -375,7 +411,8 @@ namespace NNControl.Network
                     return;
                 }
 
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View.SetColor(hexColor);
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View
+                    .SetColor(hexColor);
             }
 
 
@@ -396,7 +433,8 @@ namespace NNControl.Network
                     return;
                 }
 
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View.SetColor(scale);
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View
+                    .SetColor(scale);
             }
 
             public void ResetColorsToDefault()
@@ -412,6 +450,7 @@ namespace NNControl.Network
                         }
                     }
                 }
+
                 ApplyColors();
             }
 

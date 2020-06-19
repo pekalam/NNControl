@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using NNControl.Model;
+﻿using NNControl.Model;
 using NNControl.Network;
 using NNControl.Neuron;
 using NNControl.Synapse;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace NNControl.Layer
 {

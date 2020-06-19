@@ -1,11 +1,11 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows;
-using NNControl.Adapter;
+﻿using NNControl.Adapter;
 using NNControl.Network;
 using NNControl.Neuron;
 using StateMachineLib;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace NNControl
 {
