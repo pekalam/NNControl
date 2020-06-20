@@ -167,7 +167,7 @@ namespace NNControl
                     })
                     .Exit(s =>
                     {
-                        if (s == Triggers.LB_UP)
+                        if (s.Trigger == Triggers.LB_UP)
                         {
                             _networkController.SelectedNeuronMoveEnd();
                         }

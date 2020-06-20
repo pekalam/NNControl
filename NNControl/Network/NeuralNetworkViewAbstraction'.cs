@@ -66,7 +66,7 @@ namespace NNControl.Network
                 .CreateState(RedrawStates.S2)
                     .Enter(s =>
                     {
-                        _redrawMachineQueue.Enqueue(s);
+                        _redrawMachineQueue.Enqueue(s.Trigger);
                     })
                     .Transition(ViewTrig.DRAW, RedrawStates.S1)
                     .AllTransition(RedrawStates.S2)
@@ -259,7 +259,7 @@ namespace NNControl.Network
 
         internal void StartVis()
         {
-            vis = new StateMachineVis<ViewTrig, States>(_stateMachine, pipeName: "viewGraphViz", loggingEnabled: true);
+            vis = new StateMachineVis<ViewTrig, States>(_stateMachine, "viewGraphViz");
             vis.Start(@"StateMachineLibVis.exe", "-c viewGraphViz -l 970");
         }
 

@@ -75,7 +75,7 @@ namespace NNControl
         {
             if (vis == null)
             {
-                vis = new StateMachineVis<Triggers, States>(_stateMachine, loggingEnabled: true);
+                vis = new StateMachineVis<Triggers, States>(_stateMachine);
 
                 await Task.Delay(2000);
                 vis.Start(@"StateMachineLibVis.exe", "-c graphViz -l 0");
