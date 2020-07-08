@@ -1,7 +1,9 @@
 ﻿using NNControl.Network;
 using NNLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -14,6 +16,7 @@ namespace NNLibAdapter
     {
         private readonly ReplaySubject<int> _sub = new ReplaySubject<int>(10);
         private IDisposable? _epochSubscr;
+        private Action<Action>? _colorUpdateHighOrder;
 
         private NeuralNetworkController _controller;
         private MLPTrainer _trainer;
@@ -26,7 +29,7 @@ namespace NNLibAdapter
         public void SetupTrainer(MLPTrainer trainer)
         {
             _trainer = trainer;
-            _trainer.EpochEnd += TrainerEpochEnd;
+            _trainer.EpochEnd += UpdateColors;
         }
 
         public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
@@ -44,8 +47,16 @@ namespace NNLibAdapter
                     {
                         return;
                     }
-                    TrainerEpochEnd();
+                    UpdateColors();
                 });
+        }
+
+        public void SetupTrainer(MLPTrainer trainer, TimeSpan delay,ref Action epochEndAction, Action<Action> colorUpdateHighOrder)
+        {
+            _trainer = trainer;
+            _colorUpdateHighOrder = colorUpdateHighOrder;
+
+            epochEndAction += UpdateColors;
         }
 
         private void TrainerOnEpochEnd()
@@ -56,13 +67,20 @@ namespace NNLibAdapter
         public void StopAnimation(bool resetColors)
         {
             //flush
-            TrainerEpochEnd();
+            UpdateColors();
             _epochSubscr?.Dispose();
             _trainer.EpochEnd -= TrainerOnEpochEnd;
             if (resetColors)
             {
                 _controller.Color.ResetColorsToDefault();
             }
+        }
+
+
+        private void UpdateColors()
+        {
+            var layers = _trainer.Network.Layers;
+            SetColors(layers);
         }
 
 
@@ -145,9 +163,15 @@ namespace NNLibAdapter
             return (mingz, maxgz, minlz, maxlz);
         }
 
+        private static int i = 128;
+
         private int Scale(double x, double minx, double maxx, int miny, int maxy, int start = 0)
         {
-            if (!double.IsFinite(x))
+            // var r = new Random().Next(0, 6);
+            // return r == 1 ? 126 : (r == 2 ? 128 : (r == 3 ? 127 : (r == 4 ? 0 : (r == 5 ? 254 : 255))));
+
+
+            if (!double.IsFinite(x) || x == 0.0d)
             {
                 return 127;
             }
@@ -184,11 +208,11 @@ namespace NNLibAdapter
                         var el = layers[i].Weights[j, k];
                         if (el < 0)
                         {
-                            color.SetSynapseColor(i + 1, j, k, Scale(el, minlz, 0, 0, 127));
+                            color.SetSynapseColor(i + 1, j, k, Scale(el, minlz, 0, 0, 126));
                         }
                         else
                         {
-                            color.SetSynapseColor(i + 1, j, k, Scale(el, 0, maxgz, 0, 127, 128));
+                            color.SetSynapseColor(i + 1, j, k, Scale(el, 0, maxgz, 0, 126, 128));
                         }
                     }
                 }
@@ -204,23 +228,25 @@ namespace NNLibAdapter
                     var el = layers[i].Biases[j, 0];
                     if (el < 0)
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(el, minblz, 0, 0, 127));
+                        color.SetNeuronColor(i + 1, j, Scale(el, minblz, 0, 0, 126));
                     }
                     else
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(el, 0, maxbgz, 0, 127, 128));
+                        color.SetNeuronColor(i + 1, j, Scale(el, 0, maxbgz, 0, 126, 128));
                     }
                 }
             }
 
-            Application.Current.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
 
-        }
+            if (_colorUpdateHighOrder != null)
+            {
+                _colorUpdateHighOrder(() => color.ApplyColors());
+            }
+            else
+            {
+                Application.Current?.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
+            }
 
-        private void TrainerEpochEnd()
-        {
-            var layers = _trainer.Network.Layers;
-            SetColors(layers);
         }
     }
 }

@@ -228,6 +228,7 @@ namespace NNControl
                     })
                     .Transition(Triggers.MV_LB, States.S13)
                     .Transition(Triggers.LB_UP, States.S0)
+                    .Transition(Triggers.MOUSE_OUT, States.S0)
                 .End()
 
 

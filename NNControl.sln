@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NNLibAdapterTest", "NNLibAd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NNLib", "..\..\..\..\Public\PRACA\NNLib\NNLib\NNLib.csproj", "{7E2080AD-E3D7-42B1-B648-8068B03F60D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorAnimationTest", "ColorAnimationTest\ColorAnimationTest.csproj", "{8FC0F637-4234-4B0A-B3AE-9292EF28FDB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorAnimationTest", "ColorAnimationTest\ColorAnimationTest.csproj", "{8FC0F637-4234-4B0A-B3AE-9292EF28FDB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

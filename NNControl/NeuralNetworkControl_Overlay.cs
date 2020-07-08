@@ -25,7 +25,7 @@ namespace NNControl
         {
             var neuronRadius = ModelAdapter.NeuralNetworkModel.NeuronRadius * 2 * (_networkController.View.Zoom + 1);
             _neuronOverlay.Visibility = Visibility.Visible;
-
+            
             Canvas.SetLeft(_neuronOverlay, p.X + neuronRadius);
             Canvas.SetTop(_neuronOverlay, p.Y);
         }

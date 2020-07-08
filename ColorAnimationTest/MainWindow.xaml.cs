@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using NNControl.Network;
 using NNLib;
-using NNLib.ActivationFunction;
 using NNLibAdapter;
 
 namespace ColorAnimationTest
@@ -44,7 +43,7 @@ namespace ColorAnimationTest
             InitializeComponent();
         }
 
-        protected async override void OnContentRendered(EventArgs e)
+        protected override async void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
 
@@ -59,19 +58,19 @@ namespace ColorAnimationTest
                     {
                         for (int c = 0; c < layer.Weights.ColumnCount; c++)
                         {
-                            layer.Weights[r, c] = rnd.NextDouble() * rnd.Next(-100, 100);
+                            layer.Weights[r, c] = rnd.NextDouble() * rnd.Next(-101, 100);
                         }
                     }
 
                     for (int r = 0; r < layer.Biases.RowCount; r++)
                     {
-                        layer.Biases[r, 0] = rnd.NextDouble() * rnd.Next(-100, 100);
+                        layer.Biases[r, 0] = rnd.NextDouble() * rnd.Next(-101, 100);
                     }
                 }
 
                 _colorAnimation.CallSetColors(_network);
 
-                await Task.Delay(100);
+                await Task.Delay(1000);
             }
         }
 

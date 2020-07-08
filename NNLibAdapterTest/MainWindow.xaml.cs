@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NNLib;
-using NNLib.ActivationFunction;
+using NNLib.Common;
 using NNLibAdapter;
 
 namespace NNLibAdapterTest
@@ -48,7 +48,7 @@ namespace NNLibAdapterTest
                 new PerceptronLayer(2, 15, new SigmoidActivationFunction()),
                 new PerceptronLayer(15, 1, new SigmoidActivationFunction()));
 
-            _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentParams(), new QuadraticLossFunction());
+            _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentAlgorithm(new GradientDescentParams()), new QuadraticLossFunction());
 
             Adapter = new NNLibAdapter.NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
@@ -76,6 +76,16 @@ namespace NNLibAdapterTest
                 }
 
             });
+        }
+
+        private void Highlihght_OnClick(object sender, RoutedEventArgs e)
+        {
+            control.Controller.HighlightLayer(1);
+        }
+
+        private void Add_OnClick(object sender, RoutedEventArgs e)
+        {
+            Adapter.LayerModelAdapters[1].SetNeuronsCount(_network.Layers[0].NeuronsCount+1);
         }
     }
 }

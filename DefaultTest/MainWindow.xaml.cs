@@ -36,7 +36,7 @@ namespace DefaultTest
             // {
             //     while (true)
             //     {
-            //         var l = rnd.Next(0, control.Controller.Layers.Count);
+            // var l = rnd.Next(0, control.Controller.Layers.Count);
             //         var n = rnd.Next(0, control.Controller.Layers[l].Neurons.Count);
             //         var s = rnd.Next(0, control.Controller.Layers[l].Neurons[n].TotalSynapses);
             //
@@ -87,6 +87,11 @@ namespace DefaultTest
             //
             // });
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            control.Controller.HighlightLayer(1);
         }
     }
 }

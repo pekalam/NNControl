@@ -1,4 +1,5 @@
-﻿using NNControl.Layer.Impl;
+﻿using System.Diagnostics;
+using NNControl.Layer.Impl;
 using NNControl.Model;
 using NNControl.Network.Impl;
 using SkiaSharp;
@@ -90,7 +91,7 @@ namespace NNControl.Neuron.Impl
             canvas.DrawRect(neuron.ReferenceRect, _defaultInputPaint);
 #endif
 
-            DrawNeuron(canvas, network, layer, neuron, network.SelectedNeuron.Contains(neuron), network.HighlightedNeurons.Contains(neuron));
+            DrawNeuron(canvas, network, layer, neuron, network.SelectedNeuron.Contains(neuron), layer.HighlightedNeurons.Contains(neuron));
         }
     }
 }

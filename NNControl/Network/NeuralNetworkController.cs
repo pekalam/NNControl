@@ -191,45 +191,26 @@ namespace NNControl.Network
             return foundNeuron;
         }
 
-        public NeuronController HighlightNeuron(int layerNum, int neuronNum)
-        {
-            var neuron = Layers[layerNum].Neurons[neuronNum];
-            View.HighlightedNeurons.Add(neuron.View);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
-            return neuron;
-        }
-
-        public void ClearNeuronHighlight(int layerNum, int neuronNum)
-        {
-            var neuron = Layers[layerNum].Neurons[neuronNum];
-            View.HighlightedNeurons.Remove(neuron.View);
-            RequestRedraw(ViewTrig.FORCE_DRAW);
-        }
-
         public void HighlightLayer(int layerNum)
         {
             var layer = Layers[layerNum];
-            foreach (var neuron in layer.Neurons)
-            {
-                View.HighlightedNeurons.Add(neuron.View);
-            }
+            layer.HighlightLayer();
             RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 
         public void ClearLayerHighlight(int layerNum)
         {
             var layer = Layers[layerNum];
-            foreach (var neuron in layer.Neurons)
-            {
-                View.HighlightedNeurons.Remove(neuron.View);
-            }
+            layer.ClearHighlight();
             RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 
         public void ClearHighlight()
         {
-            View.HighlightedNeurons.Clear();
-            View.HighlightedSynapses.Clear();
+            foreach (var layer in Layers)
+            {
+                layer.ClearHighlight();
+            }
             RequestRedraw(ViewTrig.FORCE_DRAW);
         }
 

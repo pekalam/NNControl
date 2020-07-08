@@ -58,21 +58,21 @@ namespace NNControl.Layer
         private NeuronController CreateAndAddNewNeuron(int neuronNum)
         {
             var newNeuron = View.CreateNeuronInstance();
-            var newNeuronAbstr = new NeuronController(_neurons.Count, newNeuron, this);
+            var controller = new NeuronController(_neurons.Count, newNeuron, this);
             LayerModel.NeuronModels[neuronNum].SynapsesLabels = new SynapsesLabelsCollection(View);
 
             if (View.PreviousLayer != null)
             {
                 foreach (var prevNeuron in PreviousLayer.Neurons)
                 {
-                    prevNeuron.AddSynapse(newNeuronAbstr);
+                    prevNeuron.AddSynapse(controller);
                 }
             }
 
             View.Neurons.Add(newNeuron);
-            _neurons.Add(newNeuronAbstr);
+            _neurons.Add(controller);
 
-            return newNeuronAbstr;
+            return controller;
         }
 
         private void RemoveNeuron(int neuronNum)
@@ -156,6 +156,11 @@ namespace NNControl.Layer
                             newNeuron.AddSynapse(nextNeuron);
                         }
                     }
+
+                    if (View.HighlightedNeurons.Count > 0)
+                    {
+                        View.HighlightedNeurons.Add(newNeuron.View);
+                    }
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -185,5 +190,15 @@ namespace NNControl.Layer
 
             View.OnZoomChanged();
         }
+
+        public void HighlightLayer()
+        {
+            foreach (var neuron in Neurons)
+            {
+                View.HighlightedNeurons.Add(neuron.View);
+            }
+        }
+
+        public void ClearHighlight() => View.HighlightedNeurons.Clear();
     }
 }
