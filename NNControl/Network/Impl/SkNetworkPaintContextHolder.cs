@@ -2,6 +2,6 @@
 {
     public static class SkNetworkPaintContextHolder
     {
-        public static SkNetworkPaintContext Context { get; set; }
+        public static SkNetworkPaintContext Context;
     }
 }

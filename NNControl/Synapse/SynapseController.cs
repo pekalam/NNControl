@@ -13,9 +13,9 @@ namespace NNControl.Synapse
             View.Neuron2 = neuron2.View;
         }
 
-        internal NeuronController Neuron1 { get; private set; }
-        internal NeuronController Neuron2 { get; private set; }
-        internal SynapseView View { get; private set; }
+        internal NeuronController Neuron1;
+        internal NeuronController Neuron2;
+        internal SynapseView View;
 
         internal void SetArrowPos()
         {

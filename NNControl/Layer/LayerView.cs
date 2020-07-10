@@ -7,15 +7,15 @@ namespace NNControl.Layer
 {
     public abstract class LayerView
     {
-        public List<NeuronView> Neurons { get; } = new List<NeuronView>();
-        public List<NeuronView> HighlightedNeurons { get; } = new List<NeuronView>();
-        public LayerModel LayerModel { get; set; }
+        public List<NeuronView> Neurons = new List<NeuronView>();
+        public List<NeuronView> HighlightedNeurons = new List<NeuronView>();
+        public LayerModel LayerModel;
         public virtual float X { get; set; }
         public virtual float Y { get; set; }
 
-        public LayerView PreviousLayer { get; set; }
-        public NeuralNetworkView Network { get; set; }
-        public int Number { get; set; }
+        public LayerView PreviousLayer;
+        public NeuralNetworkView Network;
+        public int Number;
 
         public abstract NeuronView CreateNeuronInstance();
         public abstract void OnRepositioned();

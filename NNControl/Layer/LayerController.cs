@@ -9,11 +9,11 @@ namespace NNControl.Layer
 {
     public class LayerController
     {
-        internal LayerView View { get; private set; }
+        internal LayerView View;
         private readonly List<NeuronController> _neurons = new List<NeuronController>();
-        internal NeuralNetworkController Network { get; private set; }
-        internal LayerController PreviousLayer { get; set; }
-        internal LayerController NextLayer { get; set; }
+        internal NeuralNetworkController Network;
+        internal LayerController PreviousLayer;
+        internal LayerController NextLayer;
 
         public LayerController(LayerController previousLayer, int layerNum, LayerView view,
             NeuralNetworkController network)

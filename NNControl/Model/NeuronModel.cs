@@ -5,7 +5,7 @@ namespace NNControl.Model
 {
     public class NeuronModel
     {
-        public SynapsesLabelsCollection SynapsesLabels { get; internal set; }
-        public string Label { get; set; }
+        public SynapsesLabelsCollection SynapsesLabels;
+        public string Label = string.Empty;
     }
 }

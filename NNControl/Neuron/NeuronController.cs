@@ -25,8 +25,8 @@ namespace NNControl.Neuron
             CreateNeuron();
         }
 
-        internal NeuronView View { get; private set; }
-        internal LayerController Layer { get; private set; }
+        internal NeuronView View;
+        internal LayerController Layer;
 
         private void CreateNeuron()
         {

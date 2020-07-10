@@ -9,12 +9,12 @@ namespace NNControl.Network
     public abstract class NeuralNetworkView
     {
         public virtual NeuralNetworkModel NeuralNetworkModel { get; set; }
-        public List<LayerView> Layers { get; } = new List<LayerView>();
-        public List<NeuronView> SelectedNeuron { get; } = new List<NeuronView>();
-        public List<SynapseView> HighlightedSynapses { get; } = new List<SynapseView>();
+        public List<LayerView> Layers = new List<LayerView>();
+        public List<NeuronView> SelectedNeuron = new List<NeuronView>();
+        public List<SynapseView> HighlightedSynapses = new List<SynapseView>();
         public virtual double Zoom { get; internal set; } = 0;
-        public int NeuronsCount { get; internal set; }
-        public SynapseView SelectedSynapse { get; set; }
+        public int NeuronsCount;
+        public SynapseView SelectedSynapse;
 
         public abstract (float x, float y) ToCanvasPoints(float x, float y);
 

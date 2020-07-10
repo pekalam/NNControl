@@ -4,15 +4,15 @@ namespace NNControl.Synapse
 {
     public abstract class SynapseView
     {
-        public int NumberInNeuron { get; set; }
-        public bool Excluded { get; set; }
-        public NeuronView Neuron1 { get; set; }
-        public NeuronView Neuron2 { get; set; }
+        public int NumberInNeuron;
+        public bool Excluded;
+        public NeuronView Neuron1;
+        public NeuronView Neuron2;
 
-        public (float x, float y) ArrowLeftEnd { get; set; }
-        public (float x, float y) ArrowRightEnd { get; set; }
-        public (float x, float y) ArrowEnd { get; set; }
-        public (float x, float y) ArrowBeg { get; set; }
+        public (float x, float y) ArrowLeftEnd;
+        public (float x, float y) ArrowRightEnd;
+        public (float x, float y) ArrowEnd;
+        public (float x, float y) ArrowBeg;
 
 
         public abstract bool Contains(float x, float y);

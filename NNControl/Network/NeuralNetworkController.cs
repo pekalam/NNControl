@@ -25,18 +25,18 @@ namespace NNControl.Network
 
         public event Action OnRequestRedraw;
 
-        internal NeuralNetworkView View { get; private set; }
+        internal NeuralNetworkView View;
 
         public IReadOnlyList<LayerController> Layers => _abstrLayers;
 
 
-        public float CanvasWidth { get; private set; }
-        public float CanvasHeight { get; private set; }
+        public float CanvasWidth;
+        public float CanvasHeight;
 
         private Box _viewportPosition;
         internal Box ViewportPosition => _viewportPosition;
 
-        public ColorManager Color { get; }
+        public ColorManager Color;
 
         public NeuralNetworkModel NeuralNetworkModel
         {

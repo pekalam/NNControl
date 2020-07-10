@@ -10,14 +10,14 @@ namespace NNControl.Neuron
         public virtual float X { get; set; }
         public virtual float Y { get; set; }
 
-        
-        public int NumberInLayer { get; set; }
-        public int Number { get; set; }
-        public bool Excluded { get; set; }
+
+        public int NumberInLayer;
+        public int Number;
+        public bool Excluded;
         public readonly List<SynapseView> Synapses = new List<SynapseView>();
         public readonly List<SynapseView> ConnectedSynapses = new List<SynapseView>();
-        public LayerView Layer { get; set; }
-        public NeuronModel NeuronModel { get; set; }
+        public LayerView Layer;
+        public NeuronModel NeuronModel;
 
         public abstract SynapseView CreateSynapseImpl();
         public abstract bool Contains(float x, float y);
