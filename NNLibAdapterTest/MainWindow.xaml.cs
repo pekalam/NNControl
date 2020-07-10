@@ -52,6 +52,8 @@ namespace NNLibAdapterTest
 
             Adapter = new NNLibAdapter.NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
+            Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
+            Adapter.SetOutputLabels(new[] { "out 1" });
             DataContext = this;
             InitializeComponent();
         }
@@ -70,6 +72,7 @@ namespace NNLibAdapterTest
                     {
                         _trainer.DoEpoch();
                         Debug.WriteLine(_trainer.Error);
+                        //Adapter.UpdateWeights(control);
                     });
 
                     await Task.Delay(10);

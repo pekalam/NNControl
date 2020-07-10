@@ -316,7 +316,7 @@ namespace NNControl.Network
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.Synapses)
+            foreach (var synapse in neuron.ConnectedSynapses)
             {
                 if (synapse.View.Contains(x, y))
                 {
@@ -387,12 +387,12 @@ namespace NNControl.Network
 
             public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
             {
-                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses.Count == 0)
                 {
                     return;
                 }
 
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses[numberInNeuron].View
                     .SetColor(hexColor);
             }
 
@@ -409,12 +409,12 @@ namespace NNControl.Network
 
             public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, int scale)
             {
-                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses.Count == 0)
+                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses.Count == 0)
                 {
                     return;
                 }
 
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View
+                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses[numberInNeuron].View
                     .SetColor(scale);
             }
 
@@ -425,7 +425,7 @@ namespace NNControl.Network
                     foreach (var neuron in layer.Neurons)
                     {
                         neuron.View.SetColor(_controller.NeuralNetworkModel.NeuronSettings.Color);
-                        foreach (var synapse in neuron.Synapses)
+                        foreach (var synapse in neuron.ConnectedSynapses)
                         {
                             synapse.View.SetColor(_controller.NeuralNetworkModel.SynapseSettings.Color);
                         }

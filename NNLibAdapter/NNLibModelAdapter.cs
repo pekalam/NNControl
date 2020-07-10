@@ -1,4 +1,5 @@
-﻿using NNControl;
+﻿using System;
+using NNControl;
 using NNControl.Adapter;
 using NNControl.Model;
 using NNControl.Network;
@@ -77,6 +78,15 @@ namespace NNLibAdapter
                 }
             };
             _layerModelAdapters.Add(new NNLibLayerAdapter(layerModel, layer));
+
+            if (_layerModelAdapters.Count > 2)
+            {
+                foreach (var neuron in NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels)
+                {
+                    neuron.Label = String.Empty;
+                }
+            }
+            
             NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
         }
 
@@ -98,13 +108,29 @@ namespace NNLibAdapter
                 {
                     for (int k = 0; k < Layers[i].InputsCount; k++)
                     {
-                        NeuralNetworkModel.NetworkLayerModels[i].NeuronModels[j].SynapsesLabels[k] =
+                        NeuralNetworkModel.NetworkLayerModels[i+1].NeuronModels[j].SynapsesLabels[k] =
                             Layers[i].Weights[j, k].ToString(format);
                     }
                 }
             }
 
             networkControl.UpdateSynapseLabels();
+        }
+
+        public void SetInputLabels(string[] labels)
+        {
+            for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count; i++)
+            {
+                NeuralNetworkModel.NetworkLayerModels[0].NeuronModels[i].Label = labels[i];
+            }
+        }
+
+        public void SetOutputLabels(string[] labels)
+        {
+            for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels.Count; i++)
+            {
+                NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels[i].Label = labels[i];
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

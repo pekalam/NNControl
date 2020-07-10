@@ -53,13 +53,16 @@ namespace NNControl.Neuron
             neuron2.ConnectedSynapses.Add(newSynapseAbstr);
             neuron2.View.ConnectedSynapses.Add(newSynapse);
 
-            neuron2.Synapses.Add(newSynapseAbstr);
-            neuron2.View.Synapses.Add(newSynapse);
+            //neuron2.Synapses.Add(newSynapseAbstr);
+            //neuron2.View.Synapses.Add(newSynapse);
 
-            neuron2.View.NeuronModel.SynapsesLabels.Add("");
 
             ConnectedSynapses.Add(newSynapseAbstr);
             View.ConnectedSynapses.Add(newSynapse);
+
+            Synapses.Add(newSynapseAbstr);
+            View.Synapses.Add(newSynapse);
+            //View.NeuronModel.SynapsesLabels.Add("1");
         }
 
         private void SetArrowPos()

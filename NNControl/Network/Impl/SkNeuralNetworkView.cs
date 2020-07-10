@@ -74,7 +74,7 @@ namespace NNControl.Network.Impl
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.Synapses)
+            foreach (var synapse in neuron.ConnectedSynapses)
             {
                 if (synapse.Excluded)
                 {
@@ -126,7 +126,7 @@ namespace NNControl.Network.Impl
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.Synapses)
+            foreach (var synapse in neuron.ConnectedSynapses)
             {
                 if (synapse.Excluded)
                 {
@@ -147,17 +147,17 @@ namespace NNControl.Network.Impl
                 }
             }
 
-
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.Synapses)
-            {
-                if (synapse.Excluded)
-                {
-                    (synapse as SkSynapseView).DrawSynapseLabel(this, layerView as SkLayerView, neuron as SkNeuronView,
-                        synapse as SkSynapseView);
-                }
-            }
+            //
+            // foreach (var layerView in Layers)
+            // foreach (var neuron in layerView.Neurons)
+            // foreach (var synapse in neuron.ConnectedSynapses)
+            // {
+            //     if (synapse.Excluded)
+            //     {
+            //         (synapse as SkSynapseView).DrawSynapseLabel(this, layerView as SkLayerView, neuron as SkNeuronView,
+            //             synapse as SkSynapseView);
+            //     }
+            // }
         }
     }
 }

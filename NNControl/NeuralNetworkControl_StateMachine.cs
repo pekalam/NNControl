@@ -74,7 +74,7 @@ namespace NNControl
 
                         if (_networkController.View.SelectedNeuron.Count == 1)
                         {
-                            ShowNeuronOverlay(_clickedNeuronScreenPoint);
+                            //ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(_networkController.View.SelectedNeuron[0]);
                         }
                         else
@@ -91,12 +91,8 @@ namespace NNControl
                 .CreateState(States.S3)
                 .Enter(s =>
                 {
-                    Console.WriteLine("asd");
                 })
-                .Loop(Triggers.LB_UP)
-                .Loop(Triggers.LBx1)
-                .Loop(Triggers.MV_LB)
-                .Loop(Triggers.LBx2)
+                .Ignoring()
                 .Transition(Triggers.RBx1, States.S4)
                 .End()
 
@@ -157,7 +153,7 @@ namespace NNControl
                         _clickedNeuronScreenPoint = _clickedPoint;
                         if (_networkController.View.SelectedNeuron.Count == 1)
                         {
-                            ShowNeuronOverlay(_clickedNeuronScreenPoint);
+                            //ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(_networkController.View.SelectedNeuron[0]);
                         }
                         else

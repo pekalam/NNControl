@@ -12,18 +12,19 @@ namespace NNControl.Neuron.Impl
         private readonly SKPaint _selectedPaint = new SKPaint();
         private readonly SKPaint _defaultInputPaint = new SKPaint();
         private readonly SKPaint _highlightedPaint = new SKPaint();
-
+        private readonly SKPaint _defaultLabelPaint = new SKPaint();
 
         public SkNeuronPainter(NeuronSettings settings)
         {
-            _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = _highlightedPaint.IsAntialias = true;
+            _defaultPaint.IsAntialias = _selectedPaint.IsAntialias = _defaultInputPaint.IsAntialias = _highlightedPaint.IsAntialias = _defaultLabelPaint.IsAntialias = true;
             _defaultPaint.Color = SKColor.Parse(settings.Color);
             _defaultInputPaint.Color = SKColor.Parse(settings.InputColor);
             _selectedPaint.Color = SKColor.Parse(settings.SelectedColor);
             _highlightedPaint.Color = SKColor.Parse(settings.HighlightedColor);
+            _defaultLabelPaint.Color = SKColor.Parse(settings.LabelColor);
             _defaultPaint.StrokeCap = _selectedPaint.StrokeCap = _highlightedPaint.StrokeCap = SKStrokeCap.Round;
 
-            _defaultInputPaint.Style = SKPaintStyle.Fill;
+            _defaultInputPaint.Style = _defaultLabelPaint.Style = SKPaintStyle.Fill;
 
             //            var selectedShadowFilter = CreateSelectedShadow();
 
@@ -79,6 +80,19 @@ namespace NNControl.Neuron.Impl
             else
             {
                 canvas.DrawCircle(neuron.X, neuron.Y, network.NeuralNetworkModel.NeuronRadius, paint);
+            }
+
+
+            if (layer.PreviousLayer == null && neuron.NeuronModel.Label != string.Empty)
+            {
+                var l = _defaultLabelPaint.MeasureText(neuron.NeuronModel.Label);
+                canvas.DrawText(neuron.NeuronModel.Label, neuron.X - network.NeuralNetworkModel.NeuronRadius / 2f - 1.75f*l, neuron.Y + _defaultLabelPaint.FontSpacing/4f, _defaultLabelPaint);
+            }
+
+            if (neuron.Synapses.Count == 0 && neuron.NeuronModel.Label != string.Empty)
+            {
+                var l = _defaultLabelPaint.MeasureText(neuron.NeuronModel.Label);
+                canvas.DrawText(neuron.NeuronModel.Label, neuron.X - network.NeuralNetworkModel.NeuronRadius / 2f + 1.25f*l, neuron.Y + _defaultLabelPaint.FontSpacing / 4f, _defaultLabelPaint);
             }
         }
 
