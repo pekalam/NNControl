@@ -56,6 +56,7 @@ namespace NNLibAdapterTest
             Adapter.SetOutputLabels(new[] { "out 1" });
             DataContext = this;
             InitializeComponent();
+            NCount.Text = _network.Layers[0].NeuronsCount.ToString();
         }
 
         public NNLibAdapter.NNLibModelAdapter Adapter { get; set; }
@@ -74,10 +75,10 @@ namespace NNLibAdapterTest
                         Debug.WriteLine(_trainer.Error);
                         //Adapter.UpdateWeights(control);
                     });
-
+            
                     await Task.Delay(10);
                 }
-
+            
             });
         }
 
@@ -89,6 +90,21 @@ namespace NNLibAdapterTest
         private void Add_OnClick(object sender, RoutedEventArgs e)
         {
             Adapter.LayerModelAdapters[1].SetNeuronsCount(_network.Layers[0].NeuronsCount+1);
+            _network.Layers[0].NeuronsCount++;
+        }
+
+        private void NCount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var n = Convert.ToInt32(NCount.Text);
+                Adapter.LayerModelAdapters[1].SetNeuronsCount(n);
+                _network.Layers[0].NeuronsCount = n;
+            }
+            catch (Exception exception)
+            {
+
+            }
         }
     }
 }

@@ -131,17 +131,6 @@ namespace NNControl.Layer
             }
         }
 
-        public void AddSynapsesToNext(LayerController next)
-        {
-            foreach (var neuron in Neurons)
-            {
-                foreach (var nextNeuron in next.Neurons)
-                {
-                    neuron.AddSynapse(nextNeuron);
-                }
-            }
-        }
-
         private void NeuronModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -165,7 +154,10 @@ namespace NNControl.Layer
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                RemoveNeuron(e.OldStartingIndex);
+                foreach (var item in e.OldItems)
+                {
+                    RemoveNeuron((int)item);
+                }
             }
         }
 

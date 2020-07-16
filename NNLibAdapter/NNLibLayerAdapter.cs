@@ -3,6 +3,7 @@ using NNControl.Model;
 using NNLib;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NNLibAdapter
@@ -53,11 +54,7 @@ namespace NNLibAdapter
             }
             else
             {
-                var newNeuronModels = new NeuronModel[layerNeuronsCount - neuronsCount];
-                for (int i = 0; i < layerNeuronsCount - neuronsCount; i++)
-                {
-                    LayerModel.NeuronModels.RemoveAt(LayerModel.NeuronModels.Count - 1);
-                }
+                LayerModel.NeuronModels.RemoveRange(LayerModel.NeuronModels.Where((_, ind) => ind >= neuronsCount).ToArray());
             }
 
         }

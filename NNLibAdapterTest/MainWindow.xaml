@@ -16,6 +16,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Name="Highlihght" Click="Highlihght_OnClick">Highlight</Button>
             <Button Name="Add" Click="Add_OnClick">Add</Button>
+            <TextBox Name="NCount" MinWidth="100" TextChanged="NCount_TextChanged"/>
         </StackPanel>
     </Grid>
 </Window>
