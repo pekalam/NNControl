@@ -16,7 +16,7 @@ namespace ColorAnimationTest
 
         public void CallSetColors(MLPNetwork network)
         {
-            SetColors(network.Layers);
+            SetColorsPerLayer(network.Layers);
         }
     }
 
@@ -26,6 +26,7 @@ namespace ColorAnimationTest
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int i = 0;
         private MLPNetwork _network;
         private TestColorAnimation _colorAnimation;
 
@@ -58,7 +59,39 @@ namespace ColorAnimationTest
                     {
                         for (int c = 0; c < layer.Weights.ColumnCount; c++)
                         {
-                            layer.Weights[r, c] = rnd.NextDouble() * rnd.Next(-101, 100);
+                            if (i < 4)
+                            {
+                                if (Adapter.ColorAnimation.AnimationMode == ColorAnimationMode.Layer)
+                                {
+                                    layer.Weights[r, c] = rnd.NextDouble() * rnd.Next(-101, 100);
+                                }
+                                else
+                                {
+                                    if (layer.IsOutputLayer)
+                                    {
+                                        layer.Weights[r, c] = rnd.NextDouble() * rnd.Next(-101, 100);
+                                    }
+                                    else
+                                    {
+                                        layer.Weights[r, c] = 0.000001;
+                                    }
+                                }
+                            }
+
+                            if (i > 4)
+                            {
+                                layer.Weights[r, c] = c switch
+                                {
+                                    0 => 0.01,
+                                    1 => 0,
+                                    _ => 100
+                                };
+                            }
+
+                            if (i == 8)
+                            {
+                                i = 0;
+                            }
                         }
                     }
 
@@ -71,9 +104,20 @@ namespace ColorAnimationTest
                 _colorAnimation.CallSetColors(_network);
 
                 await Task.Delay(1000);
+                i++;
             }
         }
 
         public NNLibModelAdapter Adapter { get; set; }
+
+        private void Mode_Checked(object sender, RoutedEventArgs e)
+        {
+            Adapter.ColorAnimation.AnimationMode = ColorAnimationMode.Network;
+        }
+
+        private void Mode_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Adapter.ColorAnimation.AnimationMode = ColorAnimationMode.Layer;
+        }
     }
 }

@@ -9,9 +9,15 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.VisualBasic;
 
 namespace NNLibAdapter
 {
+    public enum ColorAnimationMode
+    {
+        Layer,Network,
+    }
+
     public class ColorAnimation
     {
         private readonly ReplaySubject<int> _sub = new ReplaySubject<int>(10);
@@ -25,6 +31,8 @@ namespace NNLibAdapter
         {
             _controller = controller;
         }
+
+        public ColorAnimationMode AnimationMode { get; set; }
 
         public void SetupTrainer(MLPTrainer trainer)
         {
@@ -80,7 +88,14 @@ namespace NNLibAdapter
         private void UpdateColors()
         {
             var layers = _trainer.Network.Layers;
-            SetColors(layers);
+            if(AnimationMode == ColorAnimationMode.Layer)
+            {
+                SetColorsPerLayer(layers);
+            }
+            else
+            {
+                SetColorsPerNetwork(layers);
+            }
         }
 
 
@@ -119,9 +134,6 @@ namespace NNLibAdapter
                     }
                 }
             }
-
-
-
 
             return (mingz, maxgz, minlz, maxlz);
         }
@@ -163,8 +175,6 @@ namespace NNLibAdapter
             return (mingz, maxgz, minlz, maxlz);
         }
 
-        private static int i = 128;
-
         private int Scale(double x, double minx, double maxx, int miny, int maxy, int start = 0)
         {
             // var r = new Random().Next(0, 6);
@@ -193,46 +203,39 @@ namespace NNLibAdapter
             return s;
         }
 
-        protected virtual void SetColors(IReadOnlyList<PerceptronLayer> layers)
+        protected virtual void SetColorsPerLayer(IReadOnlyList<PerceptronLayer> layers)
         {
             var color = _controller.Color;
 
             for (int i = 0; i < layers.Count; i++)
             {
-                var (mingz, maxgz, minlz, maxlz) = FindMinMax(layers[i]);
+                var (_, maxgz, minlz, _) = FindMinMax(layers[i]);
+                var (_, maxbgz, minblz, _) = FindMinMaxB(layers[i]);
 
-                for (int j = 0; j < layers[i].Weights.RowCount; j++)
+                for (int j = 0; j < layers[i].Weights.ColumnCount; j++)
                 {
-                    for (int k = 0; k < layers[i].Weights.ColumnCount; k++)
+                    for (int k = 0; k < layers[i].Weights.RowCount; k++)
                     {
-                        var el = layers[i].Weights[j, k];
-                        if (el < 0)
+                        if (layers[i].Weights[k, j] < 0)
                         {
-                            color.SetSynapseColor(i + 1, j, k, Scale(el, minlz, 0, 0, 126));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], minlz, 0, 0, 126));
                         }
                         else
                         {
-                            color.SetSynapseColor(i + 1, j, k, Scale(el, 0, maxgz, 0, 126, 128));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], 0, maxgz, 0, 126, 128));
                         }
                     }
                 }
-            }
-
-
-            for (int i = 0; i < layers.Count; i++)
-            {
-                var (minbgz, maxbgz, minblz, maxblz) = FindMinMaxB(layers[i]);
 
                 for (int j = 0; j < layers[i].Biases.RowCount; j++)
                 {
-                    var el = layers[i].Biases[j, 0];
-                    if (el < 0)
+                    if (layers[i].Biases[j, 0] < 0)
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(el, minblz, 0, 0, 126));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], minblz, 0, 0, 126));
                     }
                     else
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(el, 0, maxbgz, 0, 126, 128));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], 0, maxbgz, 0, 126, 128));
                     }
                 }
             }
@@ -247,6 +250,69 @@ namespace NNLibAdapter
                 Application.Current?.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
             }
 
+        }
+
+        protected virtual void SetColorsPerNetwork(IReadOnlyList<PerceptronLayer> layers)
+        {
+            var color = _controller.Color;
+            double mingz=double.MinValue, maxgz=double.MinValue, minlz=double.MinValue, maxlz=double.MaxValue;
+            double minbgz = double.MinValue, maxbgz = double.MaxValue, minblz = double.MinValue, maxblz = double.MaxValue;
+
+            for (int i = 0; i < layers.Count; i++)
+            {
+                var (nmingz, nmaxgz, nminlz, nmaxlz) = FindMinMax(layers[i]);
+                if (nmingz < mingz) mingz = nmingz;
+                if (nmaxgz > maxgz) maxgz = nmaxgz;
+                if (nminlz < minlz) minlz = nminlz;
+                if (nmaxlz > maxlz) maxlz = nmaxlz;
+
+
+                var (nminbgz, nmaxbgz, nminblz, nmaxblz) = FindMinMaxB(layers[i]);
+                if (nminbgz < minbgz) minbgz = nminbgz;
+                if (nmaxbgz > maxbgz) maxbgz = nmaxbgz;
+                if (nminblz < minblz) minblz = nminblz;
+                if (nmaxblz > maxblz) maxblz = nmaxblz;
+            }
+
+
+            for (int i = 0; i < layers.Count; i++)
+            {
+                for (int j = 0; j < layers[i].Weights.ColumnCount; j++)
+                {
+                    for (int k = 0; k < layers[i].Weights.RowCount; k++)
+                    {
+                        if (layers[i].Weights[k, j] < 0)
+                        {
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], minlz, 0, 0, 126));
+                        }
+                        else
+                        {
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], 0, maxgz, 0, 126, 128));
+                        }
+                    }
+                }
+
+                for (int j = 0; j < layers[i].Biases.RowCount; j++)
+                {
+                    if (layers[i].Biases[j, 0] < 0)
+                    {
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], minblz, 0, 0, 126));
+                    }
+                    else
+                    {
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], 0, maxbgz, 0, 126, 128));
+                    }
+                }
+            }
+
+            if (_colorUpdateHighOrder != null)
+            {
+                _colorUpdateHighOrder(() => color.ApplyColors());
+            }
+            else
+            {
+                Application.Current?.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
+            }
         }
     }
 }

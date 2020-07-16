@@ -8,6 +8,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
         <nnControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <CheckBox Name="Mode" Content="Network animation mode" Checked="Mode_Checked" Unchecked="Mode_Unchecked"/>
+        </StackPanel>
     </Grid>
 </Window>
