@@ -86,13 +86,13 @@ namespace NNControl.Neuron.Impl
             if (layer.PreviousLayer == null && neuron.NeuronModel.Label != string.Empty)
             {
                 var l = _defaultLabelPaint.MeasureText(neuron.NeuronModel.Label);
-                canvas.DrawText(neuron.NeuronModel.Label, neuron.X - network.NeuralNetworkModel.NeuronRadius / 2f - 1.75f*l, neuron.Y + _defaultLabelPaint.FontSpacing/4f, _defaultLabelPaint);
+                canvas.DrawText(neuron.NeuronModel.Label, neuron.X - network.NeuralNetworkModel.NeuronRadius - l - 10, neuron.Y + _defaultLabelPaint.FontSpacing/4f, _defaultLabelPaint);
             }
 
             if (neuron.Synapses.Count == 0 && neuron.NeuronModel.Label != string.Empty)
             {
                 var l = _defaultLabelPaint.MeasureText(neuron.NeuronModel.Label);
-                canvas.DrawText(neuron.NeuronModel.Label, neuron.X - network.NeuralNetworkModel.NeuronRadius / 2f + 1.25f*l, neuron.Y + _defaultLabelPaint.FontSpacing / 4f, _defaultLabelPaint);
+                canvas.DrawText(neuron.NeuronModel.Label, neuron.X + network.NeuralNetworkModel.NeuronRadius + 10, neuron.Y + _defaultLabelPaint.FontSpacing / 4f, _defaultLabelPaint);
             }
         }
 
