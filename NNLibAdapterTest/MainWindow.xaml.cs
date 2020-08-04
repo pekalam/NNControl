@@ -106,5 +106,11 @@ namespace NNLibAdapterTest
 
             }
         }
+
+        private void RmMid_Click(object sender, RoutedEventArgs e)
+        {
+            Adapter.RemoveLayer(1);
+            _network.RemoveLayer(_network.Layers[1]);
+        }
     }
 }

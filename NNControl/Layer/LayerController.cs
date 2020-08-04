@@ -99,9 +99,9 @@ namespace NNControl.Layer
 
         public void RemoveNeurons()
         {
-            for (int i = 0; i < Neurons.Count; i++)
+            while (_neurons.Count > 0)
             {
-                RemoveNeuron(i);
+                RemoveNeuron(0);
             }
         }
 

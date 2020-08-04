@@ -59,7 +59,7 @@ namespace NNLibAdapter
                 });
         }
 
-        public void SetupTrainer(MLPTrainer trainer, TimeSpan delay,ref Action epochEndAction, Action<Action> colorUpdateHighOrder)
+        public void SetupTrainer(MLPTrainer trainer,ref Action epochEndAction, Action<Action> colorUpdateHighOrder)
         {
             _trainer = trainer;
             _colorUpdateHighOrder = colorUpdateHighOrder;

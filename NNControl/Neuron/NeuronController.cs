@@ -82,6 +82,9 @@ namespace NNControl.Neuron
 
         internal void RemoveSynapseTo(NeuronController neuron2)
         {
+            Synapses.RemoveAll(s => s.Neuron2 == neuron2);
+            View.Synapses.RemoveAll(s => s.Neuron2 == neuron2.View);
+
             ConnectedSynapses.RemoveAll(s => s.Neuron2 == neuron2);
             View.ConnectedSynapses.RemoveAll(s => s.Neuron2 == neuron2.View);
         }
@@ -89,9 +92,10 @@ namespace NNControl.Neuron
         internal void RemoveSynapseFrom(NeuronController neuron1)
         {
             Synapses.RemoveAll(s => s.Neuron1 == neuron1);
+            View.Synapses.RemoveAll(s => s.Neuron1 == neuron1.View);
+
             ConnectedSynapses.RemoveAll(s => s.Neuron1 == neuron1);
             View.ConnectedSynapses.RemoveAll(s => s.Neuron1 == neuron1.View);
-            View.Synapses.RemoveAll(s => s.Neuron1 == neuron1.View);
         }
 
         public void Reposition()

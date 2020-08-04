@@ -40,17 +40,27 @@ namespace LargeNet
             {
                 while (true)
                 {
-                    var l = rnd.Next(0, control.Controller.Layers.Count);
-                    var n = rnd.Next(0, control.Controller.Layers[l].Neurons.Count);
-                    var s = rnd.Next(0, control.Controller.Layers[l].Neurons[n].TotalSynapses);
+                    // var l = rnd.Next(0, control.Controller.Layers.Count);
+                    // var n = rnd.Next(0, control.Controller.Layers[l].Neurons.Count);
+                    // var s = rnd.Next(0, control.Controller.Layers[l].Neurons[n].TotalSynapses);
+
+                    var b = new byte[3];
+                    for (int i = 0; i < control.Controller.Layers.Count; i++)
+                    {
+                        for (int j = 0; j < control.Controller.Layers[i].Neurons.Count; j++)
+                        {
+                            for (int k = 0; k < control.Controller.Layers[i].Neurons[j].TotalSynapses; k++)
+                            {
+                                rnd.NextBytes(b);
+                                var str = BitConverter.ToString(b).Replace("-", "");
+                                control.Controller.Color.SetNeuronColor(i, j, "#" + str);
+                                control.Controller.Color.SetSynapseColor(i, j, k, "#" + str);
+                            }
+                        }
+                    }
 
                     Dispatcher.Invoke(() =>
                     {
-                        var b = new byte[3];
-                        rnd.NextBytes(b);
-                        var str = BitConverter.ToString(b).Replace("-", "");
-                        control.Controller.Color.SetNeuronColor(l, n, "#" + str);
-                        control.Controller.Color.SetSynapseColor(l, n, s, "#" + str);
                         control.Controller.Color.ApplyColors();
                     });
 

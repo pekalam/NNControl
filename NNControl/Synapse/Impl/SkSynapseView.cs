@@ -23,7 +23,7 @@ namespace NNControl.Synapse.Impl
             "#00B0FF", "#00B2FF", "#00B4FF", "#00B6FF", "#00B8FF", "#00BBFF", "#00BDFF", "#00BFFF", "#00C1FF",
             "#00C3FF", "#00C5FF", "#00C7FF", "#00CAFF", "#00CCFF", "#00CEFF", "#00D0FF", "#00D2FF", "#00D4FF",
             "#00D7FF", "#00D9FF", "#00DBFF", "#00DDFF", "#00DFFF", "#00E1FF", "#00E3FF", "#00E6FF", "#00E8FF",
-            "#FFFFFF", "#00EBFF", "#00EDFF", "#00EFFF", "#00F1FF", "#00F4FF", "#00F6FF", "#00F8FF", "#00FAFF", "#00FCFF"
+            "#00EAFF", "#00EBFF", "#00EDFF", "#00EFFF", "#00F1FF", "#00F4FF", "#00F6FF", "#00F8FF", "#00FAFF", "#00FCFF"
         };
 
         private static readonly string[] RedScale2 = new[]
