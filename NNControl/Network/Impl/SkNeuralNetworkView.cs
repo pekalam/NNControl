@@ -4,30 +4,22 @@ using NNControl.Model;
 using NNControl.Neuron.Impl;
 using NNControl.Synapse.Impl;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace NNControl.Network.Impl
 {
-
-
-    internal partial class SkNeuralNetworkView
-    {
-
-    }
-
-
-    internal partial class SkNeuralNetworkView : NeuralNetworkView
+    internal class SkNeuralNetworkView : NeuralNetworkView
     {
         private SKImage _saved;
 
         private NeuralNetworkModel _neuralNetworkModel;
         private SkNetworkLayerPainter _networkLayerPainter;
+        private SKColor _bgColor;
 
         private float _transX;
         private float _transY;
 
-        public SkNeuralNetworkView()
-        {
-        }
+        public SKPaintSurfaceEventArgs PaintArgs;
 
         public override LayerView CreateLayerInstance()
         {
@@ -40,6 +32,7 @@ namespace NNControl.Network.Impl
             set
             {
                 _neuralNetworkModel = value;
+                _bgColor = SKColor.Parse(value.BackgroundColor);
                 _networkLayerPainter = new SkNetworkLayerPainter();
             }
         }
@@ -47,77 +40,64 @@ namespace NNControl.Network.Impl
 
         private void ApplyZoom()
         {
-            var ctx = SkNetworkPaintContextHolder.Context;
-
-            var m = ctx.e.Surface.Canvas.TotalMatrix;
+            var m = PaintArgs.Surface.Canvas.TotalMatrix;
             m.ScaleX = (float) Zoom + 1;
             m.ScaleY = (float) Zoom + 1;
 
             // m.TransX = (float) (ZoomCenterX * Zoom);
             // m.TransY = (float)(ZoomCenterY * Zoom);
 
-            
-            _transX = m.TransX = -ctx.e.Surface.Canvas.DeviceClipBounds.MidX * (float)Zoom;
-            _transY = m.TransY = -ctx.e.Surface.Canvas.DeviceClipBounds.MidY * (float)Zoom;
 
-            ctx.e.Surface.Canvas.SetMatrix(m);
+            _transX = m.TransX = -PaintArgs.Surface.Canvas.DeviceClipBounds.MidX * (float) Zoom;
+            _transY = m.TransY = -PaintArgs.Surface.Canvas.DeviceClipBounds.MidY * (float) Zoom;
+
+            PaintArgs.Surface.Canvas.SetMatrix(m);
         }
 
         private void DrawAll()
         {
-            var ctx = SkNetworkPaintContextHolder.Context;
-            var canvas = ctx.e.Surface.Canvas;
-
-            canvas.Clear(SKColor.Parse(NeuralNetworkModel.BackgroundColor));
+            PaintArgs.Surface.Canvas.Clear(_bgColor);
 
             ApplyZoom();
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.ConnectedSynapses)
             {
-                if (synapse.Excluded)
+                foreach (var synapse in neuron.ConnectedSynapses)
                 {
-                    continue;
+                    if (synapse.Excluded)
+                    {
+                        continue;
+                    }
+
+
+                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
                 }
 
-
-                (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
-                    synapse as SkSynapseView);
-            }
-
-
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
-            {
                 if (neuron.Excluded)
                 {
                     continue;
                 }
 
-                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView);
             }
-
         }
 
         public override (float x, float y) ToCanvasPoints(float x, float y)
         {
-            return ((x - _transX) / (float)(Zoom + 1), (y - _transY) / (float)(Zoom + 1));
+            return ((x - _transX) / (float) (Zoom + 1), (y - _transY) / (float) (Zoom + 1));
         }
 
-       
 
         public override void DrawAndSave()
         {
-            var ctx = SkNetworkPaintContextHolder.Context;
             DrawAll();
-            _saved = ctx.e.Surface.Snapshot();
+            _saved = PaintArgs.Surface.Snapshot();
         }
 
         public override void DrawFromSaved()
         {
-            var ctx = SkNetworkPaintContextHolder.Context;
-            ctx.e.Surface.Canvas.DrawImage(_saved, 0, 0);
+            PaintArgs.Surface.Canvas.DrawImage(_saved, 0, 0);
         }
 
         public override void DrawExcluded()
@@ -126,24 +106,18 @@ namespace NNControl.Network.Impl
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.ConnectedSynapses)
             {
-                if (synapse.Excluded)
+                foreach (var synapse in neuron.ConnectedSynapses)
                 {
-                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView,
-                        synapse as SkSynapseView);
-                }
-            }
-
-
-            foreach (var layerView in Layers)
-            {
-                foreach (var neuron in layerView.Neurons)
-                {
-                    if (neuron.Excluded)
+                    if (synapse.Excluded)
                     {
-                        (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                        (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
                     }
+                }
+
+                if (neuron.Excluded)
+                {
+                    (neuron as SkNeuronView).Draw(this, layerView as SkLayerView);
                 }
             }
 

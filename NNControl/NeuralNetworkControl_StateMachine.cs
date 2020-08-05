@@ -43,12 +43,12 @@ namespace NNControl
                 .CreateState(States.S1)
                     .Enter(s =>
                     {
-                        if ((_clickedNeuron = _networkController.SelectNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
+                        if ((_clickedNeuron = Controller.SelectNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
                         {
                             _clickedNeuronScreenPoint = _clickedPoint;
                             _stateMachine.Next(Triggers.NEURON_HIT);
                         }
-                        else if ((_clickedSynapse = _networkController.SelectSynapseAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
+                        else if ((_clickedSynapse = Controller.SelectSynapseAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
                         {
                             _stateMachine.Next(Triggers.SYNAPSE_HIT);
                         }
@@ -69,13 +69,13 @@ namespace NNControl
                         if (_clickedSynapse != null)
                         {
                             _clickedSynapse = null;
-                            _networkController.DeselectSynapse();
+                            Controller.DeselectSynapse();
                         }
 
-                        if (_networkController.View.SelectedNeuron.Count == 1)
+                        if (Controller.View.SelectedNeuron.Count == 1)
                         {
                             //ShowNeuronOverlay(_clickedNeuronScreenPoint);
-                            RaiseNeuronClickEvent(_networkController.View.SelectedNeuron[0]);
+                            RaiseNeuronClickEvent(Controller.View.SelectedNeuron[0]);
                         }
                         else
                         {
@@ -100,7 +100,7 @@ namespace NNControl
                 .Enter(s =>
                 {
                     _clickedSynapse = null;
-                    _networkController.DeselectSynapse();
+                    Controller.DeselectSynapse();
                     _stateMachine.Next(Triggers.SYNAPSE_DESELECT);
                 })
                 .Transition(Triggers.SYNAPSE_DESELECT, States.S0)
@@ -109,7 +109,7 @@ namespace NNControl
                 .CreateState(States.S5)
                     .Enter(s =>
                     {
-                        if ((_clickedNeuron = _networkController.SelectNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
+                        if ((_clickedNeuron = Controller.SelectNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y)) != null)
                         {
                             _stateMachine.Next(Triggers.NEURON_HIT);
                         }
@@ -125,12 +125,12 @@ namespace NNControl
                 .CreateState(States.S6)
                     .Enter(s =>
                     {
-                        _clickedNeuron = _networkController.FindNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y);
+                        _clickedNeuron = Controller.FindNeuronAt((int)_clickedPoint.X, (int)_clickedPoint.Y);
                         if (_clickedNeuron == null)
                         {
                             _stateMachine.Next(Triggers.BACKGROUND_HIT);
                         }
-                        else if (_networkController.View.SelectedNeuron.Contains(_clickedNeuron.View))
+                        else if (Controller.View.SelectedNeuron.Contains(_clickedNeuron.View))
                         {
                             _stateMachine.Next(Triggers.NEURON_HIT);
                         }
@@ -149,12 +149,12 @@ namespace NNControl
                 .CreateState(States.S7)
                     .Enter(s =>
                     {
-                        _networkController.MoveSelectedNeurons(_clickedNeuron.View, (float)_clickedPoint.X, (float)_clickedPoint.Y);
+                        Controller.MoveSelectedNeurons(_clickedNeuron.View, (float)_clickedPoint.X, (float)_clickedPoint.Y);
                         _clickedNeuronScreenPoint = _clickedPoint;
-                        if (_networkController.View.SelectedNeuron.Count == 1)
+                        if (Controller.View.SelectedNeuron.Count == 1)
                         {
                             //ShowNeuronOverlay(_clickedNeuronScreenPoint);
-                            RaiseNeuronClickEvent(_networkController.View.SelectedNeuron[0]);
+                            RaiseNeuronClickEvent(Controller.View.SelectedNeuron[0]);
                         }
                         else
                         {
@@ -165,7 +165,7 @@ namespace NNControl
                     {
                         if (s.Trigger == Triggers.LB_UP)
                         {
-                            _networkController.SelectedNeuronMoveEnd();
+                            Controller.SelectedNeuronMoveEnd();
                         }
                     })
                     .Transition(Triggers.LB_UP, States.S2)
@@ -179,7 +179,7 @@ namespace NNControl
                     .Enter(s =>
                     {
                         _clickedNeuron = null;
-                        _networkController.DeselectNeuron();
+                        Controller.DeselectNeuron();
                         HideNeuronOverlay();
                         _stateMachine.Next(Triggers.ALL_NEURONS_DESELECT);
                     })
@@ -207,7 +207,7 @@ namespace NNControl
                 .CreateState(States.S11)
                     .Enter(s =>
                     {
-                        _networkController.Move((int)(_clickedPoint.X - _baseMovePoint.X), (int)(_clickedPoint.Y - _baseMovePoint.Y));
+                        Controller.Move((int)(_clickedPoint.X - _baseMovePoint.X), (int)(_clickedPoint.Y - _baseMovePoint.Y));
                         _baseMovePoint = _clickedPoint;
                     })
                 .Loop(Triggers.MV_LB)
@@ -231,7 +231,7 @@ namespace NNControl
                 .CreateState(States.S13)
                 .Enter(s =>
                 {
-                    _networkController.Move((int)(_clickedPoint.X - _baseMovePoint.X), (int)(_clickedPoint.Y - _baseMovePoint.Y));
+                    Controller.Move((int)(_clickedPoint.X - _baseMovePoint.X), (int)(_clickedPoint.Y - _baseMovePoint.Y));
                     _baseMovePoint = _clickedPoint;
                 })
                 .Transition(Triggers.LB_UP, States.S0)

@@ -98,8 +98,7 @@ namespace NNControl.Neuron.Impl
 
         public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)
         {
-            var ctx = SkNetworkPaintContextHolder.Context;
-            var canvas = ctx.e.Surface.Canvas;
+            var canvas = network.PaintArgs.Surface.Canvas;
 
 #if DEBUG2
             canvas.DrawRect(neuron.ReferenceRect, _defaultInputPaint);

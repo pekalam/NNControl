@@ -11,131 +11,55 @@ namespace NNControl.Network
 {
     public partial class NeuralNetworkController
     {
-        internal NeuralNetworkPositionManager PositionManager =
-            new NeuralNetworkPositionManager();
-
-        private readonly List<LayerController> _abstrLayers = new List<LayerController>();
         private readonly List<NeuronController> _selectedNeurons = new List<NeuronController>();
+        private readonly Action _onRedraw;
 
-        public NeuralNetworkController(NeuralNetworkView view) : this()
+        internal NetworkPositionManager PositionManager = new NetworkPositionManager();
+        internal NetworkStructureManager StructureManager;
+        public ColorManager Color;
+        internal NeuralNetworkView View;
+        internal Box ViewportPosition;
+
+
+        public IReadOnlyList<LayerController> Layers => StructureManager.LayerControllers;
+        public float CanvasWidth;
+        public float CanvasHeight;
+
+        public NeuralNetworkController(NeuralNetworkView view, Action onRedraw) : this(onRedraw)
         {
+            StructureManager = new NetworkStructureManager(view, this);
             View = view;
             Color = new ColorManager(this);
         }
 
-        public event Action OnRequestRedraw;
-
-        internal NeuralNetworkView View;
-
-        public IReadOnlyList<LayerController> Layers => _abstrLayers;
-
-
-        public float CanvasWidth;
-        public float CanvasHeight;
-
-        private Box _viewportPosition;
-        internal Box ViewportPosition => _viewportPosition;
-
-        public ColorManager Color;
-
         public NeuralNetworkModel NeuralNetworkModel
         {
-            get => View.NeuralNetworkModel;
+            get => StructureManager.View.NeuralNetworkModel;
             set
             {
-                _abstrLayers.Clear();
-                View.Layers.Clear();
-                View.NeuralNetworkModel = value;
+                StructureManager.SetNeuralNetworkModel(value);
+                StructureManager.AddNewLayers();
 
-                AddNewLayers();
+                PositionManager.AdjustNetworkPosition(this);
 
-                PositionManager.InvokeActionsAfterPositionsSet(this);
+                value.NetworkLayerModels.CollectionChanged += (_, arg) =>
+                {
+                    if (arg.Action == NotifyCollectionChangedAction.Add)
+                    {
+                        foreach (var item in arg.NewItems)
+                        {
+                            (item as LayerModel).NeuronModels.CollectionChanged += (_, __) => Reposition();
+                        }
+                    }
 
-                value.NetworkLayerModels.CollectionChanged += NetworkLayerModelsOnCollectionChanged;
+                    Reposition();
+                };
+                foreach (var layerModel in value.NetworkLayerModels)
+                {
+                    layerModel.NeuronModels.CollectionChanged += (_, __) => Reposition();
+                }
 
                 RequestRedraw(ViewTrig.FORCE_DRAW);
-            }
-        }
-
-        private void AddNewLayers(int collectionStartingIndex = 0)
-        {
-            for (int i = collectionStartingIndex; i < View.NeuralNetworkModel.NetworkLayerModels.Count; i++)
-            {
-                CreateAndAddNewLayer(i);
-                View.NeuralNetworkModel.NetworkLayerModels[i].NeuronModels.CollectionChanged +=
-                    NeuronModelsOnCollectionChanged;
-            }
-
-            SetNeuronsNumbers();
-            View.NeuronsCount = NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count).Sum();
-        }
-
-        private void CreateAndAddNewLayer(int layerNum)
-        {
-            var newLayer = View.CreateLayerInstance();
-            View.Layers.Add(newLayer);
-
-            var previousLayer = layerNum == 0 ? null : _abstrLayers[layerNum - 1];
-            var newAbstractLayer = new LayerController(previousLayer, layerNum,
-                newLayer, this);
-            if (previousLayer != null)
-            {
-                previousLayer.NextLayer = newAbstractLayer;
-            }
-
-            _abstrLayers.Add(newAbstractLayer);
-        }
-
-        private void NetworkLayerModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                AddNewLayers(e.NewStartingIndex);
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                LayerController next = e.OldStartingIndex < Layers.Count - 1 ? Layers[e.OldStartingIndex + 1] : null;
-                next?.RemoveSynapsesFromPrevious();
-
-                LayerController toRemove = _abstrLayers[e.OldStartingIndex];
-                //toRemove.RemoveSynapsesFromPrevious();
-                toRemove.RemoveNeurons();
-
-                View.Layers.RemoveAt(e.OldStartingIndex);
-                _abstrLayers.RemoveAt(e.OldStartingIndex);
-
-                for (int i = 0; i < _abstrLayers.Count; i++)
-                {
-                    _abstrLayers[i].View.Number = i;
-                    View.Layers[i].PreviousLayer = i > 0 ? View.Layers[i - 1] : null;
-                    _abstrLayers[i].PreviousLayer = i > 0 ? _abstrLayers[i - 1] : null;
-                    _abstrLayers[i].NextLayer = i < _abstrLayers.Count - 1 ? _abstrLayers[i + 1] : null;
-                }
-
-                next?.AddSynapsesToPrevious();
-            }
-
-            Reposition();
-        }
-
-        private void NeuronModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            View.NeuronsCount = View.NeuralNetworkModel.NetworkLayerModels.Select(model => model.NeuronModels.Count)
-                .Sum();
-            SetNeuronsNumbers();
-
-            Reposition();
-        }
-
-        private void SetNeuronsNumbers()
-        {
-            int n = 0;
-            foreach (var layer in View.Layers)
-            {
-                foreach (var neuron in layer.Neurons)
-                {
-                    neuron.Number = n++;
-                }
             }
         }
 
@@ -270,8 +194,8 @@ namespace NNControl.Network
 
         public void Move(int dx, int dy)
         {
-            _viewportPosition.Left += dx;
-            _viewportPosition.Top += dy;
+            ViewportPosition.Left += dx;
+            ViewportPosition.Top += dy;
             foreach (var layer in Layers)
             {
                 layer.View.X += dx;
@@ -287,14 +211,14 @@ namespace NNControl.Network
 
         public void Reposition()
         {
-            _viewportPosition.Left = 0;
-            _viewportPosition.Top = 0;
+            ViewportPosition.Left = 0;
+            ViewportPosition.Top = 0;
             foreach (var layer in Layers)
             {
                 layer.Reposition();
             }
 
-            PositionManager.InvokeActionsAfterPositionsSet(this);
+            PositionManager.AdjustNetworkPosition(this);
             RequestRedraw(ViewTrig.REPOSITION);
         }
 
@@ -305,7 +229,7 @@ namespace NNControl.Network
                 layer.Reposition();
             }
 
-            PositionManager.InvokeActionsAfterPositionsSet(this, false);
+            PositionManager.AdjustNetworkPosition(this, false);
             RequestRedraw(ViewTrig.REPOSITION);
         }
 
@@ -316,7 +240,7 @@ namespace NNControl.Network
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.ConnectedSynapses)
+            foreach (var synapse in neuron.Synapses)
             {
                 if (synapse.View.Contains(x, y))
                 {
@@ -344,101 +268,8 @@ namespace NNControl.Network
 
         public void RequestRedraw(NeuralNetworkController.ViewTrig next)
         {
-            Check.NotNull(OnRequestRedraw);
             _redrawStateMachine.Next(next);
-            // ReSharper disable once PossibleNullReferenceException
-            OnRequestRedraw.Invoke();
-        }
-    }
-
-    public partial class NeuralNetworkController
-    {
-        public class ColorManager
-        {
-            private NeuralNetworkController _controller;
-
-            public ColorManager(NeuralNetworkController controller)
-            {
-                _controller = controller;
-            }
-
-            public void SetNeuronColor(int layerNumber, int numberInLayer, string hexColor)
-            {
-                _controller.Layers[layerNumber].Neurons[numberInLayer].View.SetColor(hexColor);
-            }
-
-            public void SetNeuronColor(int number, string hexColor)
-            {
-                NeuronController neuron = null;
-                foreach (var layer in _controller.Layers)
-                {
-                    foreach (var n in layer.Neurons)
-                    {
-                        if (n.View.Number == number)
-                        {
-                            neuron = n;
-                            break;
-                        }
-                    }
-                }
-
-                neuron?.View.SetColor(hexColor);
-            }
-
-            public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
-            {
-                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses.Count == 0)
-                {
-                    return;
-                }
-
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses[numberInNeuron].View
-                    .SetColor(hexColor);
-            }
-
-
-            public void SetNeuronColor(int layerNumber, int numberInLayer, int scale)
-            {
-                _controller.Layers[layerNumber].Neurons[numberInLayer].View.SetColor(scale);
-            }
-
-            public void SetNeuronColor(int number, int scale)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, int scale)
-            {
-                if (_controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses.Count == 0)
-                {
-                    return;
-                }
-
-                _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].ConnectedSynapses[numberInNeuron].View
-                    .SetColor(scale);
-            }
-
-            public void ResetColorsToDefault()
-            {
-                foreach (var layer in _controller.Layers)
-                {
-                    foreach (var neuron in layer.Neurons)
-                    {
-                        neuron.View.SetColor(_controller.NeuralNetworkModel.NeuronSettings.Color);
-                        foreach (var synapse in neuron.ConnectedSynapses)
-                        {
-                            synapse.View.SetColor(_controller.NeuralNetworkModel.SynapseSettings.Color);
-                        }
-                    }
-                }
-
-                ApplyColors();
-            }
-
-            public void ApplyColors()
-            {
-                _controller.RequestRedraw(ViewTrig.FORCE_DRAW);
-            }
+            _onRedraw();
         }
     }
 }

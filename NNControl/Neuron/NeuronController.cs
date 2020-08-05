@@ -50,34 +50,33 @@ namespace NNControl.Neuron
 
             newSynapse.NumberInNeuron = neuron2.Synapses.Count;
 
-            neuron2.ConnectedSynapses.Add(newSynapseAbstr);
-            neuron2.View.ConnectedSynapses.Add(newSynapse);
+            //neuron2.ConnectedSynapses.Add(newSynapseAbstr);
+            //neuron2.View.ConnectedSynapses.Add(newSynapse);
 
-            //neuron2.Synapses.Add(newSynapseAbstr);
-            //neuron2.View.Synapses.Add(newSynapse);
+            neuron2.Synapses.Add(newSynapseAbstr);
+            neuron2.View.Synapses.Add(newSynapse);
 
 
             ConnectedSynapses.Add(newSynapseAbstr);
             View.ConnectedSynapses.Add(newSynapse);
 
-            Synapses.Add(newSynapseAbstr);
-            View.Synapses.Add(newSynapse);
+            //Synapses.Add(newSynapseAbstr);
+            //View.Synapses.Add(newSynapse);
             //View.NeuronModel.SynapsesLabels.Add("1");
-        }
-
-        private void SetArrowPos()
-        {
-            foreach (var synapse in ConnectedSynapses)
-            {
-                synapse.SetArrowPos();
-            }
         }
 
         internal void Move(float dx, float dy)
         {
             View.X += dx;
             View.Y += dy;
-            SetArrowPos();
+            foreach (var synapse in Synapses)
+            {
+                synapse.SetArrowPos();
+            }
+            foreach (var synapse in ConnectedSynapses)
+            {
+                synapse.SetArrowPos();
+            }
         }
 
         internal void RemoveSynapseTo(NeuronController neuron2)
@@ -103,12 +102,10 @@ namespace NNControl.Neuron
             View.X = (int)Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
             View.Y = (int)Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
             View.OnRepositioned();
-            SetArrowPos();
-        }
-
-        public void OnZoomChanged()
-        {
-            View.OnZoomChanged();
+            foreach (var synapse in Synapses)
+            {
+                synapse.SetArrowPos();
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using NNControl.Adapter;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using NNControl.Adapter;
 using NNControl.Network;
 using NNControl.Network.Impl;
 using System.Runtime.CompilerServices;
@@ -16,16 +19,33 @@ namespace NNControl
     public partial class NeuralNetworkControl : UserControl
     {
         private static double ZoomStepWheel = 0.05;
-
+        
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
-        private readonly NeuralNetworkController _networkController;
+        private Stopwatch _st = new Stopwatch();
+        private double _measured;
+        private int _meaInd = 0;
+
+        private SkNeuralNetworkView _skView = new SkNeuralNetworkView();
 
         public NeuralNetworkControl()
         {
             SizeChanged += NeuralNetworkControl_SizeChanged;
-            _networkController = new NeuralNetworkController(new SkNeuralNetworkView());
-            _networkController.OnRequestRedraw += () => canvas.InvalidateVisual();
+            Controller = new NeuralNetworkController(_skView, () =>
+            {
+                _st.Restart();
+                canvas.InvalidateVisual();
+                _st.Stop();
+
+                _measured += _st.ElapsedTicks / 40.0d;
+                _meaInd++;
+                if (_meaInd == 40)
+                {
+                    _meaInd = 0;
+                    Console.WriteLine("Mean: " + _measured);
+                    _measured = 0;
+                }
+            });
 
             InitStateMachine();
             InitializeComponent();
@@ -33,31 +53,28 @@ namespace NNControl
             InitOverlay();
         }
 
-        public NeuralNetworkController Controller => _networkController;
+        public NeuralNetworkController Controller { get; }
 
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - 60);
-            _networkController.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+            Controller.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             // _networkView.ForceDraw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
-            _networkController.Reposition();
+            Controller.Reposition();
         }
 
         private void canvas_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
         {
-            SkNetworkPaintContextHolder.Context = new SkNetworkPaintContext()
-            {
-                e = e
-            };
+            _skView.PaintArgs = e;
 
-            if (_networkController.NeuralNetworkModel != null)
+            if (Controller.NeuralNetworkModel != null)
             {
-                _networkController.Draw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+                Controller.Draw((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             }
             else
             {
-                _networkController.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
+                Controller.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
                 SetValue(ModelAdapterProperty, _defaultAdapter);
             }
         }
@@ -135,5 +152,7 @@ namespace NNControl
         {
             _stateMachine.Next(Triggers.MOUSE_OUT);
         }
+
+
     }
 }

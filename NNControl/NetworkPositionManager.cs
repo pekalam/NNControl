@@ -2,16 +2,13 @@
 using NNControl.Network;
 using NNControl.Neuron;
 using System;
-using System.Diagnostics;
 
 namespace NNControl
 {
-    public class NeuralNetworkPositionManager
+    public class NetworkPositionManager
     {
         public float GetLayerX(NeuralNetworkController network, int layerNum)
         {
-            Debug.Assert(network != null);
-
             return network.NeuralNetworkModel.Padding.Left +
                    (2 * network.NeuralNetworkModel.NeuronRadius + network.NeuralNetworkModel.LayerXSpaceBetween) *
                    layerNum + network.ViewportPosition.Left;
@@ -19,28 +16,18 @@ namespace NNControl
 
         public float GetLayerY(NeuralNetworkController network, int layerNum)
         {
-            Debug.Assert(network != null);
-
             return network.NeuralNetworkModel.Padding.Top + network.ViewportPosition.Top;
         }
 
         public float GetNeuronX(NeuralNetworkController network, LayerView layer,
             NeuronView neuron)
         {
-            Debug.Assert(network != null);
-            Debug.Assert(layer != null);
-            Debug.Assert(neuron != null);
-
             return layer.X;
         }
 
         public float GetNeuronY(NeuralNetworkController network, LayerView layer,
             NeuronView neuron)
         {
-            Debug.Assert(network != null);
-            Debug.Assert(layer != null);
-            Debug.Assert(neuron != null);
-
             var offsetFromPrev = (neuron.NumberInLayer * (2 * network.NeuralNetworkModel.NeuronRadius +
                                                           network.NeuralNetworkModel.LayerYSpaceBetween));
             return layer.Y + offsetFromPrev;
@@ -148,7 +135,7 @@ namespace NNControl
             }
         }
 
-        public void InvokeActionsAfterPositionsSet(NeuralNetworkController network, bool setZoom = true,
+        public void AdjustNetworkPosition(NeuralNetworkController network, bool setZoom = true,
             bool adjustToNotOverlap = true)
         {
             if (network.Layers.Count == 0)

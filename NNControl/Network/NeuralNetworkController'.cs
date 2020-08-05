@@ -29,8 +29,9 @@ namespace NNControl.Network
 
         private readonly Queue<ViewTrig> _redrawMachineQueue = new Queue<ViewTrig>();
 
-        protected NeuralNetworkController()
+        protected NeuralNetworkController(Action onRedraw)
         {
+            _onRedraw = onRedraw;
             _redrawStateMachine = new StateMachineBuilder<ViewTrig, RedrawStates>()
                 .CreateState(RedrawStates.S0)
                     .Enter(s =>
@@ -271,8 +272,13 @@ namespace NNControl.Network
                 foreach (var synapse in neuron.ConnectedSynapses)
                 {
                     synapse.Excluded = excluded;
-                    synapse.Neuron1.Excluded = excluded;
-                    synapse.Neuron2.Excluded = excluded;
+                    // synapse.Neuron1.Excluded = excluded;
+                    // synapse.Neuron2.Excluded = excluded;
+                }
+
+                foreach (var synapse in neuron.Synapses)
+                {
+                    synapse.Excluded = excluded;
                 }
             }
         }

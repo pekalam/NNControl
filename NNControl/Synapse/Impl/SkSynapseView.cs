@@ -45,14 +45,10 @@ namespace NNControl.Synapse.Impl
         };
 
 
-        private static SKColor[] _colors = new SKColor[256];
+        private static readonly SKColor[] _colors = new SKColor[256];
 
         static ScaleColorManager()
         {
-            float h = 0;
-            float s = 0;
-            float v = 100;
-
             for (int i = 0; i < 127; i++)
             {
                 _colors[i] = SKColor.Parse(RedScale[i]);
@@ -73,7 +69,7 @@ namespace NNControl.Synapse.Impl
 
     internal class SkSynapseView : SynapseView
     {
-        private SkSynapsePainter _synapsePainter;
+        private readonly SkSynapsePainter _synapsePainter;
 
         public SkSynapseView(SkSynapsePainter synapsePainter)
         {
@@ -138,9 +134,9 @@ namespace NNControl.Synapse.Impl
             return false;
         }
 
-        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse)
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)
         {
-            _synapsePainter.Draw(network, layer, neuron, synapse);
+            _synapsePainter.Draw(network, layer, neuron, this);
         }
 
 

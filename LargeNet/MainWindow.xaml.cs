@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using NNControl;
 using NNControl.Adapter;
 
@@ -28,7 +29,7 @@ namespace LargeNet
 
         public MainWindow()
         {
-            Adapter = new DefaultNeuralNetworkModelAdapter(40,40,20,10,1);
+            Adapter = new DefaultNeuralNetworkModelAdapter(100,100,20,10,1);
             DataContext = this;
             InitializeComponent();
         }
@@ -51,10 +52,8 @@ namespace LargeNet
                         {
                             for (int k = 0; k < control.Controller.Layers[i].Neurons[j].TotalSynapses; k++)
                             {
-                                rnd.NextBytes(b);
-                                var str = BitConverter.ToString(b).Replace("-", "");
-                                control.Controller.Color.SetNeuronColor(i, j, "#" + str);
-                                control.Controller.Color.SetSynapseColor(i, j, k, "#" + str);
+                                control.Controller.Color.SetNeuronColor(i, j, rnd.Next(0, 256));
+                                control.Controller.Color.SetSynapseColor(i, j, k, rnd.Next(0, 256));
                             }
                         }
                     }
@@ -62,9 +61,9 @@ namespace LargeNet
                     Dispatcher.Invoke(() =>
                     {
                         control.Controller.Color.ApplyColors();
-                    });
+                    }, DispatcherPriority.Background);
 
-                    await Task.Delay(200);
+                    await Task.Delay(33);
                 }
             });
         }

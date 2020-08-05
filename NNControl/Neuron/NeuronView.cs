@@ -22,7 +22,6 @@ namespace NNControl.Neuron
         public abstract SynapseView CreateSynapseImpl();
         public abstract bool Contains(float x, float y);
         public abstract void OnRepositioned();
-        public abstract void OnZoomChanged();
         public abstract void SetColor(string hexColor);
         public abstract void SetColor(int scale);
     }

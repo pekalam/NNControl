@@ -54,7 +54,7 @@ namespace NNControl
             
             if (adapter.NeuralNetworkModel != null)
             {
-                control._networkController.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                control.Controller.NeuralNetworkModel = adapter.NeuralNetworkModel;
             }
 
             control.OnPropertyChanged(nameof(ModelAdapter));
@@ -66,7 +66,7 @@ namespace NNControl
             {
                 if (args.PropertyName == nameof(adapter.NeuralNetworkModel))
                 {
-                    _networkController.NeuralNetworkModel = adapter.NeuralNetworkModel;
+                    Controller.NeuralNetworkModel = adapter.NeuralNetworkModel;
                 }
             };
         }
@@ -79,13 +79,13 @@ namespace NNControl
 
                 await Task.Delay(2000);
                 vis.Start(@"StateMachineLibVis.exe", "-c graphViz -l 0");
-                _networkController.StartVis();
+                Controller.StartVis();
             }
         }
 
         public void UpdateSynapseLabels()
         {
-            _networkController.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_EXCLUDED);
+            Controller.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_EXCLUDED);
         }
 
         public static readonly RoutedEvent NeuronClickEvent =
@@ -108,19 +108,19 @@ namespace NNControl
 
         public void Zoom(double zoom)
         {
-            _networkController.SetZoom(_networkController.View.Zoom + zoom);
+            Controller.SetZoom(Controller.View.Zoom + zoom);
             _stateMachine.Next(Triggers.ZOOM);
         }
 
         public void Reposition()
         {
-            _networkController.Reposition();
+            Controller.Reposition();
             _stateMachine.Next(Triggers.REPOSITION);
         }
 
         public void UpdatePositionParameters()
         {
-            _networkController.UpdatePositionParameters();
+            Controller.UpdatePositionParameters();
             _stateMachine.Next(Triggers.REPOSITION);
         }
 

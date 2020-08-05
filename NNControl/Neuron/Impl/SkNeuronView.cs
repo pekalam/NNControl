@@ -33,8 +33,8 @@ namespace NNControl.Neuron.Impl
             set
             {
                 _x = value;
-                ReferenceRect.Left = (X - Radius);
-                ReferenceRect.Right = (X + Radius);
+                ReferenceRect.Left = X - Radius;
+                ReferenceRect.Right = X + Radius;
             }
         }
         public override float Y
@@ -44,8 +44,8 @@ namespace NNControl.Neuron.Impl
             {
                 _y = value;
 
-                ReferenceRect.Top = (Y - Radius);
-                ReferenceRect.Bottom = (Y + Radius);
+                ReferenceRect.Top = Y - Radius;
+                ReferenceRect.Bottom = Y + Radius;
             }
         }
 
@@ -60,10 +60,6 @@ namespace NNControl.Neuron.Impl
             }
         }
 
-        public override void OnZoomChanged()
-        {
-        }
-
         public override void SetColor(string hexColor)
         {
             _neuronPainter.SetColor(SKColor.Parse(hexColor));
@@ -74,9 +70,9 @@ namespace NNControl.Neuron.Impl
             _neuronPainter.SetColor(ScaleColorManager.FromScale(scale));
         }
 
-        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer)
         {
-            _neuronPainter.Draw(network, layer, neuron);
+            _neuronPainter.Draw(network, layer, this);
         }
 
         public override bool Contains(float x, float y)

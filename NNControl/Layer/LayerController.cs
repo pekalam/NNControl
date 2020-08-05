@@ -44,10 +44,9 @@ namespace NNControl.Layer
         private void CreateLayer(int layerNum)
         {
             View.PreviousLayer = Network.Layers.Count > 0 ? Network.View.Layers[layerNum - 1] : null;
-            var x = (int) Network.PositionManager.GetLayerX(Network, layerNum);
-            var y = (int) Network.PositionManager.GetLayerY(Network, layerNum);
-            View.X = x;
-            View.Y = y;
+
+            View.X = Network.PositionManager.GetLayerX(Network, layerNum);
+            View.Y = Network.PositionManager.GetLayerY(Network, layerNum);
             View.Number = layerNum;
             View.Network = Network.View;
 
@@ -61,7 +60,7 @@ namespace NNControl.Layer
             var controller = new NeuronController(_neurons.Count, newNeuron, this);
             LayerModel.NeuronModels[neuronNum].SynapsesLabels = new SynapsesLabelsCollection(View);
 
-            if (View.PreviousLayer != null)
+            if (PreviousLayer != null)
             {
                 foreach (var prevNeuron in PreviousLayer.Neurons)
                 {
@@ -175,11 +174,6 @@ namespace NNControl.Layer
 
         public void OnZoomChanged()
         {
-            foreach (var neuron in Neurons)
-            {
-                neuron.OnZoomChanged();
-            }
-
             View.OnZoomChanged();
         }
 
