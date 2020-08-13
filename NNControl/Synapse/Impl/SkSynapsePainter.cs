@@ -15,6 +15,8 @@ namespace NNControl.Synapse.Impl
         private readonly SKPaint _largeNetSynPaint = new SKPaint();
         private readonly SKPaint _largeNetArrowPaint = new SKPaint();
 
+        private readonly SKPath _arrowPath = new SKPath();
+
         public SkSynapsePainter(SynapseSettings settings)
         {
             _synapsePaint.Color = SKColor.Parse(settings.Color);
@@ -64,15 +66,15 @@ namespace NNControl.Synapse.Impl
             // canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.Neuron2.X, synapse.Neuron2.Y,
             //     synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
 
-            var arrowPath = new SKPath();
+            _arrowPath.Rewind();
 
-            arrowPath.MoveTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
-            arrowPath.LineTo(synapse.ArrowLeftEnd.x, synapse.ArrowLeftEnd.y);
-            arrowPath.LineTo(synapse.ArrowRightEnd.x, synapse.ArrowRightEnd.y);
-            arrowPath.LineTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
-            arrowPath.Close();
+            _arrowPath.MoveTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
+            _arrowPath.LineTo(synapse.ArrowLeftEnd.x, synapse.ArrowLeftEnd.y);
+            _arrowPath.LineTo(synapse.ArrowRightEnd.x, synapse.ArrowRightEnd.y);
+            _arrowPath.LineTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
+            _arrowPath.Close();
 
-            canvas.DrawPath(arrowPath, neuron.ConnectedSynapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
+            canvas.DrawPath(_arrowPath, neuron.ConnectedSynapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
         }
 
         public void DrawSynapseLabel(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,
