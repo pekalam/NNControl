@@ -64,22 +64,22 @@ namespace NNLibAdapterTest
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            // Adapter.ColorAnimation.SetupTrainer(_trainer);
-            // Task.Run(async () =>
-            // {
-            //     while (true)
-            //     {
-            //         Dispatcher.Invoke(() =>
-            //         {
-            //             _trainer.DoEpoch();
-            //             Debug.WriteLine(_trainer.Error);
-            //             //Adapter.UpdateWeights(control);
-            //         });
-            //
-            //         await Task.Delay(10);
-            //     }
-            //
-            // });
+            Adapter.ColorAnimation.SetupTrainer(_trainer);
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        _trainer.DoEpoch();
+                        //Debug.WriteLine(_trainer.Error);
+                        //Adapter.UpdateWeights(control);
+                    });
+            
+                    await Task.Delay(10);
+                }
+            
+            });
         }
 
         private void Highlihght_OnClick(object sender, RoutedEventArgs e)

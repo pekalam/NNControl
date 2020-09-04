@@ -7,8 +7,8 @@ namespace NNControl.Neuron
 {
     public abstract class NeuronView
     {
-        public virtual float X { get; set; }
-        public virtual float Y { get; set; }
+        public float X;
+        public float Y;
 
 
         public int NumberInLayer;
@@ -21,8 +21,9 @@ namespace NNControl.Neuron
 
         public abstract SynapseView CreateSynapseImpl();
         public abstract bool Contains(float x, float y);
+        public abstract void OnPositionSet();
         public abstract void OnRepositioned();
-        public abstract void SetColor(string hexColor);
+        public abstract void ResetColor(string hexColor);
         public abstract void SetColor(int scale);
     }
 }

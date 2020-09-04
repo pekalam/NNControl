@@ -73,7 +73,12 @@ namespace NNControl.Network.Impl
 
                     (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
                 }
+            }
 
+
+            foreach (var layerView in Layers)
+            foreach (var neuron in layerView.Neurons)
+            {
                 if (neuron.Excluded)
                 {
                     continue;
@@ -114,12 +119,17 @@ namespace NNControl.Network.Impl
                         (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
                     }
                 }
+            }
 
+            foreach (var layerView in Layers)
+            foreach (var neuron in layerView.Neurons)
+            {
                 if (neuron.Excluded)
                 {
                     (neuron as SkNeuronView).Draw(this, layerView as SkLayerView);
                 }
             }
+
 
             //
             // foreach (var layerView in Layers)

@@ -8,17 +8,7 @@ using NNLibAdapter;
 
 namespace ColorAnimationTest
 {
-    public class TestColorAnimation : ColorAnimation
-    {
-        public TestColorAnimation(NeuralNetworkController controller) : base(controller)
-        {
-        }
 
-        public void CallSetColors(MLPNetwork network)
-        {
-            SetColorsPerLayer(network.Layers);
-        }
-    }
 
 
     /// <summary>
@@ -28,14 +18,14 @@ namespace ColorAnimationTest
     {
         private int i = 0;
         private MLPNetwork _network;
-        private TestColorAnimation _colorAnimation;
+        private ColorAnimation _colorAnimation;
 
         public MainWindow()
         {
 
-            _network = new MLPNetwork(new PerceptronLayer(2, 2, new SigmoidActivationFunction()),
-                new PerceptronLayer(2, 15, new SigmoidActivationFunction()),
-                new PerceptronLayer(15, 1, new SigmoidActivationFunction()));
+            _network = new MLPNetwork(new PerceptronLayer(2, 100, new SigmoidActivationFunction()),
+                new PerceptronLayer(100, 100, new SigmoidActivationFunction()),
+                new PerceptronLayer(100, 1, new SigmoidActivationFunction()));
 
             Adapter = new NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
@@ -48,7 +38,7 @@ namespace ColorAnimationTest
         {
             base.OnContentRendered(e);
 
-            _colorAnimation = new TestColorAnimation(Adapter.Controller);
+            _colorAnimation = new ColorAnimation(Adapter.Controller);
             var rnd = new Random();
 
             while (true)
@@ -97,21 +87,23 @@ namespace ColorAnimationTest
 
                     for (int r = 0; r < layer.Biases.RowCount; r++)
                     {
-                        layer.Biases[r, 0] = r switch
-                        {
-                            0 => -0.1275,
-                            1 => -0.15,
-                            2 => 0.42,
-                            3 => -0.308,
-                            4 => -2.44,
-                            _ => 10
-                        };
+                        // layer.Biases[r, 0] = r switch
+                        // {
+                        //     0 => -0.1275,
+                        //     1 => -0.15,
+                        //     2 => 0.42,
+                        //     3 => -0.308,
+                        //     4 => -2.44,
+                        //     _ => 10
+                        // };
+
+                        layer.Biases[r, 0]= rnd.NextDouble() * rnd.Next(-101, 100);
                     }
                 }
 
-                _colorAnimation.CallSetColors(_network);
+                _colorAnimation.SetColorsPerLayer(_network.Layers);
 
-                await Task.Delay(1000);
+                await Task.Delay(10);
                 i++;
             }
         }

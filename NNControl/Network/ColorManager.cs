@@ -14,7 +14,7 @@ namespace NNControl.Network
 
         public void SetNeuronColor(int layerNumber, int numberInLayer, string hexColor)
         {
-            _controller.Layers[layerNumber].Neurons[numberInLayer].View.SetColor(hexColor);
+            _controller.Layers[layerNumber].Neurons[numberInLayer].View.ResetColor(hexColor);
         }
 
         public void SetNeuronColor(int number, string hexColor)
@@ -32,7 +32,7 @@ namespace NNControl.Network
                 }
             }
 
-            neuron?.View.SetColor(hexColor);
+            neuron?.View.ResetColor(hexColor);
         }
 
         public void SetSynapseColor(int layerNumber, int neuronNumberInLayer, int numberInNeuron, string hexColor)
@@ -43,7 +43,7 @@ namespace NNControl.Network
             }
 
             _controller.Layers[layerNumber].Neurons[neuronNumberInLayer].Synapses[numberInNeuron].View
-                .SetColor(hexColor);
+                .ResetColor(hexColor);
         }
 
 
@@ -74,10 +74,10 @@ namespace NNControl.Network
             {
                 foreach (var neuron in layer.Neurons)
                 {
-                    neuron.View.SetColor(_controller.NeuralNetworkModel.NeuronSettings.Color);
+                    neuron.View.ResetColor(_controller.NeuralNetworkModel.NeuronSettings.Color);
                     foreach (var synapse in neuron.Synapses)
                     {
-                        synapse.View.SetColor(_controller.NeuralNetworkModel.SynapseSettings.Color);
+                        synapse.View.ResetColor(_controller.NeuralNetworkModel.SynapseSettings.Color);
                     }
                 }
             }

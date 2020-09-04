@@ -9,6 +9,7 @@ namespace NNControl.Synapse.Impl
     internal class SkSynapseView : SynapseView
     {
         private readonly SkSynapsePainter _synapsePainter;
+        private int _scale = -1;
 
         public SkSynapseView(SkSynapsePainter synapsePainter)
         {
@@ -85,14 +86,19 @@ namespace NNControl.Synapse.Impl
             _synapsePainter.DrawSynapseLabel(network, layer, neuron, synapse);
         }
 
-        public override void SetColor(string hexColor)
+        public override void ResetColor(string hexColor)
         {
             _synapsePainter.SetColor(SKColor.Parse(hexColor));
+            _scale = -1;
         }
 
         public override void SetColor(int scale)
         {
-            _synapsePainter.SetColor(ScaleColorManager.FromScale(scale));
+            if (scale != _scale)
+            {
+                _synapsePainter.SetColor(ScaleColorManager.FromScale(scale));
+                _scale = scale;
+            }
         }
     }
 }

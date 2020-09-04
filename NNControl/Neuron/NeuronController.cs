@@ -1,4 +1,4 @@
-﻿using NNControl.Layer;
+using NNControl.Layer;
 using NNControl.Synapse;
 using System.Collections.Generic;
 
@@ -30,9 +30,9 @@ namespace NNControl.Neuron
 
         private void CreateNeuron()
         {
-            var x = (int)Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
-            var y = (int)Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
-            View.X = x;
+            View.X = Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
+            View.Y = Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
+            View.OnPositionSet();
             View.Y = y;
         }
 
@@ -69,6 +69,7 @@ namespace NNControl.Neuron
         {
             View.X += dx;
             View.Y += dy;
+            View.OnPositionSet();
             foreach (var synapse in Synapses)
             {
                 synapse.SetArrowPos();
@@ -99,8 +100,9 @@ namespace NNControl.Neuron
 
         public void Reposition()
         {
-            View.X = (int)Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
-            View.Y = (int)Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
+            View.X = Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
+            View.Y = Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
+            View.OnPositionSet();
             View.OnRepositioned();
             foreach (var synapse in Synapses)
             {

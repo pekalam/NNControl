@@ -208,7 +208,7 @@ namespace NNLibAdapter
             return s;
         }
 
-        protected virtual void SetColorsPerLayer(IReadOnlyList<PerceptronLayer> layers)
+        public void SetColorsPerLayer(IReadOnlyList<PerceptronLayer> layers)
         {
             var color = _controller.Color;
 
@@ -248,16 +248,16 @@ namespace NNLibAdapter
 
             if (_colorUpdateHighOrder != null)
             {
-                _colorUpdateHighOrder(() => color.ApplyColors());
+                _colorUpdateHighOrder(_controller.Color.ApplyColors);
             }
             else
             {
-                Application.Current?.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
+                Application.Current?.Dispatcher.InvokeAsync(_controller.Color.ApplyColors, DispatcherPriority.Background);
             }
 
         }
 
-        protected virtual void SetColorsPerNetwork(IReadOnlyList<PerceptronLayer> layers)
+        public void SetColorsPerNetwork(IReadOnlyList<PerceptronLayer> layers)
         {
             var color = _controller.Color;
             double mingz=double.MinValue, maxgz=double.MinValue, minlz=double.MinValue, maxlz=double.MaxValue;
@@ -312,11 +312,11 @@ namespace NNLibAdapter
 
             if (_colorUpdateHighOrder != null)
             {
-                _colorUpdateHighOrder(() => color.ApplyColors());
+                _colorUpdateHighOrder(_controller.Color.ApplyColors);
             }
             else
             {
-                Application.Current?.Dispatcher.InvokeAsync(() => color.ApplyColors(), DispatcherPriority.Background);
+                Application.Current?.Dispatcher.InvokeAsync(_controller.Color.ApplyColors, DispatcherPriority.Background);
             }
         }
     }

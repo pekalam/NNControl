@@ -1,4 +1,4 @@
-﻿using NNControl.Neuron;
+using NNControl.Neuron;
 
 namespace NNControl.Synapse
 {
@@ -16,7 +16,7 @@ namespace NNControl.Synapse
 
 
         public abstract bool Contains(float x, float y);
-        public abstract void SetColor(string hexColor);
+        public abstract void ResetColor(string hexColor);
         public abstract void SetColor(int scale);
     }
 }
