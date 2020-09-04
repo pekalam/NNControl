@@ -38,7 +38,7 @@ namespace NNControl.Network
             set
             {
                 StructureManager.SetNeuralNetworkModel(value);
-                StructureManager.AddNewLayers();
+                StructureManager.AddNewLayers(0, value.NetworkLayerModels.Count);
 
                 PositionManager.AdjustNetworkPosition(this);
 

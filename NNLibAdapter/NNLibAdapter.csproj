@@ -3,14 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
+    <Authors>Marek Pękala</Authors>
+    <Company>Marek Pękala</Company>
+    <Description>Integrates NNLib with NNControl.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NNLib" Version="1.0.3" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Public\PRACA\NNLib\NNLib\NNLib.csproj" />
     <ProjectReference Include="..\NNControl\NNControl.csproj" />
   </ItemGroup>
 

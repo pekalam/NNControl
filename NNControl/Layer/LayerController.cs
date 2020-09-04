@@ -21,7 +21,17 @@ namespace NNControl.Layer
             PreviousLayer = previousLayer;
             View = view;
             Network = network;
-            CreateLayer(layerNum);
+            CreateLayer(layerNum, previousLayer);
+        }
+
+        public LayerController(LayerController previousLayer, int layerNum, LayerView view,
+            NeuralNetworkController network, LayerController nextLayer)
+        {
+            NextLayer = nextLayer;
+            PreviousLayer = previousLayer;
+            View = view;
+            Network = network;
+            CreateLayer(layerNum, previousLayer);
         }
 
         public IReadOnlyList<NeuronController> Neurons => _neurons;
@@ -41,9 +51,9 @@ namespace NNControl.Layer
             }
         }
 
-        private void CreateLayer(int layerNum)
+        private void CreateLayer(int layerNum, LayerController previousLayer)
         {
-            View.PreviousLayer = Network.Layers.Count > 0 ? Network.View.Layers[layerNum - 1] : null;
+            View.PreviousLayer = previousLayer?.View;
 
             View.X = Network.PositionManager.GetLayerX(Network, layerNum);
             View.Y = Network.PositionManager.GetLayerY(Network, layerNum);
@@ -65,6 +75,14 @@ namespace NNControl.Layer
                 foreach (var prevNeuron in PreviousLayer.Neurons)
                 {
                     prevNeuron.AddSynapse(controller);
+                }
+            }
+
+            if (NextLayer != null)
+            {
+                foreach (var nextNeuron in NextLayer.Neurons)
+                {
+                    controller.AddSynapse(nextNeuron);
                 }
             }
 
@@ -111,6 +129,17 @@ namespace NNControl.Layer
                 foreach (var prevNeuron in PreviousLayer.Neurons)
                 {
                     neuron.RemoveSynapseFrom(prevNeuron);
+                }
+            }
+        }
+
+        public void RemoveSynapsesTo(LayerController layer)
+        {
+            foreach (var neuron in Neurons)
+            {
+                foreach (var nextNeuron in layer.Neurons)
+                {
+                    neuron.RemoveSynapseTo(nextNeuron);
                 }
             }
         }

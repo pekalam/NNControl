@@ -6,6 +6,11 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <Authors>Marek Pękala</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>WPF control that creates visualization of neural network.</Description>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

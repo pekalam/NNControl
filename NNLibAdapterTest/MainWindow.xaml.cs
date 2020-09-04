@@ -59,27 +59,27 @@ namespace NNLibAdapterTest
             NCount.Text = _network.Layers[0].NeuronsCount.ToString();
         }
 
-        public NNLibAdapter.NNLibModelAdapter Adapter { get; set; }
+        public NNLibModelAdapter Adapter { get; set; }
 
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            Adapter.ColorAnimation.SetupTrainer(_trainer);
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        _trainer.DoEpoch();
-                        Debug.WriteLine(_trainer.Error);
-                        //Adapter.UpdateWeights(control);
-                    });
-            
-                    await Task.Delay(10);
-                }
-            
-            });
+            // Adapter.ColorAnimation.SetupTrainer(_trainer);
+            // Task.Run(async () =>
+            // {
+            //     while (true)
+            //     {
+            //         Dispatcher.Invoke(() =>
+            //         {
+            //             _trainer.DoEpoch();
+            //             Debug.WriteLine(_trainer.Error);
+            //             //Adapter.UpdateWeights(control);
+            //         });
+            //
+            //         await Task.Delay(10);
+            //     }
+            //
+            // });
         }
 
         private void Highlihght_OnClick(object sender, RoutedEventArgs e)
@@ -111,6 +111,27 @@ namespace NNLibAdapterTest
         {
             Adapter.RemoveLayer(1);
             _network.RemoveLayer(_network.Layers[1]);
+        }
+
+        private void Before_Click(object sender, RoutedEventArgs e)
+        {
+            var ind = Convert.ToInt32(BeforeInd.Text);
+
+            Adapter.InsertBefore(ind,_network.InsertBefore(ind));   
+        }
+
+        private void After_Click(object sender, RoutedEventArgs e)
+        {
+            var ind = Convert.ToInt32(AfterInd.Text);
+
+            Adapter.InsertAfter(ind, _network.InsertAfter(ind));
+        }
+
+        private void AddLayer_Click(object sender, RoutedEventArgs e)
+        {
+            var layer = new PerceptronLayer(_network.Layers[^1].NeuronsCount, 1, new LinearActivationFunction());
+            _network.AddLayer(layer);
+            Adapter.AddLayer(layer);
         }
     }
 }

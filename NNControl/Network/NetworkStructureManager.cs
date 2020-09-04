@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using NNControl.Layer;
 using NNControl.Model;
@@ -10,7 +11,7 @@ namespace NNControl.Network
         internal readonly NeuralNetworkView View;
         internal readonly List<LayerController> LayerControllers = new List<LayerController>();
 
-        private NeuralNetworkController _networkController;
+        private readonly NeuralNetworkController _networkController;
 
         public NetworkStructureManager(NeuralNetworkView view, NeuralNetworkController networkController)
         {
@@ -32,7 +33,14 @@ namespace NNControl.Network
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                AddNewLayers(e.NewStartingIndex);
+                if (e.NewStartingIndex >= View.Layers.Count)
+                {
+                    AddNewLayers(e.NewStartingIndex, e.NewItems.Count);
+                }
+                else
+                {
+                    InsertNewLayers(e.NewStartingIndex, e.NewItems.Count);
+                }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -81,9 +89,62 @@ namespace NNControl.Network
             }
         }
 
-        public void AddNewLayers(int collectionStartingIndex = 0)
+        public void CreateInsertedLayer(int layerNum)
         {
-            for (int i = collectionStartingIndex; i < View.NeuralNetworkModel.NetworkLayerModels.Count; i++)
+            var newLayerView = View.CreateLayerInstance();
+            View.Layers.Insert(layerNum,newLayerView);
+
+            int i = 0;
+            foreach (var layer in View.Layers)
+            {
+                layer.Number = i++;
+            }
+
+            var previousLayer = layerNum == 0 ? null : LayerControllers[layerNum - 1];
+            var nextLayer = layerNum >= LayerControllers.Count ? null : LayerControllers[layerNum];
+
+            if (previousLayer != null && nextLayer != null)
+            {
+                previousLayer.RemoveSynapsesTo(nextLayer);
+            }
+
+            if (layerNum == 0)
+            {
+                nextLayer.View.PreviousLayer = newLayerView;
+            }
+
+
+
+            var newAbstractLayer = new LayerController(previousLayer, layerNum, newLayerView, _networkController, nextLayer);
+            if (previousLayer != null)
+            {
+                previousLayer.NextLayer = newAbstractLayer;
+            }
+
+            if (nextLayer != null)
+            {
+                nextLayer.PreviousLayer = newAbstractLayer;
+            }
+
+            LayerControllers.Insert(layerNum,newAbstractLayer);
+
+
+            View.NeuralNetworkModel.NetworkLayerModels[layerNum].NeuronModels.CollectionChanged += NeuronModelsOnCollectionChanged;
+
+            ResetNeuronsNumbers();
+        }
+
+        public void InsertNewLayers(int collectionStartingIndex, int count)
+        {
+            for (int i = collectionStartingIndex; i < collectionStartingIndex + count; i++)
+            {
+                CreateInsertedLayer(i);
+            }
+        }
+
+        public void AddNewLayers(int collectionStartingIndex, int count)
+        {
+            for (int i = collectionStartingIndex; i < collectionStartingIndex + count; i++)
             {
                 CreateNewLayer(i);
             }

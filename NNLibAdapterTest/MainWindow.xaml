@@ -15,9 +15,14 @@
         <nnControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Name="Highlihght" Click="Highlihght_OnClick">Highlight</Button>
-            <Button Name="Add" Click="Add_OnClick">Add</Button>
+            <Button Name="Add" Click="Add_OnClick">Add neuron</Button>
             <Button Name="RmMid" Click="RmMid_Click">Remove</Button>
             <TextBox Name="NCount" MinWidth="100" TextChanged="NCount_TextChanged"/>
+            <Button x:Name="After" Click="After_Click">Insert after</Button>
+            <TextBox x:Name="AfterInd" Width="40"/>
+            <Button x:Name="Before" Click="Before_Click">Insert before</Button>
+            <TextBox x:Name="BeforeInd" Width="40"/>
+            <Button x:Name="AddLayer" Click="AddLayer_Click">Add</Button>
         </StackPanel>
     </Grid>
 </Window>

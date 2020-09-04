@@ -33,11 +33,13 @@ namespace NNLibAdapter
         }
 
         public ColorAnimationMode AnimationMode { get; set; }
+        public bool IsAnimating { get; set; }
 
         public void SetupTrainer(MLPTrainer trainer)
         {
             _trainer = trainer;
             _trainer.EpochEnd += UpdateColors;
+            IsAnimating = true;
         }
 
         public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
@@ -57,6 +59,7 @@ namespace NNLibAdapter
                     }
                     UpdateColors();
                 });
+            IsAnimating = true;
         }
 
         public void SetupTrainer(MLPTrainer trainer,ref Action epochEndAction, Action<Action> colorUpdateHighOrder)
@@ -65,6 +68,7 @@ namespace NNLibAdapter
             _colorUpdateHighOrder = colorUpdateHighOrder;
 
             epochEndAction += UpdateColors;
+            IsAnimating = true;
         }
 
         private void TrainerOnEpochEnd()
@@ -82,6 +86,7 @@ namespace NNLibAdapter
             {
                 _controller.Color.ResetColorsToDefault();
             }
+            IsAnimating = false;
         }
 
 
