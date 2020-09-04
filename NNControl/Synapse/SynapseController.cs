@@ -1,4 +1,4 @@
-﻿using NNControl.Neuron;
+using NNControl.Neuron;
 
 namespace NNControl.Synapse
 {
@@ -12,6 +12,8 @@ namespace NNControl.Synapse
             View.Neuron1 = neuron1.View;
             View.Neuron2 = neuron2.View;
         }
+
+        private SynapseData SynapseData => Neuron1.Layer.Network.SynapseData;
 
         internal NeuronController Neuron1;
         internal NeuronController Neuron2;
@@ -35,10 +37,23 @@ namespace NNControl.Synapse
 
             var dif = (x: arrowBeg.x - arrowEnd.x, y: arrowBeg.y - arrowEnd.y);
 
-            View.ArrowLeftEnd = (x: arrowBeg.x + dif.y, y: arrowBeg.y - dif.x);
-            View.ArrowRightEnd = (x: arrowBeg.x - dif.y, y: arrowBeg.y + dif.x);
-            View.ArrowEnd = arrowEnd;
-            View.ArrowBeg = arrowBeg;
+            // View.ArrowLeftEnd = (x: arrowBeg.x + dif.y, y: arrowBeg.y - dif.x);
+            // View.ArrowRightEnd = (x: arrowBeg.x - dif.y, y: arrowBeg.y + dif.x);
+            // View.ArrowEnd = arrowEnd;
+            // View.ArrowBeg = arrowBeg;
+
+            SynapseData.SetArrowLeftX(View.Id, arrowBeg.x + dif.y);
+            SynapseData.SetArrowLeftY(View.Id, arrowBeg.y - dif.x);
+
+            SynapseData.SetArrowRightX(View.Id, arrowBeg.x - dif.y);
+            SynapseData.SetArrowRightY(View.Id, arrowBeg.y + dif.x);
+
+            SynapseData.SetArrowEndX(View.Id, Neuron2.View.X - vp.x);
+            SynapseData.SetArrowEndY(View.Id, Neuron2.View.Y - vp.y);
+            
+            SynapseData.SetArrowBegX(View.Id, Neuron2.View.X - vp2.x);
+            SynapseData.SetArrowBegY(View.Id, Neuron2.View.Y - vp2.y);
+
         }
     }
 }

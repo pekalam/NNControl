@@ -1,6 +1,7 @@
-using NNControl.Layer;
+﻿using NNControl.Layer;
 using NNControl.Synapse;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace NNControl.Neuron
 {
@@ -25,6 +26,8 @@ namespace NNControl.Neuron
             CreateNeuron();
         }
 
+        internal SynapseData SynapseData => Layer.Network.SynapseData;
+
         internal NeuronView View;
         internal LayerController Layer;
 
@@ -33,7 +36,6 @@ namespace NNControl.Neuron
             View.X = Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
             View.Y = Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
             View.OnPositionSet();
-            View.Y = y;
         }
 
         public SynapseController GetSynapse(int number)
@@ -46,6 +48,13 @@ namespace NNControl.Neuron
         internal void AddSynapse(NeuronController neuron2)
         {
             var newSynapse = View.CreateSynapseImpl();
+            newSynapse.Id = Layer.Network.SynapseData.AddSynapse();
+            newSynapse.SynapseData = Layer.Network.SynapseData;
+
+            SynapseData.SetX(newSynapse.Id, View.X);
+            SynapseData.SetY(newSynapse.Id, View.Y);
+
+
             var newSynapseAbstr = new SynapseController(this, neuron2, newSynapse);
 
             newSynapse.NumberInNeuron = neuron2.Synapses.Count;
@@ -76,6 +85,8 @@ namespace NNControl.Neuron
             }
             foreach (var synapse in ConnectedSynapses)
             {
+                SynapseData.SetX(synapse.View.Id, View.X);
+                SynapseData.SetY(synapse.View.Id, View.Y);
                 synapse.SetArrowPos();
             }
         }
@@ -107,6 +118,11 @@ namespace NNControl.Neuron
             foreach (var synapse in Synapses)
             {
                 synapse.SetArrowPos();
+            }
+            foreach (var synapse in ConnectedSynapses)
+            {
+                SynapseData.SetX(synapse.View.Id, View.X);
+                SynapseData.SetY(synapse.View.Id, View.Y);
             }
         }
     }

@@ -59,20 +59,37 @@ namespace NNControl.Synapse.Impl
             SKPaint synapsPaint = neuron.ConnectedSynapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
 
 
-            canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.ArrowBeg.x, synapse.ArrowBeg.y,
+            // canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.ArrowBeg.x, synapse.ArrowBeg.y,
+            //     synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
+
+
+            canvas.DrawLine(synapse.SynapseData.GetX(synapse.Id),
+                synapse.SynapseData.GetY(synapse.Id), 
+                synapse.SynapseData.GetArrowBegX(synapse.Id),
+                synapse.SynapseData.GetArrowBegY(synapse.Id),
                 synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
 
 
             // canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.Neuron2.X, synapse.Neuron2.Y,
             //     synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
 
+            // _arrowPath.Rewind();
+            //
+            // _arrowPath.MoveTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
+            // _arrowPath.LineTo(synapse.ArrowLeftEnd.x, synapse.ArrowLeftEnd.y);
+            // _arrowPath.LineTo(synapse.ArrowRightEnd.x, synapse.ArrowRightEnd.y);
+            // _arrowPath.LineTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
+            // _arrowPath.Close();
+
+
             _arrowPath.Rewind();
 
-            _arrowPath.MoveTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
-            _arrowPath.LineTo(synapse.ArrowLeftEnd.x, synapse.ArrowLeftEnd.y);
-            _arrowPath.LineTo(synapse.ArrowRightEnd.x, synapse.ArrowRightEnd.y);
-            _arrowPath.LineTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
+            _arrowPath.MoveTo(synapse.SynapseData.GetArrowEndX(synapse.Id), synapse.SynapseData.GetArrowEndY(synapse.Id));
+            _arrowPath.LineTo(synapse.SynapseData.GetArrowLeftX(synapse.Id), synapse.SynapseData.GetArrowLeftY(synapse.Id));
+            _arrowPath.LineTo(synapse.SynapseData.GetArrowRightX(synapse.Id), synapse.SynapseData.GetArrowRightY(synapse.Id));
+            _arrowPath.LineTo(synapse.SynapseData.GetArrowEndX(synapse.Id), synapse.SynapseData.GetArrowEndY(synapse.Id));
             _arrowPath.Close();
+
 
             canvas.DrawPath(_arrowPath, neuron.ConnectedSynapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
         }

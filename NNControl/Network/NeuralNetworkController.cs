@@ -20,6 +20,7 @@ namespace NNControl.Network
         internal NeuralNetworkView View;
         internal Box ViewportPosition;
 
+        internal SynapseData SynapseData = new SynapseData();
 
         public IReadOnlyList<LayerController> Layers => StructureManager.LayerControllers;
         public float CanvasWidth;
