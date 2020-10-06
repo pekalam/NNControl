@@ -52,10 +52,16 @@ namespace NNControl.Network
                         }
                         else
                         {
+                            ViewTrig? prev = null;
                             while (_redrawMachineQueue.Count > 0)
                             {
                                 _redrawMachineQueue.TryDequeue(out var next);
-                                _stateMachine.Next(next);
+                                if (prev == null || prev != next)
+                                {
+                                    _stateMachine.Next(next);
+                                }
+
+                                prev = next;
                             }
                         }
                     })

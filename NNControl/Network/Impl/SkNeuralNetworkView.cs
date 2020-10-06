@@ -14,7 +14,6 @@ namespace NNControl.Network.Impl
         private SKPicture _saved;
 
         private NeuralNetworkModel _neuralNetworkModel;
-        private SkNetworkLayerPainter _networkLayerPainter;
         private SKColor _bgColor;
 
         private float _transX;
@@ -34,7 +33,6 @@ namespace NNControl.Network.Impl
             {
                 _neuralNetworkModel = value;
                 _bgColor = SKColor.Parse(value.BackgroundColor);
-                _networkLayerPainter = new SkNetworkLayerPainter();
             }
         }
 
@@ -58,6 +56,7 @@ namespace NNControl.Network.Impl
         private void DrawAll(SKCanvas canvas)
         {
             ApplyZoom(canvas);
+            canvas.Clear(_bgColor);
 
             for (int i = 0; i < Layers.Count; i++)
             {

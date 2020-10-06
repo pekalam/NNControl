@@ -69,6 +69,7 @@ namespace NNLibAdapterTest
 
         private void Highlihght_OnClick(object sender, RoutedEventArgs e)
         {
+            control.Controller.ClearHighlight();
             control.Controller.HighlightLayer(1);
         }
 
