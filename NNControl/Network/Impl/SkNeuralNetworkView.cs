@@ -10,7 +10,8 @@ namespace NNControl.Network.Impl
 {
     internal class SkNeuralNetworkView : NeuralNetworkView
     {
-        private SKImage _saved;
+        //private SKImage _saved;
+        private SKPicture _saved;
 
         private NeuralNetworkModel _neuralNetworkModel;
         private SkNetworkLayerPainter _networkLayerPainter;
@@ -56,7 +57,6 @@ namespace NNControl.Network.Impl
 
         private void DrawAll(SKCanvas canvas)
         {
-            canvas.Clear(_bgColor);
             ApplyZoom(canvas);
 
             foreach (var layerView in Layers)
@@ -95,14 +95,21 @@ namespace NNControl.Network.Impl
 
         public override void DrawAndSave()
         {
-            var canvas = PaintArgs.Surface.Canvas;
+            var pictureRecorder = new SKPictureRecorder();
+            var canvas = pictureRecorder.BeginRecording(PaintArgs.Info.Rect);
             DrawAll(canvas);
-            _saved = PaintArgs.Surface.Snapshot();
+            //_saved = PaintArgs.Surface.Snapshot();
+            _saved = pictureRecorder.EndRecording();
+            pictureRecorder.Dispose();
+
+            PaintArgs.Surface.Canvas.Clear(_bgColor);
+            PaintArgs.Surface.Canvas.DrawPicture(_saved);
         }
 
         public override void DrawFromSaved()
         {
-            PaintArgs.Surface.Canvas.DrawImage(_saved, 0, 0);
+            PaintArgs.Surface.Canvas.DrawPicture(_saved);
+            //PaintArgs.Surface.Canvas.DrawImage(_saved, 0, 0);
         }
 
         public override void DrawExcluded()
