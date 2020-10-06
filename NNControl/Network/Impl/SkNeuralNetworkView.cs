@@ -59,31 +59,35 @@ namespace NNControl.Network.Impl
         {
             ApplyZoom(canvas);
 
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
+            for (int i = 0; i < Layers.Count; i++)
             {
-                foreach (var synapse in neuron.ConnectedSynapses)
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    if (synapse.Excluded)
+                    for (int k = 0; k < Layers[i].Neurons[j].ConnectedSynapses.Count; k++)
                     {
-                        continue;
+                        if (Layers[i].Neurons[j].ConnectedSynapses[k].Excluded)
+                        {
+                            continue;
+                        }
+
+
+                        (Layers[i].Neurons[j].ConnectedSynapses[k] as SkSynapseView)!.Draw(this, Layers[i] as SkLayerView, Layers[i].Neurons[j] as SkNeuronView, canvas);
                     }
-
-
-                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView, canvas);
                 }
             }
 
 
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
+            for (int i = 0; i < Layers.Count; i++)
             {
-                if (neuron.Excluded)
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    continue;
-                }
+                    if (Layers[i].Neurons[j].Excluded)
+                    {
+                        continue;
+                    }
 
-                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, canvas);
+                    (Layers[i].Neurons[j] as SkNeuronView)!.Draw(this, Layers[i] as SkLayerView, canvas);
+                }
             }
         }
 
@@ -102,8 +106,9 @@ namespace NNControl.Network.Impl
             _saved = pictureRecorder.EndRecording();
             pictureRecorder.Dispose();
 
-            PaintArgs.Surface.Canvas.Clear(_bgColor);
-            PaintArgs.Surface.Canvas.DrawPicture(_saved);
+            var surfCanvas = PaintArgs.Surface.Canvas;
+            surfCanvas.Clear(_bgColor);
+            surfCanvas.DrawPicture(_saved);
         }
 
         public override void DrawFromSaved()
@@ -117,27 +122,32 @@ namespace NNControl.Network.Impl
             var canvas = PaintArgs.Surface.Canvas;
             ApplyZoom(canvas);
 
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
+
+            for (int i = 0; i < Layers.Count; i++)
             {
-                foreach (var synapse in neuron.ConnectedSynapses)
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    if (synapse.Excluded)
+                    for (int k = 0; k < Layers[i].Neurons[j].ConnectedSynapses.Count; k++)
                     {
-                        (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView, canvas);
+                        if (Layers[i].Neurons[j].ConnectedSynapses[k].Excluded)
+                        {
+                            (Layers[i].Neurons[j].ConnectedSynapses[k] as SkSynapseView)!.Draw(this, Layers[i] as SkLayerView, Layers[i].Neurons[j] as SkNeuronView, canvas);
+                        }
                     }
                 }
             }
 
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
+
+            for (int i = 0; i < Layers.Count; i++)
             {
-                if (neuron.Excluded)
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, canvas);
+                    if (Layers[i].Neurons[j].Excluded)
+                    {
+                        (Layers[i].Neurons[j] as SkNeuronView)!.Draw(this, Layers[i] as SkLayerView, canvas);
+                    }
                 }
             }
-
 
             //
             // foreach (var layerView in Layers)
