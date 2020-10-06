@@ -65,7 +65,7 @@ namespace NNControl.Network
         }
 
 
-        public void SetZoom(double value)
+        public void SetZoom(float value)
         {
             if (value < -1.0d)
             {

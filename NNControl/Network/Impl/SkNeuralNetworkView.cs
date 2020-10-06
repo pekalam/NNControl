@@ -42,15 +42,15 @@ namespace NNControl.Network.Impl
         private void ApplyZoom(SKCanvas canvas)
         {
             var m = canvas.TotalMatrix;
-            m.ScaleX = (float) Zoom + 1;
-            m.ScaleY = (float) Zoom + 1;
+            m.ScaleX = Zoom + 1;
+            m.ScaleY = Zoom + 1;
 
             // m.TransX = (float) (ZoomCenterX * Zoom);
             // m.TransY = (float)(ZoomCenterY * Zoom);
 
 
-            _transX = m.TransX = -canvas.DeviceClipBounds.MidX * (float) Zoom;
-            _transY = m.TransY = -canvas.DeviceClipBounds.MidY * (float) Zoom;
+            _transX = m.TransX = -canvas.DeviceClipBounds.MidX * Zoom;
+            _transY = m.TransY = -canvas.DeviceClipBounds.MidY * Zoom;
 
             canvas.SetMatrix(m);
         }

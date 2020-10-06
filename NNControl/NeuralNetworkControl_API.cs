@@ -106,7 +106,7 @@ namespace NNControl
             RaiseEvent(args);
         }
 
-        public void Zoom(double zoom)
+        public void Zoom(float zoom)
         {
             Controller.SetZoom(Controller.View.Zoom + zoom);
             _stateMachine.Next(Triggers.ZOOM);
