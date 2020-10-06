@@ -33,7 +33,6 @@ namespace NNControl.Neuron
             View.X = Layer.Network.PositionManager.GetNeuronX(Layer.Network, Layer.View, View);
             View.Y = Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
             View.OnPositionSet();
-            View.Y = y;
         }
 
         public SynapseController GetSynapse(int number)
