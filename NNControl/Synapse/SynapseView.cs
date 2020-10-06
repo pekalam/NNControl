@@ -6,8 +6,8 @@ namespace NNControl.Synapse
 {
     public class SynapseData
     {
-        private const int DefaultSz = 100_000;
-        private const int ResizeSz = 100_000;
+        private const int DefaultSz = 1_000_000;
+        private const int ResizeSz = 500_000;
 
         private int _count;
 
@@ -96,12 +96,6 @@ namespace NNControl.Synapse
 
         public int Id;
         public SynapseData SynapseData;
-
-        public (float x, float y) ArrowLeftEnd;
-        public (float x, float y) ArrowRightEnd;
-        public (float x, float y) ArrowEnd;
-        public (float x, float y) ArrowBeg;
-
 
         public abstract bool Contains(float x, float y);
         public abstract void ResetColor(string hexColor);
