@@ -8,7 +8,7 @@ namespace NNControl.Overlays
     /// </summary>
     public partial class ActionMenuOverlay : UserControl
     {
-        private static double ZoomStepActionMenu = 0.1;
+        private static float ZoomStepActionMenu = 0.1f;
 
         private readonly NeuralNetworkControl _control;
         private bool _pristine;

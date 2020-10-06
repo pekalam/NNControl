@@ -18,7 +18,7 @@ namespace NNControl
     /// </summary>
     public partial class NeuralNetworkControl : UserControl
     {
-        private static double ZoomStepWheel = 0.05;
+        private static float ZoomStepWheel = 0.05f;
         
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
