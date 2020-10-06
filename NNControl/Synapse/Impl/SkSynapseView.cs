@@ -74,16 +74,16 @@ namespace NNControl.Synapse.Impl
             return false;
         }
 
-        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron)
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SKCanvas canvas)
         {
-            _synapsePainter.Draw(network, layer, neuron, this);
+            _synapsePainter.Draw(network, layer, neuron, this, canvas);
         }
 
 
         public void DrawSynapseLabel(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,
-            SkSynapseView synapse)
+            SkSynapseView synapse, SKCanvas canvas)
         {
-            _synapsePainter.DrawSynapseLabel(network, layer, neuron, synapse);
+            _synapsePainter.DrawSynapseLabel(network, layer, neuron, synapse, canvas);
         }
 
         public override void ResetColor(string hexColor)

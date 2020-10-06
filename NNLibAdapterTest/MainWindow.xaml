@@ -25,6 +25,7 @@
             <TextBox x:Name="BeforeInd" Width="40"/>
             <Button x:Name="AddLayer" Click="AddLayer_Click">Add</Button>
             <Button Name="Test" Click="Test_OnClick">Test</Button>
+            <Button Name="Animate" Click="Animate_OnClick">Animate</Button>
         </StackPanel>
     </Grid>
 </Window>
