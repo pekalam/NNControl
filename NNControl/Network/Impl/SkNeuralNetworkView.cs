@@ -38,9 +38,9 @@ namespace NNControl.Network.Impl
         }
 
 
-        private void ApplyZoom()
+        private void ApplyZoom(SKCanvas canvas)
         {
-            var m = PaintArgs.Surface.Canvas.TotalMatrix;
+            var m = canvas.TotalMatrix;
             m.ScaleX = (float) Zoom + 1;
             m.ScaleY = (float) Zoom + 1;
 
@@ -48,17 +48,16 @@ namespace NNControl.Network.Impl
             // m.TransY = (float)(ZoomCenterY * Zoom);
 
 
-            _transX = m.TransX = -PaintArgs.Surface.Canvas.DeviceClipBounds.MidX * (float) Zoom;
-            _transY = m.TransY = -PaintArgs.Surface.Canvas.DeviceClipBounds.MidY * (float) Zoom;
+            _transX = m.TransX = -canvas.DeviceClipBounds.MidX * (float) Zoom;
+            _transY = m.TransY = -canvas.DeviceClipBounds.MidY * (float) Zoom;
 
-            PaintArgs.Surface.Canvas.SetMatrix(m);
+            canvas.SetMatrix(m);
         }
 
-        private void DrawAll()
+        private void DrawAll(SKCanvas canvas)
         {
-            PaintArgs.Surface.Canvas.Clear(_bgColor);
-
-            ApplyZoom();
+            canvas.Clear(_bgColor);
+            ApplyZoom(canvas);
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
@@ -71,7 +70,7 @@ namespace NNControl.Network.Impl
                     }
 
 
-                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                    (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView, canvas);
                 }
             }
 
@@ -84,7 +83,7 @@ namespace NNControl.Network.Impl
                     continue;
                 }
 
-                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView);
+                (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, canvas);
             }
         }
 
@@ -96,7 +95,8 @@ namespace NNControl.Network.Impl
 
         public override void DrawAndSave()
         {
-            DrawAll();
+            var canvas = PaintArgs.Surface.Canvas;
+            DrawAll(canvas);
             _saved = PaintArgs.Surface.Snapshot();
         }
 
@@ -107,7 +107,8 @@ namespace NNControl.Network.Impl
 
         public override void DrawExcluded()
         {
-            ApplyZoom();
+            var canvas = PaintArgs.Surface.Canvas;
+            ApplyZoom(canvas);
 
             foreach (var layerView in Layers)
             foreach (var neuron in layerView.Neurons)
@@ -116,7 +117,7 @@ namespace NNControl.Network.Impl
                 {
                     if (synapse.Excluded)
                     {
-                        (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView);
+                        (synapse as SkSynapseView).Draw(this, layerView as SkLayerView, neuron as SkNeuronView, canvas);
                     }
                 }
             }
@@ -126,7 +127,7 @@ namespace NNControl.Network.Impl
             {
                 if (neuron.Excluded)
                 {
-                    (neuron as SkNeuronView).Draw(this, layerView as SkLayerView);
+                    (neuron as SkNeuronView).Draw(this, layerView as SkLayerView, canvas);
                 }
             }
 

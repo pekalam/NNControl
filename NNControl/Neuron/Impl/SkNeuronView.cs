@@ -60,9 +60,9 @@ namespace NNControl.Neuron.Impl
             }
         }
 
-        public void Draw(SkNeuralNetworkView network, SkLayerView layer)
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SKCanvas canvas)
         {
-            _neuronPainter.Draw(network, layer, this);
+            _neuronPainter.Draw(network, layer, this, canvas);
         }
 
         public override bool Contains(float x, float y)

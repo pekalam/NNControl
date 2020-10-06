@@ -8,42 +8,49 @@ namespace NNControl.Synapse.Impl
 {
     internal class SkSynapsePainter
     {
-        private readonly SKPaint _synapsePaint = new SKPaint();
-        private readonly SKPaint _synapseLabelPaint = new SKPaint();
-        private readonly SKPaint _selectedSynapsePaint = new SKPaint();
-        private readonly SKPaint _arrowPaint = new SKPaint();
-        private readonly SKPaint _largeNetSynPaint = new SKPaint();
-        private readonly SKPaint _largeNetArrowPaint = new SKPaint();
+        private static readonly SKPaint _synapseLabelPaint = new SKPaint();
+        private static readonly SKPaint _selectedSynapsePaint = new SKPaint();
+        private static readonly SKPaint _arrowPaint = new SKPaint();
+        private static readonly SKPaint _largeNetArrowPaint = new SKPaint();
 
-        private readonly SKPath _arrowPath = new SKPath();
+        private static readonly SKPath _arrowPath = new SKPath();
+
+        private readonly SKPaint _synapsePaint = new SKPaint();
+        private readonly SKPaint _largeNetSynPaint = new SKPaint();
+
+
+        private static bool _initialized;
 
         public SkSynapsePainter(SynapseSettings settings)
         {
+            if (!_initialized)
+            {
+                _synapseLabelPaint.Color = SKColor.Parse(settings.LabelColor);
+                _synapseLabelPaint.IsAntialias = true;
+
+                _selectedSynapsePaint.Color = SKColor.Parse(settings.SelectedColor);
+                _selectedSynapsePaint.IsAntialias = true;
+                _selectedSynapsePaint.StrokeCap = SKStrokeCap.Butt;
+
+
+                _arrowPaint.Style = _largeNetArrowPaint.Style = SKPaintStyle.Fill;
+                _arrowPaint.Color = SKColor.Parse(settings.ArrowColor);
+                _arrowPaint.IsAntialias = _largeNetArrowPaint.IsAntialias = true;
+
+                _largeNetArrowPaint.Color = SKColor.Parse(settings.LargetNetColor);
+
+                _initialized = true;
+            }
+
             _synapsePaint.Color = SKColor.Parse(settings.Color);
             _synapsePaint.IsAntialias = true;
             _synapsePaint.StrokeCap = SKStrokeCap.Butt;
-
-            _synapseLabelPaint.Color = SKColor.Parse(settings.LabelColor);
-            _synapseLabelPaint.IsAntialias = true;
             _synapsePaint.StrokeCap = SKStrokeCap.Butt;
-
-            _selectedSynapsePaint.Color = SKColor.Parse(settings.SelectedColor);
-            _selectedSynapsePaint.IsAntialias = true;
-            _selectedSynapsePaint.StrokeCap = SKStrokeCap.Butt;
-
-
-            _arrowPaint.Style = _largeNetArrowPaint.Style = SKPaintStyle.Fill;
-            _arrowPaint.Color = SKColor.Parse(settings.ArrowColor);
-            _arrowPaint.IsAntialias = _largeNetArrowPaint.IsAntialias = true;
-
+            _synapsePaint.StrokeWidth = _selectedSynapsePaint.StrokeWidth = settings.StrokeWidth;
 
             _largeNetSynPaint.Color = SKColor.Parse(settings.LargetNetColor);
             _largeNetSynPaint.IsAntialias = true;
             _largeNetSynPaint.StrokeCap = SKStrokeCap.Butt;
-
-            _largeNetArrowPaint.Color = SKColor.Parse(settings.LargetNetColor);
-
-            _synapsePaint.StrokeWidth = _selectedSynapsePaint.StrokeWidth = settings.StrokeWidth;
         }
 
         public void SetColor(in SKColor color)
@@ -51,16 +58,14 @@ namespace NNControl.Synapse.Impl
             _synapsePaint.Color = _largeNetSynPaint.Color = color;
         }
 
-        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse)
+        public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse, SKCanvas canvas)
         {
-            var canvas = network.PaintArgs.Surface.Canvas;
+            SKPaint synapsePaint = neuron.ConnectedSynapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
 
-            
-            SKPaint synapsPaint = neuron.ConnectedSynapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
 
 
             canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.ArrowBeg.x, synapse.ArrowBeg.y,
-                synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
+                synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsePaint);
 
 
             // canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.Neuron2.X, synapse.Neuron2.Y,
@@ -78,9 +83,8 @@ namespace NNControl.Synapse.Impl
         }
 
         public void DrawSynapseLabel(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron,
-            SkSynapseView synapse)
+            SkSynapseView synapse, SKCanvas canvas)
         {
-            var canvas = network.PaintArgs.Surface.Canvas;
 
             var txt = neuron.NeuronModel.SynapsesLabels[synapse.NumberInNeuron];
 
