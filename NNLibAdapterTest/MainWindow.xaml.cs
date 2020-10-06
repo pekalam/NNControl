@@ -64,22 +64,22 @@ namespace NNLibAdapterTest
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            Adapter.ColorAnimation.SetupTrainer(_trainer);
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        _trainer.DoEpoch();
-                        //Debug.WriteLine(_trainer.Error);
-                        //Adapter.UpdateWeights(control);
-                    });
-            
-                    await Task.Delay(10);
-                }
-            
-            });
+            // Adapter.ColorAnimation.SetupTrainer(_trainer);
+            // Task.Run(async () =>
+            // {
+            //     while (true)
+            //     {
+            //         Dispatcher.Invoke(() =>
+            //         {
+            //             _trainer.DoEpoch();
+            //             //Debug.WriteLine(_trainer.Error);
+            //             //Adapter.UpdateWeights(control);
+            //         });
+            //
+            //         await Task.Delay(10);
+            //     }
+            //
+            // });
         }
 
         private void Highlihght_OnClick(object sender, RoutedEventArgs e)
@@ -101,7 +101,7 @@ namespace NNLibAdapterTest
                 Adapter.LayerModelAdapters[1].SetNeuronsCount(n);
                 _network.Layers[0].NeuronsCount = n;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
 
             }
@@ -132,6 +132,24 @@ namespace NNLibAdapterTest
             var layer = new PerceptronLayer(_network.Layers[^1].NeuronsCount, 1, new LinearActivationFunction());
             _network.AddLayer(layer);
             Adapter.AddLayer(layer);
+        }
+
+        private void Test_OnClick(object sender, RoutedEventArgs e)
+        {
+            var stw = new Stopwatch();
+            long total = 0L;
+            stw.Restart();
+
+            Adapter.LayerModelAdapters[1].SetNeuronsCount(1000);
+            stw.Stop();
+            Debug.WriteLine("Adapter elapsed: " + stw.Elapsed);
+            total += stw.ElapsedMilliseconds;
+
+            stw.Restart();
+            _network.Layers[0].NeuronsCount = 1000;
+            stw.Stop();
+            Debug.WriteLine("NNLib elapsed: " + stw.Elapsed);
+            Debug.WriteLine("Total elapsed: " + total);
         }
     }
 }

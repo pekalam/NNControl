@@ -10,14 +10,14 @@ namespace NNLibAdapter
 {
     public class NNLibLayerAdapter : ILayerModelAdapter
     {
-        public NNLibLayerAdapter(LayerModel layerModel, Layer layer)
+        public NNLibLayerAdapter(LayerModel layerModel, Layer? layer)
         {
             LayerModel = layerModel;
             Layer = layer;
         }
 
         public LayerModel LayerModel { get; }
-        public Layer Layer { get; }
+        public Layer? Layer { get; }
 
 
         public void SetNeuronsCount(int neuronsCount)
@@ -59,7 +59,7 @@ namespace NNLibAdapter
 
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
