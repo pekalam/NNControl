@@ -19,6 +19,8 @@
             <Button Name="RmMid" Click="RmMid_Click">Remove</Button>
             <TextBlock Text="Num of neurons"/>
             <TextBox Name="NCount" MinWidth="100" TextChanged="NCount_TextChanged"/>
+            <TextBlock Text="Num of neurons l2"/>
+            <TextBox Name="NCountl2" MinWidth="100" TextChanged="NCountl2_OnTextChanged"/>
             <Button x:Name="After" Click="After_Click">Insert after</Button>
             <TextBox x:Name="AfterInd" Width="40"/>
             <Button x:Name="Before" Click="Before_Click">Insert before</Button>

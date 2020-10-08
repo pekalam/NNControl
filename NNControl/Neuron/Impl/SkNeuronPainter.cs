@@ -35,7 +35,7 @@ namespace NNControl.Neuron.Impl
             _defaultInputPaint.ImageFilter = neuronShadowFilter;
         }
 
-        internal void SetColor(SKColor color)
+        internal void SetColor(ref SKColor color)
         {
             _defaultPaint.Color = _defaultInputPaint.Color = color;
         }

@@ -61,7 +61,6 @@ namespace NNControl.Layer
             View.Network = Network.View;
 
             LayerModel = Network.NeuralNetworkModel.NetworkLayerModels[layerNum];
-            View.OnRepositioned();
         }
 
         private NeuronController CreateAndAddNewNeuron(int neuronNum)
@@ -166,13 +165,6 @@ namespace NNControl.Layer
                 for (int i = e.NewStartingIndex; i < LayerModel.NeuronModels.Count; i++)
                 {
                     var newNeuron = CreateAndAddNewNeuron(i);
-                    if (NextLayer != null)
-                    {
-                        foreach (var nextNeuron in NextLayer.Neurons)
-                        {
-                            newNeuron.AddSynapse(nextNeuron);
-                        }
-                    }
 
                     if (View.HighlightedNeurons.Count > 0)
                     {
@@ -197,13 +189,6 @@ namespace NNControl.Layer
             {
                 neuron.Reposition();
             }
-
-            View.OnRepositioned();
-        }
-
-        public void OnZoomChanged()
-        {
-            View.OnZoomChanged();
         }
 
         public void HighlightLayer()

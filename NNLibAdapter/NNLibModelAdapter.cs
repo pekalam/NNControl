@@ -170,7 +170,7 @@ namespace NNLibAdapter
                     for (int k = 0; k < Layers[i].InputsCount; k++)
                     {
                         NeuralNetworkModel.NetworkLayerModels[i+1].NeuronModels[j].SynapsesLabels[k] =
-                            Layers[i].Weights[j, k].ToString(format);
+                            Layers[i].Weights.At(j, k).ToString(format);
                     }
                 }
             }

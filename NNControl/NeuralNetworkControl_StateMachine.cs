@@ -77,10 +77,6 @@ namespace NNControl
                             //ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(Controller.View.SelectedNeuron[0]);
                         }
-                        else
-                        {
-                            HideNeuronOverlay();
-                        }
                     })
                     .Transition(Triggers.LBx1, States.S6)
                     .Transition(Triggers.CTRL_LB, States.S5)
@@ -156,10 +152,6 @@ namespace NNControl
                             //ShowNeuronOverlay(_clickedNeuronScreenPoint);
                             RaiseNeuronClickEvent(Controller.View.SelectedNeuron[0]);
                         }
-                        else
-                        {
-                            HideNeuronOverlay();
-                        }
                     })
                     .Exit(s =>
                     {
@@ -180,7 +172,6 @@ namespace NNControl
                     {
                         _clickedNeuron = null;
                         Controller.DeselectNeuron();
-                        HideNeuronOverlay();
                         _stateMachine.Next(Triggers.ALL_NEURONS_DESELECT);
                     })
                     .Transition(Triggers.ALL_NEURONS_DESELECT, States.S0)
@@ -191,7 +182,6 @@ namespace NNControl
                 .Enter(s =>
                 {
                     _baseMovePoint = _clickedPoint;
-                    HideNeuronOverlay();
                 })
                 .Transition(Triggers.MV_LB, States.S11)
                 .Transition(Triggers.LB_UP, States.S2)
@@ -242,12 +232,10 @@ namespace NNControl
                 
                 .ResetInterruptState(Triggers.ZOOM, t =>
                 {
-                    HideNeuronOverlay();
                 }, States.ZOOM_INTERRUPT, States.S0)
 
                 .ResetInterruptState(Triggers.REPOSITION, t =>
                 {
-                    HideNeuronOverlay();
                 }, States.REPOSITION_INT, States.S0)
 
                 .Build(States.S0);

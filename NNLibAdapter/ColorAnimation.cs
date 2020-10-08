@@ -112,7 +112,7 @@ namespace NNLibAdapter
             {
                 for (int j = 0; j < layer.Weights.ColumnCount; j++)
                 {
-                    var el = layer.Weights[i, j];
+                    var el = layer.Weights.At(i, j);
                     if (el < 0)
                     {
                         if (el < minlz)
@@ -149,7 +149,7 @@ namespace NNLibAdapter
 
             for (int i = 0; i < layer.Biases.RowCount; i++)
             {
-                var el = layer.Biases[i, 0];
+                var el = layer.Biases.At(i, 0);
                 if (el < 0)
                 {
                     if (el < minlz)
@@ -221,26 +221,26 @@ namespace NNLibAdapter
                 {
                     for (int k = 0; k < layers[i].Weights.RowCount; k++)
                     {
-                        if (layers[i].Weights[k, j] < 0)
+                        if (layers[i].Weights.At(k, j) < 0)
                         {
-                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], minlz, 0, 0, 126));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights.At(k, j), minlz, 0, 0, 126));
                         }
                         else
                         {
-                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], 0, maxgz, 0, 126, 128));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights.At(k, j), 0, maxgz, 0, 126, 128));
                         }
                     }
                 }
 
                 for (int j = 0; j < layers[i].Biases.RowCount; j++)
                 {
-                    if (layers[i].Biases[j, 0] < 0)
+                    if (layers[i].Biases.At(j, 0) < 0)
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], minblz, 0, 0, 126));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases.At(j, 0), minblz, 0, 0, 126));
                     }
                     else
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], 0, maxbgz, 0, 126, 128));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases.At(j, 0), 0, maxbgz, 0, 126, 128));
                     }
                 }
             }
@@ -279,33 +279,32 @@ namespace NNLibAdapter
                 if (nmaxblz > maxblz) maxblz = nmaxblz;
             }
 
-
             for (int i = 0; i < layers.Count; i++)
             {
                 for (int j = 0; j < layers[i].Weights.ColumnCount; j++)
                 {
                     for (int k = 0; k < layers[i].Weights.RowCount; k++)
                     {
-                        if (layers[i].Weights[k, j] < 0)
+                        if (layers[i].Weights.At(k, j) < 0)
                         {
-                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], minlz, 0, 0, 126));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights.At(k, j), minlz, 0, 0, 126));
                         }
                         else
                         {
-                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights[k, j], 0, maxgz, 0, 126, 128));
+                            color.SetSynapseColor(i + 1, k, j, Scale(layers[i].Weights.At(k, j), 0, maxgz, 0, 126, 128));
                         }
                     }
                 }
 
                 for (int j = 0; j < layers[i].Biases.RowCount; j++)
                 {
-                    if (layers[i].Biases[j, 0] < 0)
+                    if (layers[i].Biases.At(j, 0) < 0)
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], minblz, 0, 0, 126));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases.At(j, 0), minblz, 0, 0, 126));
                     }
                     else
                     {
-                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases[j, 0], 0, maxbgz, 0, 126, 128));
+                        color.SetNeuronColor(i + 1, j, Scale(layers[i].Biases.At(j, 0), 0, maxbgz, 0, 126, 128));
                     }
                 }
             }

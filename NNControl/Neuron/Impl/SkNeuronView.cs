@@ -47,7 +47,8 @@ namespace NNControl.Neuron.Impl
 
         public override void ResetColor(string hexColor)
         {
-            _neuronPainter.SetColor(SKColor.Parse(hexColor));
+            var col = SKColor.Parse(hexColor);
+            _neuronPainter.SetColor(ref col);
             _scale = -1;
         }
 
@@ -55,7 +56,7 @@ namespace NNControl.Neuron.Impl
         {
             if (scale != _scale)
             {
-                _neuronPainter.SetColor(ScaleColorManager.FromScale(scale));
+                _neuronPainter.SetColor(ref ScaleColorManager.FromScale(scale));
                 _scale = scale;
             }
         }

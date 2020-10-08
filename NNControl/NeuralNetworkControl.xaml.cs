@@ -62,7 +62,6 @@ namespace NNControl
             InitStateMachine();
             InitializeComponent();
             InitActionMenuOverlay();
-            InitOverlay();
         }
 
         public NeuralNetworkController Controller { get; }

@@ -69,13 +69,14 @@ namespace NNControl.Neuron
             View.X += dx;
             View.Y += dy;
             View.OnPositionSet();
-            foreach (var synapse in Synapses)
+            for (int i = 0; i < Synapses.Count; i++)
             {
-                synapse.SetArrowPos();
+                Synapses[i].SetArrowPos();
             }
-            foreach (var synapse in ConnectedSynapses)
+
+            for (int i = 0; i < ConnectedSynapses.Count; i++)
             {
-                synapse.SetArrowPos();
+                ConnectedSynapses[i].SetArrowPos();
             }
         }
 
@@ -103,9 +104,9 @@ namespace NNControl.Neuron
             View.Y = Layer.Network.PositionManager.GetNeuronY(Layer.Network, Layer.View, View);
             View.OnPositionSet();
             View.OnRepositioned();
-            foreach (var synapse in Synapses)
+            for (int i = 0; i < Synapses.Count; i++)
             {
-                synapse.SetArrowPos();
+                Synapses[i].SetArrowPos();
             }
         }
     }

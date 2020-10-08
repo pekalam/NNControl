@@ -41,25 +41,25 @@ namespace NNControl.Synapse.Impl
         };
 
 
-        private static readonly SKColor[] _colors = new SKColor[256];
+        private static readonly SKColor[] Colors = new SKColor[256];
 
         static ScaleColorManager()
         {
             for (int i = 0; i < 127; i++)
             {
-                _colors[i] = SKColor.Parse(RedScale[i]);
+                Colors[i] = SKColor.Parse(RedScale[i]);
             }
 
-            _colors[127] = SKColor.Parse("#FFFFFF");
+            Colors[127] = SKColor.Parse("#FFFFFF");
 
             for (int i = 128; i < 255; i++)
             {
-                _colors[i] = SKColor.Parse(RedScale2[254 - i]);
+                Colors[i] = SKColor.Parse(RedScale2[254 - i]);
             }
 
-            _colors[255] = SKColor.Parse("#000000");
+            Colors[255] = SKColor.Parse("#000000");
         }
 
-        public static SKColor FromScale(int scale) => _colors[scale];
+        public static ref SKColor FromScale(int scale) => ref Colors[scale];
     }
 }

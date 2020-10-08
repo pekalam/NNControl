@@ -14,8 +14,8 @@ namespace NNControl.Neuron
         public int NumberInLayer;
         public int Number;
         public bool Excluded;
-        public readonly List<SynapseView> Synapses = new List<SynapseView>();
-        public readonly List<SynapseView> ConnectedSynapses = new List<SynapseView>();
+        public readonly List<SynapseView> Synapses = new List<SynapseView>(500);
+        public readonly List<SynapseView> ConnectedSynapses = new List<SynapseView>(500);
         public LayerView Layer;
         public NeuronModel NeuronModel;
 

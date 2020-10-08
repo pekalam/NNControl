@@ -72,10 +72,6 @@ namespace NNControl.Network
             }
 
             View.Zoom = value;
-            foreach (var layer in Layers)
-            {
-                layer.OnZoomChanged();
-            }
 
             RequestRedraw(ViewTrig.ZOOM);
         }
@@ -196,13 +192,13 @@ namespace NNControl.Network
         {
             ViewportPosition.Left += dx;
             ViewportPosition.Top += dy;
-            foreach (var layer in Layers)
+            for (int i = 0; i < Layers.Count; i++)
             {
-                layer.View.X += dx;
-                layer.View.Y += dy;
-                foreach (var neuron in layer.Neurons)
+                Layers[i].View.X += dx;
+                Layers[i].View.Y += dy;
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    neuron.Move(dx, dy);
+                    Layers[i].Neurons[j].Move(dx, dy);
                 }
             }
 
@@ -213,9 +209,9 @@ namespace NNControl.Network
         {
             ViewportPosition.Left = 0;
             ViewportPosition.Top = 0;
-            foreach (var layer in Layers)
+            for (int i = 0; i < Layers.Count; i++)
             {
-                layer.Reposition();
+                Layers[i].Reposition();
             }
 
             PositionManager.AdjustNetworkPosition(this);
@@ -224,9 +220,9 @@ namespace NNControl.Network
 
         public void UpdatePositionParameters()
         {
-            foreach (var layer in Layers)
+            for (int i = 0; i < Layers.Count; i++)
             {
-                layer.Reposition();
+                Layers[i].Reposition();
             }
 
             PositionManager.AdjustNetworkPosition(this, false);
@@ -238,17 +234,20 @@ namespace NNControl.Network
         {
             (x, y) = View.ToCanvasPoints(x, y);
 
-            foreach (var layerView in Layers)
-            foreach (var neuron in layerView.Neurons)
-            foreach (var synapse in neuron.Synapses)
+
+            for (int i = 0; i < Layers.Count; i++)
             {
-                if (synapse.View.Contains(x, y))
+                for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    if (synapse.View != View.SelectedSynapse)
+                    for (int k = 0; k < Layers[i].Neurons[j].Synapses.Count; k++)
                     {
-                        View.SelectedSynapse = synapse.View;
-                        RequestRedraw(ViewTrig.SELECT_SYNAPSE);
-                        return synapse;
+                        if (!Layers[i].Neurons[j].Synapses[k].View.Contains(x, y)) continue;
+                        if (Layers[i].Neurons[j].Synapses[k].View != View.SelectedSynapse)
+                        {
+                            View.SelectedSynapse = Layers[i].Neurons[j].Synapses[k].View;
+                            RequestRedraw(ViewTrig.SELECT_SYNAPSE);
+                            return Layers[i].Neurons[j].Synapses[k];
+                        }
                     }
                 }
             }

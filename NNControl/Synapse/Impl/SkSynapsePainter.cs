@@ -1,4 +1,5 @@
-﻿using NNControl.Layer.Impl;
+﻿using System.Diagnostics;
+using NNControl.Layer.Impl;
 using NNControl.Model;
 using NNControl.Network.Impl;
 using NNControl.Neuron.Impl;
@@ -60,8 +61,7 @@ namespace NNControl.Synapse.Impl
 
         public void Draw(SkNeuralNetworkView network, SkLayerView layer, SkNeuronView neuron, SkSynapseView synapse, SKCanvas canvas)
         {
-            SKPaint synapsePaint = neuron.ConnectedSynapses.Count >= 30 ? _largeNetSynPaint : _synapsePaint;
-
+            SKPaint synapsePaint = (neuron.ConnectedSynapses.Count >= 30 || layer.Neurons.Count >= 50) ? _largeNetSynPaint : _synapsePaint;
 
 
             canvas.DrawLine(synapse.Neuron1.X, synapse.Neuron1.Y, synapse.ArrowBeg.x, synapse.ArrowBeg.y,
@@ -72,13 +72,13 @@ namespace NNControl.Synapse.Impl
             //     synapse == network.SelectedSynapse ? _selectedSynapsePaint : synapsPaint);
 
             _arrowPath.Rewind();
-
+            
             _arrowPath.MoveTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
             _arrowPath.LineTo(synapse.ArrowLeftEnd.x, synapse.ArrowLeftEnd.y);
             _arrowPath.LineTo(synapse.ArrowRightEnd.x, synapse.ArrowRightEnd.y);
             _arrowPath.LineTo(synapse.ArrowEnd.x, synapse.ArrowEnd.y);
             _arrowPath.Close();
-
+            
             canvas.DrawPath(_arrowPath, neuron.ConnectedSynapses.Count >= 30 ? _largeNetArrowPaint : _arrowPaint);
         }
 

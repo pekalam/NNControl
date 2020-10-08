@@ -52,11 +52,13 @@ namespace NNLibAdapterTest
 
             Adapter = new NNLibAdapter.NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
+            Adapter.NeuralNetworkModel.SynapseSettings.LargetNetColor = "#00FF00";
             Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
             Adapter.SetOutputLabels(new[] { "out 1" });
             DataContext = this;
             InitializeComponent();
             NCount.Text = _network.Layers[0].NeuronsCount.ToString();
+            NCountl2.Text = _network.Layers[1].NeuronsCount.ToString();
         }
 
         public NNLibModelAdapter Adapter { get; set; }
@@ -156,6 +158,20 @@ namespace NNLibAdapterTest
                 }
             
             });
+        }
+
+        private void NCountl2_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var n = Convert.ToInt32(NCountl2.Text);
+                Adapter.LayerModelAdapters[2].SetNeuronsCount(n);
+                _network.Layers[1].NeuronsCount = n;
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
