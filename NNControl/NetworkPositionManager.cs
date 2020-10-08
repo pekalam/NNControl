@@ -54,7 +54,7 @@ namespace NNControl
 
             if (maxHeight > network.CanvasHeight)
             {
-                var scale = -(1 - network.CanvasHeight / (maxHeight + network.NeuralNetworkModel.Padding.Top*2));
+                var scale = -(1 - network.CanvasHeight / (maxHeight + network.NeuralNetworkModel.Padding.Top + network.NeuralNetworkModel.Padding.Bottom));
                 newScale = Math.Min(scale, newScale);
             }
 
@@ -70,7 +70,7 @@ namespace NNControl
             for (int i = 0; i < network.Layers.Count; i++)
             {
                 float dy =
-                    (network.CanvasHeight - CalcLayerHeight(i)) / 2f - network.NeuralNetworkModel.Padding.Top/2f;
+                    (network.CanvasHeight - CalcLayerHeight(i)) / 2f - network.NeuralNetworkModel.Padding.Top + network.NeuralNetworkModel.NeuronRadius;
 
                 foreach (var neuron in network.Layers[i].Neurons)
                 {

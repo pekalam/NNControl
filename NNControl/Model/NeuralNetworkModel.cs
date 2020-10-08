@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 
 namespace NNControl.Model
 {
@@ -24,17 +25,30 @@ namespace NNControl.Model
 
     public class NeuralNetworkModel
     {
+        private string _backgroundColor = "#F00FFF";
+
         public int NeuronRadius = 10;
         public int LayerXSpaceBetween = 25;
         public int LayerYSpaceBetween = 15;
         public Box Padding = new Box() {Left = 40, Right = 40, Top = 40, Bottom = 40};
 
-        public string BackgroundColor = "#F00FFF";
+        public string BackgroundColor
+        {
+            get => _backgroundColor;
+            set
+            {
+                _backgroundColor = value;
+                BackgroundColorChanged?.Invoke(value);
+            }
+        }
 
         public NeuronSettings NeuronSettings = new NeuronSettings();
         public SynapseSettings SynapseSettings = new SynapseSettings();
 
 
         public ObservableCollection<LayerModel> NetworkLayerModels = new ObservableCollection<LayerModel>();
+  
+
+        public event Action<string> BackgroundColorChanged;
     }
 }

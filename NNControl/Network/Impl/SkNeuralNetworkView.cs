@@ -32,6 +32,7 @@ namespace NNControl.Network.Impl
             set
             {
                 _neuralNetworkModel = value;
+                value.BackgroundColorChanged += s => _bgColor = SKColor.Parse(s);
                 _bgColor = SKColor.Parse(value.BackgroundColor);
             }
         }
