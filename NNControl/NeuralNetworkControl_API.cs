@@ -18,7 +18,7 @@ namespace NNControl
                 {
                     if ((bool) args.NewValue)
                     {
-                        (o as NeuralNetworkControl).StartVis();
+                        (o as NeuralNetworkControl)!.StartVis();
                     }
                 }));
 
@@ -109,19 +109,16 @@ namespace NNControl
         public void Zoom(float zoom)
         {
             Controller.SetZoom(Controller.View.Zoom + zoom);
-            _stateMachine.Next(Triggers.ZOOM);
         }
 
         public void Reposition()
         {
             Controller.Reposition();
-            _stateMachine.Next(Triggers.REPOSITION);
         }
 
         public void UpdatePositionParameters()
         {
             Controller.UpdatePositionParameters();
-            _stateMachine.Next(Triggers.REPOSITION);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

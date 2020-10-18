@@ -14,7 +14,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NNLib;
-using NNLib.Common;
+using NNLib.ActivationFunction;
+using NNLib.Data;
+using NNLib.LossFunction;
+using NNLib.MLP;
+using NNLib.Training.GradientDescent;
 using NNLibAdapter;
 
 namespace NNLibAdapterTest
@@ -30,7 +34,7 @@ namespace NNLibAdapterTest
         public MainWindow()
         {
             var trainingSets =
-                new SupervisedTrainingSets(SupervisedSet.FromArrays(new[]
+                new SupervisedTrainingData(SupervisedTrainingSamples.FromArrays(new[]
                 {
                     new[] {0d, 0d},
                     new[] {0d, 1d},

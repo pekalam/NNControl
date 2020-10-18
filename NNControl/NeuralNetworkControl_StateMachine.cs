@@ -10,13 +10,12 @@ namespace NNControl
     {
         enum Triggers
         {
-            LBx2, NEURON_HIT, SYNAPSE_HIT, CTRL_LB, LBx1, MV_LB, RBx1, BACKGROUND_HIT, LB_UP, ALL_NEURONS_DESELECT, SYNAPSE_DESELECT,
-            ZOOM, REPOSITION, MOUSE_OUT
+            LBx2, NEURON_HIT, SYNAPSE_HIT, CTRL_LB, LBx1, MV_LB, RBx1, BACKGROUND_HIT, LB_UP, ALL_NEURONS_DESELECT, SYNAPSE_DESELECT, MOUSE_OUT
         }
 
         enum States
         {
-            S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, ZOOM_INTERRUPT, REPOSITION_INT
+            S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13
         }
 
         private StateMachine<Triggers, States> _stateMachine;
@@ -229,14 +228,6 @@ namespace NNControl
                 .Loop(Triggers.MV_LB)
                 .Ignoring()
                 .End()
-                
-                .ResetInterruptState(Triggers.ZOOM, t =>
-                {
-                }, States.ZOOM_INTERRUPT, States.S0)
-
-                .ResetInterruptState(Triggers.REPOSITION, t =>
-                {
-                }, States.REPOSITION_INT, States.S0)
 
                 .Build(States.S0);
         }

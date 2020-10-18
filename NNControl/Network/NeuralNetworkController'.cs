@@ -272,19 +272,17 @@ namespace NNControl.Network
 
         private void SetSelectedNeuronsAndSynapsesExcluded(bool excluded)
         {
-            foreach (var neuron in View.SelectedNeuron)
+            for (int i = 0; i < View.SelectedNeuron.Count; i++)
             {
-                neuron.Excluded = excluded;
-                foreach (var synapse in neuron.ConnectedSynapses)
+                View.SelectedNeuron[i].Excluded = excluded;
+                for (int j = 0; j < View.SelectedNeuron[i].ConnectedSynapses.Count; j++)
                 {
-                    synapse.Excluded = excluded;
-                    // synapse.Neuron1.Excluded = excluded;
-                    // synapse.Neuron2.Excluded = excluded;
+                    View.SelectedNeuron[i].ConnectedSynapses[j].Excluded = excluded;
                 }
-
-                foreach (var synapse in neuron.Synapses)
+                
+                for (int j = 0; j < View.SelectedNeuron[i].Synapses.Count; j++)
                 {
-                    synapse.Excluded = excluded;
+                    View.SelectedNeuron[i].Synapses[j].Excluded = excluded;
                 }
             }
         }

@@ -10,6 +10,7 @@ using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.VisualBasic;
+using NNLib.MLP;
 
 namespace NNLibAdapter
 {

@@ -48,7 +48,7 @@ namespace NNControl.Network
                     {
                         foreach (var item in arg.NewItems)
                         {
-                            (item as LayerModel).NeuronModels.CollectionChanged += (_, __) => Reposition();
+                            (item as LayerModel)!.NeuronModels.CollectionChanged += (_, __) => Reposition();
                         }
                     }
 
@@ -260,12 +260,12 @@ namespace NNControl.Network
         {
             if (View.SelectedSynapse != null)
             {
-                RequestRedraw(NeuralNetworkController.ViewTrig.DESELECT_SYNAPSE);
+                RequestRedraw(ViewTrig.DESELECT_SYNAPSE);
             }
         }
 
 
-        public void RequestRedraw(NeuralNetworkController.ViewTrig next)
+        public void RequestRedraw(ViewTrig next)
         {
             _redrawStateMachine.Next(next);
             _onRedraw();
