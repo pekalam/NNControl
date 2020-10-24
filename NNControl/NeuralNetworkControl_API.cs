@@ -108,7 +108,7 @@ namespace NNControl
 
         public void Zoom(float zoom)
         {
-            Controller.SetZoom(Controller.View.Zoom + zoom);
+            Controller.SetZoom(zoom);
         }
 
         public void Reposition()

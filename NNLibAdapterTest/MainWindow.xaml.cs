@@ -177,5 +177,17 @@ namespace NNLibAdapterTest
 
             }
         }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var net = new MLPNetwork(new []
+            {
+                new PerceptronLayer(1, 2, new SigmoidActivationFunction()), 
+                new PerceptronLayer(2, 100, new SigmoidActivationFunction()), 
+                new PerceptronLayer(100, 1, new SigmoidActivationFunction()), 
+            });
+
+            Adapter.SetNeuralNetwork(net);
+        }
     }
 }

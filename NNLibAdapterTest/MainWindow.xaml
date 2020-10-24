@@ -28,6 +28,7 @@
             <Button x:Name="AddLayer" Click="AddLayer_Click">Add</Button>
             <Button Name="Test" Click="Test_OnClick">Test</Button>
             <Button Name="Animate" Click="Animate_OnClick">Animate</Button>
+            <Button Click="ButtonBase_OnClick">Change net</Button>
         </StackPanel>
     </Grid>
 </Window>

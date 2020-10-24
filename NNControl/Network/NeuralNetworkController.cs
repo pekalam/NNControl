@@ -40,6 +40,13 @@ namespace NNControl.Network
                 StructureManager.SetNeuralNetworkModel(value);
                 StructureManager.AddNewLayers(0, value.NetworkLayerModels.Count);
 
+                ViewportPosition.Left = 0;
+                ViewportPosition.Top = 0;
+                for (int i = 0; i < Layers.Count; i++)
+                {
+                    Layers[i].Reposition();
+                }
+
                 PositionManager.AdjustNetworkPosition(this);
 
                 value.NetworkLayerModels.CollectionChanged += (_, arg) =>
@@ -71,7 +78,7 @@ namespace NNControl.Network
                 return;
             }
 
-            View.Zoom = value;
+            View.Zoom += value;
 
             RequestRedraw(ViewTrig.ZOOM);
         }
@@ -181,6 +188,8 @@ namespace NNControl.Network
             CanvasWidth = canvasWidth;
             CanvasHeight = canvasHeight;
         }
+
+        public void ForceDraw() => ForceDraw(CanvasWidth, CanvasHeight);
 
         public void ForceDraw(float canvasWidth, float canvasHeight)
         {

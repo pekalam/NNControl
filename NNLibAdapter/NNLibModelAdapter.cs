@@ -185,7 +185,6 @@ namespace NNLibAdapter
                 NeuralNetworkModel.NetworkLayerModels[0].NeuronModels[i].Label = labels[i];
             }
 
-            Controller?.Reposition();
         }
 
         public void SetOutputLabels(string[] labels)
@@ -195,7 +194,6 @@ namespace NNLibAdapter
                 NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels[i].Label = labels[i];
             }
 
-            Controller?.Reposition();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

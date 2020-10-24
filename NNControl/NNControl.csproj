@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>WPF control that creates visualization of neural network.</Description>
-    <Version>1.0.43</Version>
+    <Version>1.0.47</Version>
   </PropertyGroup>
 
   <ItemGroup>

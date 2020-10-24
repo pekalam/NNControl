@@ -151,7 +151,7 @@ namespace NNControl
             var newScale = CenterPositions(network);
             if (setZoom && network.CanvasWidth > 0 && network.CanvasHeight > 0)
             {
-                network.SetZoom(newScale);
+                network.View.Zoom = newScale;
             }
         }
     }
