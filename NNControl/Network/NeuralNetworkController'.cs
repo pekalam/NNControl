@@ -9,13 +9,13 @@ namespace NNControl.Network
         public enum ViewTrig
         {
             DRAW, PAINT, SELECT, ZOOM, DESELECT, MV, MV_END, FORCE_DRAW, SELECT_SYNAPSE, DESELECT_SYNAPSE, FORCE_DRAW_EXCLUDED,
-            FORCE_DRAW_FROM_SAVED, REPOSITION
+            FORCE_DRAW_FROM_SAVED, REPOSITION, FORCE_DRAW_DIRECTLY
         }
 
         public enum States
         {
             S0, S1, S2, S3, S4, S5, S6, S7, S8, ZOOM_INTERRUPT, FORCE_DRAW_INTERRUPT, S9, S10, S11, FORCE_DRAW_EXCLUDED_INT,
-            FORCE_DRAW_FROM_SAVED_INT, REPOSITION_INT
+            FORCE_DRAW_FROM_SAVED_INT, REPOSITION_INT, FORCE_DRAW_DIRECTLY_INTERRUPT
         }
 
         public enum RedrawStates
@@ -240,6 +240,11 @@ namespace NNControl.Network
                     View.DrawExcluded();
                 }, States.FORCE_DRAW_INTERRUPT)
 
+
+                .InterruptState(ViewTrig.FORCE_DRAW_DIRECTLY, _ =>
+                {
+                    View.DrawDirectly();
+                }, States.FORCE_DRAW_DIRECTLY_INTERRUPT)
 
                 .InterruptState(ViewTrig.REPOSITION, s =>
                 {

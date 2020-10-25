@@ -17,7 +17,6 @@ namespace NNControl.Model
         public string Color = "#000000";
         public string LabelColor = "#000000";
         public string SelectedColor = "#FFFFFF";
-        public string LargetNetColor = "#ffb0e3";
         public string ArrowColor = "#000000";
         public float StrokeWidth = 1.45f;
         public float ArrowLength = 3.2f;

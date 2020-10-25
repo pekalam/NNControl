@@ -56,7 +56,6 @@ namespace NNLibAdapterTest
 
             Adapter = new NNLibAdapter.NNLibModelAdapter();
             Adapter.SetNeuralNetwork(_network);
-            Adapter.NeuralNetworkModel.SynapseSettings.LargetNetColor = "#00FF00";
             Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
             Adapter.SetOutputLabels(new[] { "out 1" });
             DataContext = this;

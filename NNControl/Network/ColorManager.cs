@@ -87,7 +87,7 @@ namespace NNControl.Network
 
         public void ApplyColors()
         {
-            _controller.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW);
+            _controller.RequestRedraw(NeuralNetworkController.ViewTrig.FORCE_DRAW_DIRECTLY);
         }
     }
 }
