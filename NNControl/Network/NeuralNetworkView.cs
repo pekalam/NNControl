@@ -22,5 +22,6 @@ namespace NNControl.Network
         public abstract void DrawAndSave();
         public abstract void DrawFromSaved();
         public abstract void DrawExcluded();
+        public abstract void DrawDirectly();
     }
 }

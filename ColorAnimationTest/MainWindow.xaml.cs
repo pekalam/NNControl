@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using NNControl.Network;
 using NNLib;
+using NNLib.ActivationFunction;
+using NNLib.MLP;
 using NNLibAdapter;
 
 namespace ColorAnimationTest

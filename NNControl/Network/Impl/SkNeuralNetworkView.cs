@@ -161,5 +161,12 @@ namespace NNControl.Network.Impl
             //     }
             // }
         }
+
+        public override void DrawDirectly()
+        {
+            var canvas = PaintArgs.Surface.Canvas;
+
+            DrawAll(canvas);
+        }
     }
 }

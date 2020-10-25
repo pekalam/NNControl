@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using NNControl.Layer.Impl;
 using NNControl.Model;
 using NNControl.Network.Impl;
@@ -24,6 +25,7 @@ namespace NNControl.Synapse.Impl
 
         public SkSynapsePainter(SynapseSettings settings)
         {
+
             if (!_initialized)
             {
                 _synapseLabelPaint.Color = SKColor.Parse(settings.LabelColor);
@@ -38,7 +40,8 @@ namespace NNControl.Synapse.Impl
                 _arrowPaint.Color = SKColor.Parse(settings.ArrowColor);
                 _arrowPaint.IsAntialias = _largeNetArrowPaint.IsAntialias = true;
 
-                _largeNetArrowPaint.Color = SKColor.Parse(settings.LargetNetColor);
+                var synColor = SKColor.Parse(settings.Color);
+                _largeNetArrowPaint.Color = new SKColor(synColor.Red, synColor.Green, synColor.Blue, 12);
 
                 _initialized = true;
             }
@@ -49,7 +52,7 @@ namespace NNControl.Synapse.Impl
             _synapsePaint.StrokeCap = SKStrokeCap.Butt;
             _synapsePaint.StrokeWidth = _selectedSynapsePaint.StrokeWidth = settings.StrokeWidth;
 
-            _largeNetSynPaint.Color = SKColor.Parse(settings.LargetNetColor);
+            _largeNetSynPaint.Color = _largeNetArrowPaint.Color;
             _largeNetSynPaint.IsAntialias = true;
             _largeNetSynPaint.StrokeCap = SKStrokeCap.Butt;
         }

@@ -29,7 +29,7 @@ namespace LargeNet
 
         public MainWindow()
         {
-            Adapter = new DefaultNeuralNetworkModelAdapter(100,100,20,10,1);
+            Adapter = new DefaultNeuralNetworkModelAdapter(100,100, 100,20,10,1);
             DataContext = this;
             InitializeComponent();
         }
