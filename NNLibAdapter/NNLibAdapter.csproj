@@ -7,11 +7,11 @@
     <Company>Marek Pękala</Company>
     <Description>Integrates NNLib with NNControl.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.50</Version>
+    <Version>1.0.51</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NNLib" Version="1.0.63" />
+    <PackageReference Include="NNLib" Version="1.0.93" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
 

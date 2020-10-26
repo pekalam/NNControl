@@ -22,26 +22,7 @@ namespace NNLibAdapter
 
         public void SetNeuronsCount(int neuronsCount)
         {
-            int layerNeuronsCount = 0;
-
-
-            if (Layer != null)
-            {
-                if (neuronsCount == Layer.NeuronsCount)
-                {
-                    return;
-                }
-
-                if (neuronsCount <= 0)
-                {
-                    throw new ArgumentException("Invalid neurons count");
-                }
-                layerNeuronsCount = Layer.NeuronsCount;
-            }
-            else
-            {
-                layerNeuronsCount = LayerModel.NeuronModels.Count;
-            }
+            int layerNeuronsCount = LayerModel.NeuronModels.Count;
 
             if (neuronsCount > layerNeuronsCount)
             {
