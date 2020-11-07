@@ -26,6 +26,7 @@ namespace NNControl.Network
             View.NeuralNetworkModel = model;
 
 
+            model.NetworkLayerModels.CollectionChanged -= LayerModelsOnCollectionChanged;
             model.NetworkLayerModels.CollectionChanged += LayerModelsOnCollectionChanged;
         }
 
@@ -64,6 +65,8 @@ namespace NNControl.Network
 
                 next?.AddSynapsesToPrevious();
             }
+
+            _networkController.Reposition();
         }
 
         public void CreateNewLayer(int layerNum)
@@ -169,6 +172,7 @@ namespace NNControl.Network
         private void NeuronModelsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ResetNeuronsNumbers();
+            _networkController.Reposition();
         }
     }
 }

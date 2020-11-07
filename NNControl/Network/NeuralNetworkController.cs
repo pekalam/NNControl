@@ -49,23 +49,6 @@ namespace NNControl.Network
 
                 PositionManager.AdjustNetworkPosition(this);
 
-                value.NetworkLayerModels.CollectionChanged += (_, arg) =>
-                {
-                    if (arg.Action == NotifyCollectionChangedAction.Add)
-                    {
-                        foreach (var item in arg.NewItems)
-                        {
-                            (item as LayerModel)!.NeuronModels.CollectionChanged += (_, __) => Reposition();
-                        }
-                    }
-
-                    Reposition();
-                };
-                foreach (var layerModel in value.NetworkLayerModels)
-                {
-                    layerModel.NeuronModels.CollectionChanged += (_, __) => Reposition();
-                }
-
                 RequestRedraw(ViewTrig.FORCE_DRAW);
             }
         }
