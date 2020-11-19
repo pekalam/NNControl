@@ -24,6 +24,8 @@ namespace NNLibAdapter
             SetNeuralNetwork(network);
         }
 
+        public INetwork Network => _network!;
+
         public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters => _layerModelAdapters;
         public NeuralNetworkController Controller
         {
