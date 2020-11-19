@@ -33,7 +33,7 @@ namespace NNControl.Overlays
 
 
                 hSlider.Minimum = _control.ModelAdapter.NeuralNetworkModel.NeuronRadius;
-                hSlider.Maximum = 500;
+                hSlider.Maximum = 1000;
                 hSlider.Value = _control.ModelAdapter.NeuralNetworkModel.LayerXSpaceBetween;
 
                 _pristine = true;

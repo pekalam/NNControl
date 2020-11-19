@@ -37,26 +37,23 @@ namespace NNControl.Network.Impl
             }
         }
 
+        private void ApplyTranslation(SKCanvas canvas)
+        {
+
+        }
 
         private void ApplyZoom(SKCanvas canvas)
         {
-            var m = canvas.TotalMatrix;
-            m.ScaleX = Zoom + 1;
-            m.ScaleY = Zoom + 1;
+            var m = SKMatrix.CreateScale(Zoom, Zoom, canvas.DeviceClipBounds.MidX, canvas.DeviceClipBounds.MidY);
 
-            // m.TransX = (float) (ZoomCenterX * Zoom);
-            // m.TransY = (float)(ZoomCenterY * Zoom);
-
-
-            _transX = m.TransX = -canvas.DeviceClipBounds.MidX * Zoom;
-            _transY = m.TransY = -canvas.DeviceClipBounds.MidY * Zoom;
+            _transX = m.TransX;
+            _transY = m.TransY;
 
             canvas.SetMatrix(m);
         }
 
-        private void DrawAll(SKCanvas canvas)
+        private void DrawAll(SKCanvas canvas, bool aa = true)
         {
-            ApplyZoom(canvas);
             canvas.Clear(_bgColor);
 
             for (int i = 0; i < Layers.Count; i++)
@@ -93,7 +90,7 @@ namespace NNControl.Network.Impl
 
         public override (float x, float y) ToCanvasPoints(float x, float y)
         {
-            return ((x - _transX) / (float) (Zoom + 1), (y - _transY) / (float) (Zoom + 1));
+            return ((x - _transX) / Zoom, (y - _transY) / Zoom);
         }
 
 
@@ -101,19 +98,22 @@ namespace NNControl.Network.Impl
         {
             var pictureRecorder = new SKPictureRecorder();
             var canvas = pictureRecorder.BeginRecording(PaintArgs.Info.Rect);
-            DrawAll(canvas);
+            DrawAll(canvas, false);
             //_saved = PaintArgs.Surface.Snapshot();
             _saved = pictureRecorder.EndRecording();
             pictureRecorder.Dispose();
 
             var surfCanvas = PaintArgs.Surface.Canvas;
             surfCanvas.Clear(_bgColor);
+            ApplyZoom(surfCanvas);
             surfCanvas.DrawPicture(_saved);
         }
 
         public override void DrawFromSaved()
         {
-            PaintArgs.Surface.Canvas.DrawPicture(_saved);
+            var canvas = PaintArgs.Surface.Canvas;
+            ApplyZoom(canvas);
+            canvas.DrawPicture(_saved);
             //PaintArgs.Surface.Canvas.DrawImage(_saved, 0, 0);
         }
 
@@ -165,7 +165,7 @@ namespace NNControl.Network.Impl
         public override void DrawDirectly()
         {
             var canvas = PaintArgs.Surface.Canvas;
-
+            ApplyZoom(canvas);
             DrawAll(canvas);
         }
     }

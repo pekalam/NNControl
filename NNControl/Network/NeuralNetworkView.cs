@@ -11,9 +11,10 @@ namespace NNControl.Network
         public virtual NeuralNetworkModel NeuralNetworkModel { get; set; }
         public List<LayerView> Layers = new List<LayerView>();
         public List<NeuronView> SelectedNeuron = new List<NeuronView>();
-        public virtual float Zoom { get; internal set; } = 0;
+        public virtual float Zoom { get; internal set; } = 1;
         public int NeuronsCount;
         public SynapseView SelectedSynapse;
+        internal Box ViewportPosition;
 
         public abstract (float x, float y) ToCanvasPoints(float x, float y);
 

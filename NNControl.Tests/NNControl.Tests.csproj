@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NNControl\NNControl.csproj" />
+    <ProjectReference Include="..\NNLibAdapter\NNLibAdapter.csproj" />
   </ItemGroup>
 
 </Project>

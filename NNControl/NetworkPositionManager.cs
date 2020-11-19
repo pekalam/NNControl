@@ -11,12 +11,12 @@ namespace NNControl
         {
             return network.NeuralNetworkModel.Padding.Left +
                    (2 * network.NeuralNetworkModel.NeuronRadius + network.NeuralNetworkModel.LayerXSpaceBetween) *
-                   layerNum + network.ViewportPosition.Left;
+                   layerNum + network.View.ViewportPosition.Left;
         }
 
         public float GetLayerY(NeuralNetworkController network, int layerNum)
         {
-            return network.NeuralNetworkModel.Padding.Top + network.ViewportPosition.Top;
+            return network.NeuralNetworkModel.Padding.Top + network.View.ViewportPosition.Top;
         }
 
         public float GetNeuronX(NeuralNetworkController network, LayerView layer,
@@ -64,7 +64,7 @@ namespace NNControl
                 newScale = Math.Min(scale, newScale);
             }
 
-            netStart = (network.CanvasWidth - netWidth) / 2f + network.ViewportPosition.Left;
+            netStart = (network.CanvasWidth - netWidth) / 2f + network.View.ViewportPosition.Left;
 
 
             for (int i = 0; i < network.Layers.Count; i++)
@@ -151,7 +151,7 @@ namespace NNControl
             var newScale = CenterPositions(network);
             if (setZoom && network.CanvasWidth > 0 && network.CanvasHeight > 0)
             {
-                network.View.Zoom = newScale;
+                network.View.Zoom = 1 + newScale;
             }
         }
     }

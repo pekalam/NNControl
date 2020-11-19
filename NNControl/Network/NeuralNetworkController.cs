@@ -18,7 +18,6 @@ namespace NNControl.Network
         internal NetworkStructureManager StructureManager;
         public ColorManager Color;
         internal NeuralNetworkView View;
-        internal Box ViewportPosition;
 
 
         public IReadOnlyList<LayerController> Layers => StructureManager.LayerControllers;
@@ -40,8 +39,8 @@ namespace NNControl.Network
                 StructureManager.SetNeuralNetworkModel(value);
                 StructureManager.AddNewLayers(0, value.NetworkLayerModels.Count);
 
-                ViewportPosition.Left = 0;
-                ViewportPosition.Top = 0;
+                View.ViewportPosition.Left = 0;
+                View.ViewportPosition.Top = 0;
                 for (int i = 0; i < Layers.Count; i++)
                 {
                     Layers[i].Reposition();
@@ -56,12 +55,13 @@ namespace NNControl.Network
 
         public void SetZoom(float value)
         {
-            if (value < -1.0d)
+            if (View.Zoom + value <= 0f)
             {
                 return;
             }
 
             View.Zoom += value;
+
 
             RequestRedraw(ViewTrig.ZOOM);
         }
@@ -182,8 +182,8 @@ namespace NNControl.Network
 
         public void Move(int dx, int dy)
         {
-            ViewportPosition.Left += dx;
-            ViewportPosition.Top += dy;
+            View.ViewportPosition.Left += dx;
+            View.ViewportPosition.Top += dy;
             for (int i = 0; i < Layers.Count; i++)
             {
                 Layers[i].View.X += dx;
@@ -199,8 +199,8 @@ namespace NNControl.Network
 
         public void Reposition()
         {
-            ViewportPosition.Left = 0;
-            ViewportPosition.Top = 0;
+            View.ViewportPosition.Left = 0;
+            View.ViewportPosition.Top = 0;
             for (int i = 0; i < Layers.Count; i++)
             {
                 Layers[i].Reposition();

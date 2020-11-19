@@ -29,8 +29,7 @@ namespace ColorAnimationTest
                 new PerceptronLayer(100, 100, new SigmoidActivationFunction()),
                 new PerceptronLayer(100, 1, new SigmoidActivationFunction()));
 
-            Adapter = new NNLibModelAdapter();
-            Adapter.SetNeuralNetwork(_network);
+            Adapter = new NNLibModelAdapter(_network);
             DataContext = this;
 
             InitializeComponent();

@@ -69,6 +69,7 @@ namespace NNControl
 
         private void NeuralNetworkControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            _actionMenuOverlay.HideSettings();
             Canvas.SetLeft(_actionMenuOverlay, rootGrid.ActualWidth - 60);
             Controller.SetCanvasSz((float)canvas.ActualWidth, (float)canvas.ActualHeight);
             // _networkView.ForceDraw((float)canvas.ActualWidth, (float)canvas.ActualHeight);

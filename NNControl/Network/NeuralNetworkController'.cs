@@ -229,9 +229,9 @@ namespace NNControl.Network
 
                 .InterruptState(ViewTrig.ZOOM, s =>
                 {
-                    SmDeselectNeurons();
-                    View.DrawAndSave();
-
+                    //SmDeselectNeurons();
+                    // View.DrawAndSave();
+                    View.DrawFromSaved();
                 }, States.ZOOM_INTERRUPT)
 
                 .InterruptState(ViewTrig.FORCE_DRAW, s =>
@@ -248,8 +248,8 @@ namespace NNControl.Network
 
                 .InterruptState(ViewTrig.REPOSITION, s =>
                 {
-                    SmDeselectNeurons();
-                    SmDeselectSynapses();
+                    //SmDeselectNeurons();
+                    //SmDeselectSynapses();
                     View.DrawAndSave();
                 }, States.REPOSITION_INT)
 
@@ -261,7 +261,8 @@ namespace NNControl.Network
 
                 .InterruptState(ViewTrig.FORCE_DRAW_FROM_SAVED, s =>
                 {
-                    View.DrawAndSave();
+                    View.DrawFromSaved();
+                    // View.DrawAndSave();
                 }, States.FORCE_DRAW_FROM_SAVED_INT)
 
                 .Build(States.S0);
