@@ -1,16 +1,13 @@
 ﻿using NNControl.Network;
 using NNLib;
+using NNLib.MLP;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Threading;
-using Microsoft.VisualBasic;
-using NNLib.MLP;
 
 namespace NNLibAdapter
 {
@@ -21,12 +18,12 @@ namespace NNLibAdapter
 
     public class ColorAnimation
     {
-        private readonly ReplaySubject<int> _sub = new ReplaySubject<int>(10);
+        private readonly Subject<int> _subject = new Subject<int>();
         private IDisposable? _epochSubscr;
         private Action<Action>? _colorUpdateHighOrder;
 
-        private NeuralNetworkController _controller;
-        private MLPTrainer _trainer;
+        private readonly NeuralNetworkController _controller;
+        private MLPTrainer _trainer = null!;
 
         public ColorAnimation(NeuralNetworkController controller)
         {
@@ -43,13 +40,13 @@ namespace NNLibAdapter
             IsAnimating = true;
         }
 
-        public void SetupTrainer(MLPTrainer trainer, TimeSpan delay)
+        public void SetupTrainer(MLPTrainer trainer, TimeSpan delay, int bufferCount = 20)
         {
             _trainer = trainer;
             _trainer.EpochEnd += TrainerOnEpochEnd;
 
-            _epochSubscr = _sub
-                .Buffer(timeSpan: delay, count: 20)
+            _epochSubscr = _subject
+                .Buffer(timeSpan: delay, count: bufferCount)
                 .DelaySubscription(delay)
                 .SubscribeOn(Scheduler.Default)
                 .Subscribe(ints =>
@@ -74,7 +71,7 @@ namespace NNLibAdapter
 
         private void TrainerOnEpochEnd()
         {
-            _sub.OnNext(0);
+            _subject.OnNext(0);
         }
 
         public void StopAnimation(bool resetColors)
@@ -258,7 +255,7 @@ namespace NNLibAdapter
 
         }
 
-        public void SetColorsPerNetwork(IReadOnlyList<PerceptronLayer> layers)
+        public void SetColorsPerNetwork(IReadOnlyList<Layer> layers)
         {
             var color = _controller.Color;
             double mingz=double.MinValue, maxgz=double.MinValue, minlz=double.MinValue, maxlz=double.MaxValue;

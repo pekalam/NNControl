@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,16 +22,19 @@ using NNLib.LossFunction;
 using NNLib.MLP;
 using NNLib.Training.GradientDescent;
 using NNLibAdapter;
+using NNLibAdapterTest.Annotations;
 
 namespace NNLibAdapterTest
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private MLPNetwork _network;
         private MLPTrainer _trainer;
+        private NNLibModelAdapter _adapter;
+        private NNLibModelAdapter _previous;
 
         public MainWindow()
         {
@@ -48,23 +53,30 @@ namespace NNLibAdapterTest
                     new[] {1d},
                 }));
 
-            _network = new MLPNetwork(new PerceptronLayer(2, 2, new SigmoidActivationFunction()),
-                new PerceptronLayer(2, 15, new SigmoidActivationFunction()),
-                new PerceptronLayer(15, 1, new SigmoidActivationFunction()));
+            _network = new MLPNetwork(new PerceptronLayer(2, 4, new SigmoidActivationFunction()),
+                new PerceptronLayer(4, 1, new SigmoidActivationFunction()));
 
             _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentAlgorithm(new GradientDescentParams()), new QuadraticLossFunction());
 
-            Adapter = new NNLibAdapter.NNLibModelAdapter();
-            Adapter.SetNeuralNetwork(_network);
-            Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
-            Adapter.SetOutputLabels(new[] { "out 1" });
+            Adapter = _previous = new NNLibModelAdapter(_network);
+            //Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
+            //Adapter.SetOutputLabels(new[] { "out 1" });
+            Adapter.NeuralNetworkModel.BackgroundColor = "#FFFFFF";
             DataContext = this;
             InitializeComponent();
             NCount.Text = _network.Layers[0].NeuronsCount.ToString();
             NCountl2.Text = _network.Layers[1].NeuronsCount.ToString();
         }
 
-        public NNLibModelAdapter Adapter { get; set; }
+        public NNLibModelAdapter Adapter
+        {
+            get => _adapter;
+            set
+            {
+                _adapter = value;
+                OnPropertyChanged();
+            }
+        }
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -80,7 +92,6 @@ namespace NNLibAdapterTest
 
         private void Add_OnClick(object sender, RoutedEventArgs e)
         {
-            Adapter.LayerModelAdapters[1].SetNeuronsCount(_network.Layers[0].NeuronsCount+1);
             _network.Layers[0].NeuronsCount++;
         }
 
@@ -89,7 +100,6 @@ namespace NNLibAdapterTest
             try
             {
                 var n = Convert.ToInt32(NCount.Text);
-                Adapter.LayerModelAdapters[1].SetNeuronsCount(n);
                 _network.Layers[0].NeuronsCount = n;
             }
             catch (Exception)
@@ -100,29 +110,26 @@ namespace NNLibAdapterTest
 
         private void RmMid_Click(object sender, RoutedEventArgs e)
         {
-            Adapter.RemoveLayer(1);
-            _network.RemoveLayer(_network.Layers[1]);
+            var ind = Convert.ToInt32(BeforeInd.Text);
+            _network.RemoveLayer(_network.Layers[ind]);
         }
 
         private void Before_Click(object sender, RoutedEventArgs e)
         {
             var ind = Convert.ToInt32(BeforeInd.Text);
-
-            Adapter.InsertBefore(ind,_network.InsertBefore(ind));   
+            _network.InsertBefore(ind);
         }
 
         private void After_Click(object sender, RoutedEventArgs e)
         {
             var ind = Convert.ToInt32(AfterInd.Text);
-
-            Adapter.InsertAfter(ind, _network.InsertAfter(ind));
+            _network.InsertAfter(ind);
         }
 
         private void AddLayer_Click(object sender, RoutedEventArgs e)
         {
             var layer = new PerceptronLayer(_network.Layers[^1].NeuronsCount, 1, new LinearActivationFunction());
             _network.AddLayer(layer);
-            Adapter.AddLayer(layer);
         }
 
         private void Test_OnClick(object sender, RoutedEventArgs e)
@@ -131,16 +138,10 @@ namespace NNLibAdapterTest
             long total = 0L;
             stw.Restart();
 
-            Adapter.LayerModelAdapters[1].SetNeuronsCount(1000);
+            _network.Layers[0].NeuronsCount = 1000;
+
             stw.Stop();
             Debug.WriteLine("Adapter elapsed: " + stw.Elapsed);
-            total += stw.ElapsedMilliseconds;
-
-            stw.Restart();
-            _network.Layers[0].NeuronsCount = 1000;
-            stw.Stop();
-            Debug.WriteLine("NNLib elapsed: " + stw.Elapsed);
-            Debug.WriteLine("Total elapsed: " + total);
         }
 
         private void Animate_OnClick(object sender, RoutedEventArgs e)
@@ -168,7 +169,6 @@ namespace NNLibAdapterTest
             try
             {
                 var n = Convert.ToInt32(NCountl2.Text);
-                Adapter.LayerModelAdapters[2].SetNeuronsCount(n);
                 _network.Layers[1].NeuronsCount = n;
             }
             catch (Exception)
@@ -187,6 +187,32 @@ namespace NNLibAdapterTest
             });
 
             Adapter.SetNeuralNetwork(net);
+        }
+
+        private void ChangeModel_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Adapter != _previous)
+            {
+                Adapter = _previous;
+                return;
+            }
+
+            var net = new MLPNetwork(new[]
+            {
+                new PerceptronLayer(1, 2, new SigmoidActivationFunction()),
+                new PerceptronLayer(2, 3, new SigmoidActivationFunction()),
+                new PerceptronLayer(3, 1, new SigmoidActivationFunction()),
+            });
+
+            Adapter = new NNLibModelAdapter(net);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NNLibAdapterTest"
         xmlns:nnControl="clr-namespace:NNControl;assembly=NNControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -29,6 +29,7 @@
             <Button Name="Test" Click="Test_OnClick">Test</Button>
             <Button Name="Animate" Click="Animate_OnClick">Animate</Button>
             <Button Click="ButtonBase_OnClick">Change net</Button>
+            <Button Name="ChangeModel" Click="ChangeModel_OnClick">Change model</Button>
         </StackPanel>
     </Grid>
 </Window>

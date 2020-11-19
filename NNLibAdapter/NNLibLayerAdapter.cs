@@ -1,10 +1,9 @@
 ﻿using NNControl.Adapter;
 using NNControl.Model;
 using NNLib;
-using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+// ReSharper disable InconsistentNaming
 
 namespace NNLibAdapter
 {
@@ -14,6 +13,15 @@ namespace NNLibAdapter
         {
             LayerModel = layerModel;
             Layer = layer;
+            if (layer != null)
+            {
+                layer.NeuronsCountChanged += LayerOnNeuronsCountChanged;
+            }
+        }
+
+        private void LayerOnNeuronsCountChanged(Layer obj)
+        {
+            SetNeuronsCount(obj.NeuronsCount);
         }
 
         public LayerModel LayerModel { get; }
@@ -40,11 +48,6 @@ namespace NNLibAdapter
 
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public event PropertyChangedEventHandler PropertyChanged = null!;
     }
 }

@@ -1,24 +1,30 @@
-﻿using System;
-using NNControl;
+﻿using NNControl;
 using NNControl.Adapter;
 using NNControl.Model;
 using NNControl.Network;
 using NNControl.Synapse;
 using NNLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+// ReSharper disable InconsistentNaming
 
 namespace NNLibAdapter
 {
     public class NNLibModelAdapter : INeuralNetworkModelAdapter
     {
         private readonly List<NNLibLayerAdapter> _layerModelAdapters = new List<NNLibLayerAdapter>();
-        private NeuralNetworkController _controller;
+        private NeuralNetworkController _controller = null!;
+        private INetwork? _network;
+
+        public NNLibModelAdapter(INetwork network)
+        {
+            SetNeuralNetwork(network);
+        }
 
         public IReadOnlyList<ILayerModelAdapter> LayerModelAdapters => _layerModelAdapters;
-
         public NeuralNetworkController Controller
         {
             get => _controller;
@@ -29,22 +35,34 @@ namespace NNLibAdapter
             }
         }
 
-        public IReadOnlyList<Layer> Layers { get; private set; }
-        public NeuralNetworkModel NeuralNetworkModel { get; private set; }
-        public ColorAnimation ColorAnimation { get; private set; }
+        public NeuralNetworkModel NeuralNetworkModel { get; private set; } = null!;
+        public ColorAnimation ColorAnimation { get; private set; } = null!;
 
-        public void SetNeuralNetwork<T>(Network<T> network) where T : Layer
+        public void SetNeuralNetwork(INetwork network)
         {
-            Layers = network.BaseLayers;
+            void AddLayerModel(LayerModel layerModel, Layer? layer)
+            {
+                _layerModelAdapters.Add(new NNLibLayerAdapter(layerModel, layer));
+                NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
+            }
+
+            if (_network != null)
+            {
+                _network.StructureChanged -= NetworkOnStructureChanged;
+            }
+            _network = network;
+            _network.StructureChanged += NetworkOnStructureChanged;
             NeuralNetworkModel = new NeuralNetworkModel();
-            var inputLayer = Layers[0];
-            //Forward layer
-            var forwardLayerModel = new LayerModel();
+            _layerModelAdapters.Clear();
+
+            var inputLayer = network.BaseLayers[0];
+            inputLayer.InputsCountChanged += LayerOnInputsCountChanged;
+            var inputLayerModel = new LayerModel();
             for (int i = 0; i < inputLayer.InputsCount; i++)
             {
-                forwardLayerModel.NeuronModels.Add(new NeuronModel());
+                inputLayerModel.NeuronModels.Add(new NeuronModel());
             }
-            AddLayerModel(forwardLayerModel, null);
+            AddLayerModel(inputLayerModel, null);
 
             foreach (var layer in network.BaseLayers)
             {
@@ -61,12 +79,51 @@ namespace NNLibAdapter
 
             OnPropertyChanged(nameof(NeuralNetworkModel));
         }
-
-        private void AddLayerModel(LayerModel layerModel, Layer layer)
+        
+        private void NetworkOnStructureChanged(INetwork obj)
         {
-            _layerModelAdapters.Add(new NNLibLayerAdapter(layerModel, layer));
-            NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
+            if (_layerModelAdapters.Count < obj.TotalLayers + 1)
+            {
+                if (obj.TotalLayers > 1 && obj.BaseLayers[^2] == _layerModelAdapters[^1].Layer)
+                {
+                    AddLayer(obj.BaseLayers[^1]);
+                    return;
+                }
+
+                for (int i = 1; i < _layerModelAdapters.Count; i++)
+                {
+                    if (_layerModelAdapters[i].Layer == obj.BaseLayers[i])
+                    {
+                        InsertBefore(i, obj.BaseLayers[i-1]);
+                        return;
+                    }
+
+                    if (_layerModelAdapters[i].Layer != obj.BaseLayers[i - 1])
+                    {
+                        InsertAfter(i-1, obj.BaseLayers[i-1]);
+                        return;
+                    }
+                }
+            }
+            else if (_layerModelAdapters.Count > obj.TotalLayers + 1)
+            {
+                for (int i = 1; i < obj.TotalLayers + 1; i++)
+                {
+                    if (_layerModelAdapters[i].Layer != obj.BaseLayers[i-1])
+                    {
+                        RemoveLayer(i);
+                        return;
+                    }
+                }
+                RemoveLayer(_layerModelAdapters.Count - 1);
+            }
         }
+        private void LayerOnInputsCountChanged(Layer obj)
+        {
+            _layerModelAdapters[0].SetNeuronsCount(obj.InputsCount);
+        }
+
+
 
         public void AddLayer(Layer layer)
         {
@@ -148,29 +205,38 @@ namespace NNLibAdapter
 
         public void InsertBefore(int ind, Layer layer)
         {
+            if (ind == 1)
+            {
+                _layerModelAdapters[1].Layer!.InputsCountChanged -= LayerOnInputsCountChanged; 
+                layer.InputsCountChanged += LayerOnInputsCountChanged;
+            }
+
             InsertAfter(ind-1,layer);
         }
 
         public void RemoveLayer(int layerIndex)
         {
-            _layerModelAdapters.RemoveAt(layerIndex + 1);
-            NeuralNetworkModel.NetworkLayerModels.RemoveAt(layerIndex + 1);
-            if (layerIndex == 0)
+            _layerModelAdapters.RemoveAt(layerIndex);
+            NeuralNetworkModel.NetworkLayerModels.RemoveAt(layerIndex);
+            if (layerIndex == 1)
             {
-                _layerModelAdapters[0].SetNeuronsCount(_layerModelAdapters[1].Layer.InputsCount);
+                _layerModelAdapters[1].Layer!.InputsCountChanged += LayerOnInputsCountChanged;
+                _layerModelAdapters[0].SetNeuronsCount(_layerModelAdapters[1].Layer!.InputsCount);
             }
         }
 
+
+
         public void UpdateWeights(NeuralNetworkControl networkControl, string format = "F3")
         {
-            for (int i = 1; i < Layers.Count; i++)
+            for (int i = 1; i < _network!.BaseLayers.Count; i++)
             {
-                for (int j = 0; j < Layers[i].NeuronsCount; j++)
+                for (int j = 0; j < _network.BaseLayers[i].NeuronsCount; j++)
                 {
-                    for (int k = 0; k < Layers[i].InputsCount; k++)
+                    for (int k = 0; k < _network.BaseLayers[i].InputsCount; k++)
                     {
                         NeuralNetworkModel.NetworkLayerModels[i+1].NeuronModels[j].SynapsesLabels[k] =
-                            Layers[i].Weights.At(j, k).ToString(format);
+                            _network.BaseLayers[i].Weights.At(j, k).ToString(format);
                     }
                 }
             }
@@ -180,6 +246,11 @@ namespace NNLibAdapter
 
         public void SetInputLabels(string[] labels)
         {
+            if (labels.Length != NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count)
+            {
+                throw new ArgumentException("Invalid input labels length");
+            }
+
             for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count; i++)
             {
                 NeuralNetworkModel.NetworkLayerModels[0].NeuronModels[i].Label = labels[i];
@@ -189,6 +260,11 @@ namespace NNLibAdapter
 
         public void SetOutputLabels(string[] labels)
         {
+            if (labels.Length != NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels.Count)
+            {
+                throw new ArgumentException("Invalid output labels length");
+            }
+
             for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels.Count; i++)
             {
                 NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels[i].Label = labels[i];
@@ -196,8 +272,10 @@ namespace NNLibAdapter
 
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+
+
+        public event PropertyChangedEventHandler PropertyChanged = null!;
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
