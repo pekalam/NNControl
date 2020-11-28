@@ -57,7 +57,7 @@ namespace LargeNet
                             }
                         }
                     }
-
+                    
                     Dispatcher.Invoke(() =>
                     {
                         control.Controller.Color.ApplyColors();

@@ -18,6 +18,8 @@ namespace NNLibAdapter
         private readonly List<NNLibLayerAdapter> _layerModelAdapters = new List<NNLibLayerAdapter>();
         private NeuralNetworkController _controller = null!;
         private INetwork? _network;
+        private string[]? _inputLabels;
+        private string[]? _targetLabels;
 
         public NNLibModelAdapter(INetwork network)
         {
@@ -37,6 +39,14 @@ namespace NNLibAdapter
             }
         }
 
+        public void Detach()
+        {
+            if (_network != null)
+            {
+                _network.StructureChanged -= NetworkOnStructureChanged;
+            }
+        }
+
         public NeuralNetworkModel NeuralNetworkModel { get; private set; } = null!;
         public ColorAnimation ColorAnimation { get; private set; } = null!;
 
@@ -48,11 +58,14 @@ namespace NNLibAdapter
                 NeuralNetworkModel.NetworkLayerModels.Add(layerModel);
             }
 
+            if(_network == network) return;
+
             if (_network != null)
             {
                 _network.StructureChanged -= NetworkOnStructureChanged;
             }
             _network = network;
+            _network.StructureChanged -= NetworkOnStructureChanged;
             _network.StructureChanged += NetworkOnStructureChanged;
             NeuralNetworkModel = new NeuralNetworkModel();
             _layerModelAdapters.Clear();
@@ -89,6 +102,7 @@ namespace NNLibAdapter
                 if (obj.TotalLayers > 1 && obj.BaseLayers[^2] == _layerModelAdapters[^1].Layer)
                 {
                     AddLayer(obj.BaseLayers[^1]);
+                    RefreshLabels();
                     return;
                 }
 
@@ -97,12 +111,14 @@ namespace NNLibAdapter
                     if (_layerModelAdapters[i].Layer == obj.BaseLayers[i])
                     {
                         InsertBefore(i, obj.BaseLayers[i-1]);
+                        RefreshLabels();
                         return;
                     }
 
                     if (_layerModelAdapters[i].Layer != obj.BaseLayers[i - 1])
                     {
                         InsertAfter(i-1, obj.BaseLayers[i-1]);
+                        RefreshLabels();
                         return;
                     }
                 }
@@ -114,11 +130,14 @@ namespace NNLibAdapter
                     if (_layerModelAdapters[i].Layer != obj.BaseLayers[i-1])
                     {
                         RemoveLayer(i);
+                        RefreshLabels();
                         return;
                     }
                 }
                 RemoveLayer(_layerModelAdapters.Count - 1);
+                RefreshLabels();
             }
+
         }
         private void LayerOnInputsCountChanged(Layer obj)
         {
@@ -246,32 +265,46 @@ namespace NNLibAdapter
             networkControl.UpdateSynapseLabels();
         }
 
-        public void SetInputLabels(string[] labels)
+        private void RefreshLabels()
         {
-            if (labels.Length != NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count)
+            if (_inputLabels != null || _targetLabels != null)
             {
-                throw new ArgumentException("Invalid input labels length");
-            }
+                for (int i = 1; i < _layerModelAdapters.Count - 1; i++)
+                {
+                    _layerModelAdapters[i].ClearLabels();
+                }
 
-            for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count; i++)
-            {
-                NeuralNetworkModel.NetworkLayerModels[0].NeuronModels[i].Label = labels[i];
-            }
+                if (_inputLabels != null)
+                {
+                    _layerModelAdapters[0].AttachLabels(_inputLabels);
+                }
 
+                if (_targetLabels != null)
+                {
+                    _layerModelAdapters[^1].AttachLabels(_targetLabels);
+                }
+            }
         }
 
-        public void SetOutputLabels(string[] labels)
+        public void AttachOutputLabels(string[] labels)
         {
             if (labels.Length != NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels.Count)
             {
                 throw new ArgumentException("Invalid output labels length");
             }
+            _targetLabels = labels;
+            RefreshLabels();
+        }
 
-            for (int i = 0; i < NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels.Count; i++)
+
+        public void AttachInputLabels(string[] labels)
+        {
+            if (labels.Length != NeuralNetworkModel.NetworkLayerModels[0].NeuronModels.Count)
             {
-                NeuralNetworkModel.NetworkLayerModels[^1].NeuronModels[i].Label = labels[i];
+                throw new ArgumentException("Invalid output labels length");
             }
-
+            _inputLabels = labels;
+            RefreshLabels();
         }
 
 

@@ -176,7 +176,7 @@ namespace NNControl.Layer
             {
                 foreach (var item in e.OldItems)
                 {
-                    RemoveNeuron(0);
+                    RemoveNeuron(Neurons.Count - 1);
                 }
             }
         }

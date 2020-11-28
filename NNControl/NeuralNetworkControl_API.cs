@@ -47,10 +47,15 @@ namespace NNControl
                 return;
             }
 
+            if (e.OldValue is INeuralNetworkModelAdapter oldAdapter)
+            {
+                oldAdapter.Detach();
+            }
+
             var control = (d as NeuralNetworkControl);
 
             adapter.Controller = control.Controller;
-            control.SetAdapter(adapter);
+            control.SetAdapterHandlers(adapter);
             
             if (adapter.NeuralNetworkModel != null)
             {
@@ -60,15 +65,18 @@ namespace NNControl
             control.OnPropertyChanged(nameof(ModelAdapter));
         }
 
-        private void SetAdapter(INeuralNetworkModelAdapter adapter)
+        private void SetAdapterHandlers(INeuralNetworkModelAdapter adapter)
         {
-            adapter.PropertyChanged += (sender, args) =>
+            adapter.PropertyChanged -= AdapterOnPropertyChanged;
+            adapter.PropertyChanged += AdapterOnPropertyChanged;
+        }
+
+        private void AdapterOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(ModelAdapter.NeuralNetworkModel))
             {
-                if (args.PropertyName == nameof(adapter.NeuralNetworkModel))
-                {
-                    Controller.NeuralNetworkModel = adapter.NeuralNetworkModel;
-                }
-            };
+                Controller.NeuralNetworkModel = ModelAdapter.NeuralNetworkModel;
+            }
         }
 
         private async void StartVis()

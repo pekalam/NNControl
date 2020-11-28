@@ -55,6 +55,7 @@ namespace NNLibAdapterTest
 
             _network = new MLPNetwork(new PerceptronLayer(2, 4, new SigmoidActivationFunction()),
                 new PerceptronLayer(4, 1, new SigmoidActivationFunction()));
+            
 
             _trainer = new MLPTrainer(_network, trainingSets, new GradientDescentAlgorithm(new GradientDescentParams()), new QuadraticLossFunction());
 
@@ -62,6 +63,7 @@ namespace NNLibAdapterTest
             //Adapter.SetInputLabels(new []{"inp 1", "inp 2"});
             //Adapter.SetOutputLabels(new[] { "out 1" });
             Adapter.NeuralNetworkModel.BackgroundColor = "#FFFFFF";
+            Adapter.AttachOutputLabels(new string[]{"1"});
             DataContext = this;
             InitializeComponent();
             NCount.Text = _network.Layers[0].NeuronsCount.ToString();
@@ -193,7 +195,9 @@ namespace NNLibAdapterTest
         {
             if (Adapter != _previous)
             {
+                var newPr = Adapter;
                 Adapter = _previous;
+                _previous = newPr;
                 return;
             }
 
@@ -203,7 +207,7 @@ namespace NNLibAdapterTest
                 new PerceptronLayer(2, 3, new SigmoidActivationFunction()),
                 new PerceptronLayer(3, 1, new SigmoidActivationFunction()),
             });
-
+            _previous = Adapter;
             Adapter = new NNLibModelAdapter(net);
         }
 

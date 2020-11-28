@@ -23,6 +23,12 @@ namespace NNControl.Network
         {
             LayerControllers.Clear();
             View.Layers.Clear();
+
+            if (View.NeuralNetworkModel != null)
+            {
+                View.NeuralNetworkModel.NetworkLayerModels.CollectionChanged -= LayerModelsOnCollectionChanged;
+            }
+
             View.NeuralNetworkModel = model;
 
 

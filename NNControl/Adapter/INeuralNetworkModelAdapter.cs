@@ -10,5 +10,7 @@ namespace NNControl.Adapter
         NeuralNetworkModel NeuralNetworkModel { get; }
         IReadOnlyList<ILayerModelAdapter> LayerModelAdapters { get; }
         NeuralNetworkController Controller { get; set; }
+
+        void Detach();
     }
 }

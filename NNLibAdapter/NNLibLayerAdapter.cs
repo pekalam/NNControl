@@ -9,6 +9,8 @@ namespace NNLibAdapter
 {
     public class NNLibLayerAdapter : ILayerModelAdapter
     {
+        private string[]? _labels;
+
         public NNLibLayerAdapter(LayerModel layerModel, Layer? layer)
         {
             LayerModel = layerModel;
@@ -46,6 +48,36 @@ namespace NNLibAdapter
                 LayerModel.NeuronModels.RemoveRange(LayerModel.NeuronModels.Where((_, ind) => ind >= neuronsCount).ToArray());
             }
 
+            if (_labels != null && _labels.Length == LayerModel.NeuronModels.Count)
+            {
+                for (int i = 0; i < LayerModel.NeuronModels.Count; i++)
+                {
+                    LayerModel.NeuronModels[i].Label = _labels[i];
+                }
+            }
+        }
+
+        internal void AttachLabels(string[] labels)
+        {
+            _labels = labels;
+
+            if (labels.Length == LayerModel.NeuronModels.Count)
+            {
+                for (int i = 0; i < LayerModel.NeuronModels.Count; i++)
+                {
+                    LayerModel.NeuronModels[i].Label = labels[i];
+                }
+            }
+        }
+
+        internal void ClearLabels()
+        {
+            _labels = null;
+
+            for (int i = 0; i < LayerModel.NeuronModels.Count; i++)
+            {
+                LayerModel.NeuronModels[i].Label = "";
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged = null!;
