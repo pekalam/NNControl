@@ -52,7 +52,7 @@ namespace NNControl.Network.Impl
             canvas.SetMatrix(m);
         }
 
-        private void DrawAll(SKCanvas canvas, bool aa = true)
+        private void DrawAll(SKCanvas canvas, bool drawExcluded = false)
         {
             canvas.Clear(_bgColor);
 
@@ -62,7 +62,7 @@ namespace NNControl.Network.Impl
                 {
                     for (int k = 0; k < Layers[i].Neurons[j].ConnectedSynapses.Count; k++)
                     {
-                        if (Layers[i].Neurons[j].ConnectedSynapses[k].Excluded)
+                        if (Layers[i].Neurons[j].ConnectedSynapses[k].Excluded && !drawExcluded)
                         {
                             continue;
                         }
@@ -78,7 +78,7 @@ namespace NNControl.Network.Impl
             {
                 for (int j = 0; j < Layers[i].Neurons.Count; j++)
                 {
-                    if (Layers[i].Neurons[j].Excluded)
+                    if (Layers[i].Neurons[j].Excluded && !drawExcluded)
                     {
                         continue;
                     }
@@ -98,7 +98,7 @@ namespace NNControl.Network.Impl
         {
             var pictureRecorder = new SKPictureRecorder();
             var canvas = pictureRecorder.BeginRecording(PaintArgs.Info.Rect);
-            DrawAll(canvas, false);
+            DrawAll(canvas);
             //_saved = PaintArgs.Surface.Snapshot();
             _saved = pictureRecorder.EndRecording();
             pictureRecorder.Dispose();
@@ -166,7 +166,7 @@ namespace NNControl.Network.Impl
         {
             var canvas = PaintArgs.Surface.Canvas;
             ApplyZoom(canvas);
-            DrawAll(canvas);
+            DrawAll(canvas, true);
         }
     }
 }
