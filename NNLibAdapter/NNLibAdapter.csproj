@@ -7,13 +7,21 @@
     <Company>Marek Pękala</Company>
     <Description>Integrates NNLib with NNControl.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.2</Version>
+    <Version>1.2.40</Version>
+    <Configurations>Debug;Release;DebugLocal</Configurations>
 
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NNLib" Version="1.2.6" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'DebugLocal'">
+    <ProjectReference Include="..\..\NNLib\NNLib\NNLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'DebugLocal'">
+    <PackageReference Include="NNLib" Version="1.2.40" />
   </ItemGroup>
 
   <ItemGroup>

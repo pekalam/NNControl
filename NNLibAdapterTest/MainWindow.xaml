@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <nnControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}" ShowVis="False"/>
+        <nnControl:NeuralNetworkControl x:Name="control" ModelAdapter="{Binding Path=Adapter}" ShowVis="True"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Name="Highlihght" Click="Highlihght_OnClick">Highlight</Button>
             <Button Name="Add" Click="Add_OnClick">Add neuron</Button>

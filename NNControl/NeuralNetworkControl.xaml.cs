@@ -22,12 +22,6 @@ namespace NNControl
         
         private readonly INeuralNetworkModelAdapter _defaultAdapter = new DefaultNeuralNetworkModelAdapter(2,4,5,1);
 
-        private Stopwatch _st = new Stopwatch();
-        private double _measured;
-        private int _meaInd = 0;
-        private double _total = 0;
-        private int _totalCount = 0;
-
         private SkNeuralNetworkView _skView = new SkNeuralNetworkView();
 
         public NeuralNetworkControl()
@@ -35,28 +29,7 @@ namespace NNControl
             SizeChanged += NeuralNetworkControl_SizeChanged;
             Controller = new NeuralNetworkController(_skView, () =>
             {
-                _st.Restart();
                 canvas.InvalidateVisual();
-                _st.Stop();
-
-                _measured += _st.ElapsedTicks / 40.0d;
-                _meaInd++;
-                if (_meaInd == 40)
-                {
-                    _meaInd = 0;
-                    Console.WriteLine("Mean: " + _measured);
-                    _total += _measured / 30.0d;
-                    _totalCount++;
-                    _measured = 0;
-                }
-
-                if (_totalCount == 30)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Total: " + _total);
-                    _totalCount = 0;
-                    _total = 0;
-                }
             });
 
             InitStateMachine();
